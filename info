@@ -1,32 +1,28 @@
-import streamlit as st
-import pandas as pd
-import tempfile
-from Excel_Regression_Dashboard_automation import main
+Here’s the refined version of your email with a more professional and polite tone, incorporating your request for participation in calls and training:
 
-st.title("Regression Dashboard Excel Creation")
+⸻
 
-template_file     = st.file_uploader("Excel Template Path:", type=["xlsx", "xlsm"])
-consol_file       = st.file_uploader("Consol Workbook Template Path:", type=["xlsx", "xlsm"])
-output_file       = st.file_uploader("Output Folder:", type=["xlsx", "xlsm"])
+Subject: RE: TCoE | Training and Implementation | Q3 Release
 
-if st.button("Create Excel Dashboards"):
-    if not template_file or not consol_file or not output_file:
-        st.error("Please upload all required files.")
-    else:
-        # Save files to temp paths
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsm") as tf1:
-            tf1.write(template_file.read())
-            template_path = tf1.name
+Hi All,
 
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsm") as tf2:
-            tf2.write(consol_file.read())
-            consol_path = tf2.name
+Hope you are doing well.
 
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsm") as tf3:
-            tf3.write(output_file.read())
-            output_path = tf3.name
+We have raised the following SNOWs on your behalf to initiate the setup for Q3 pilot Testing CoE solutions. Kindly follow up with your respective leads to ensure approvals are secured.
 
-        # Call your main function with file paths
-        main(template_path, output_path, consol_path)
+Please also note that there are additional steps required on individual systems. We will reach out once your SNOW tickets are completed. A Teams group chat is being created to support the Python setup.
+	•	Python 3.9
+	•	Nexus3
+	•	SDK
 
-        st.success("Excel Dashboard created successfully.")
+I would also like to kindly request everyone to join the daily calls, as they are essential for completing the required training, practicing the proposed solutions, and applying them effectively within your respective areas for Q3 implementation. Your active participation will help avoid any gaps in Testing KPIs.
+
+Regards,
+Ravi Kumar Jain
+SVP, Testing CoE Lead
+Global Finance Transformation
+HSBC Electronic Data Processing India Pvt. Ltd
+
+⸻
+
+Let me know if you’d like a slightly more assertive or informal version.
