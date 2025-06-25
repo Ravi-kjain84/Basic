@@ -1,17 +1,12 @@
-Subject: Follow-up on Testing Team Concerns Discussed Yesterday
+# Alternate merge (adding both RequirementID and EpicID)
+def merge_requirements_epic_details(test_evidence, test_cases_df):
+    # Create mapping for RequirementID and EpicID using 'Test Case ID' as index
+    tc_to_req_map = test_cases_df.set_index('Test Case ID')['Issues Key To Link'].to_dict()
+    tc_to_epic_map = test_cases_df.set_index('Test Case ID')['EPIC LINK'].to_dict()
 
-Hi [Colleague’s Name],
+    # Update test_evidence with both RequirementID and EpicID
+    for tc_id in test_evidence:
+        test_evidence[tc_id]['RequirementID'] = tc_to_req_map.get(tc_id, 'UNKNOWN')
+        test_evidence[tc_id]['EpicID'] = tc_to_epic_map.get(tc_id, 'UNKNOWN')
 
-I hope you’re doing well.
-
-I wanted to follow up on the discussion we had yesterday regarding the challenges your team is currently facing. To summarize:
-	1.	UAT Sign-off Delays: We discussed that final users are often too busy to provide timely sign-offs, leading to delays in the UAT process.
-	2.	Agile Ceremonies: With the adoption of Agile, the team is finding that ceremonies are consuming a significant portion of their time, leaving less room for actual testing activities.
-	3.	Frequent Resource Changes: The team is experiencing frequent turnover, which means new resources often need to be retrained, affecting both the efficiency and quality of the testing process.
-
-Let’s collaborate on potential solutions for these issues. I’m confident we can streamline the UAT process, optimize the Agile ceremonies to free up more testing time, and establish a more stable resource training plan.
-
-Please let me know a good time for us to discuss these solutions further.
-
-Best regards,
-Ravi
+    return test_evidence
