@@ -1,13 +1,14 @@
 import subprocess
-import sys
 import os
 
-# Dynamically resolve base directory
-base_dir = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
-script_path = os.path.join(base_dir, 'dashboard.py')
+# Use base path relative to .exe or .py
+base_path = os.path.dirname(os.path.abspath(__file__))
+script_path = os.path.join(base_path, 'sample.py')
 
-# Launch Streamlit using current Python interpreter
-subprocess.Popen([sys.executable, "-m", "streamlit", "run", script_path])
+# Use python.exe directly from system or known venv
+python_path = os.path.join(base_path, 'python', 'python.exe')  # Optional if shipping a portable Python
 
-# Keep window open
+# Or just rely on system Python if available
+subprocess.Popen(["python", "-m", "streamlit", "run", script_path])
+
 input("Streamlit launched. Press Enter to exit...")
