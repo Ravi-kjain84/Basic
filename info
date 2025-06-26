@@ -1,9 +1,12 @@
-=LEFT(CELL("filename", A1), FIND("[", CELL("filename", A1)) - 1)
-
-
-
 let
-    Source = Excel.CurrentWorkbook(){[Name="BasePathHelper"]}[Content],
-    FolderPath = Source{0}[Column1]
+    Filepath = Excel.CurrentWorkbook(){[Name="Filepath"]}[Content]{0}[Column1],
+    Source = Excel.Workbook(File.Contents(Filepath & "Book1.xlsx"), null, true),
+    Sheet1_Sheet = Source{[Item="Sheet1",Kind="Sheet"]}[Data],
+    #"Promoted Headers" = Table.PromoteHeaders(Sheet1_Sheet, [PromoteAllScalars=true]),
+    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Filepath", type any}})
 in
-    FolderPath
+    #"Changed Type"
+
+
+
+=LEFT(CELL("filename",$A$1),FIND("[",CELL("filename",$A$1),1)-1)
