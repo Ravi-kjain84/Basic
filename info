@@ -1,3 +1,41 @@
+
+import os
+import sys
+import streamlit
+import pandas as pd
+import streamlit.web.cli as stcli
+from cx_Freeze import setup, Executable
+
+def resolve_path(path):
+    resolved_path = os.path.abspath(os.path.join(os.getcwd(), path))
+    return resolved_path
+
+if __name__ == "__main__":
+    sys.argv = [
+        "streamlit",
+        "run",
+        resolve_path("sample.py"),
+    ]
+    sys.exit(stcli.main())
+
+# --- cx_Freeze Configuration (added at the bottom) ---
+setup(
+    name="StreamlitApp",
+    version="0.1",
+    description="Streamlit wrapper EXE",
+    executables=[Executable("setup.py")],  # or sample.py if you want
+    options={
+        "build_exe": {
+            "build_exe": "build_output",  # This avoids writing to system folders
+        }
+    }
+)
+
+
+
+
+
+
 from cx_Freeze import setup, Executable
 import os, sys
 
