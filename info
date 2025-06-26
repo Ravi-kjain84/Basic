@@ -1,1 +1,17 @@
-pyinstaller --onefile --noconsole --hidden-import=encodings launcher.py
+import streamlit
+import pandas
+import streamlit.web.cli as stcli
+import os, sys
+
+def resolve_path(path):
+    resolved_path = os.path.abspath(os.path.join(os.getcwd(), path))
+    return resolved_path
+
+if __name__ == "__main__":
+    sys.argv = [
+        "streamlit",
+        "run",
+        resolve_path("app.py"),
+        # "--global.developmentMode=false",  # Commented out
+    ]
+    sys.exit(stcli.main())
