@@ -1,12 +1,3 @@
-let
-    Filepath = Excel.CurrentWorkbook(){[Name="Filepath"]}[Content]{0}[Column1],
-    Source = Excel.Workbook(File.Contents(Filepath & "Book1.xlsx"), null, true),
-    Sheet1_Sheet = Source{[Item="Sheet1",Kind="Sheet"]}[Data],
-    #"Promoted Headers" = Table.PromoteHeaders(Sheet1_Sheet, [PromoteAllScalars=true]),
-    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Filepath", type any}})
-in
-    #"Changed Type"
-
-
-
-=LEFT(CELL("filename",$A$1),FIND("[",CELL("filename",$A$1),1)-1)
+# Dynamically resolve script path based on current location (works in .exe too)
+base_dir = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+script_path = os.path.join(base_dir, 'dashboard.py')
