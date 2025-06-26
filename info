@@ -1,14 +1,22 @@
-import subprocess
+python -m venv venv
+venv\Scripts\activate
+
+pip install streamlit
+pip install -r requirements.txt  # if you have other dependencies
+
+
 import os
+import sys
+import subprocess
 
-# Use base path relative to .exe or .py
-base_path = os.path.dirname(os.path.abspath(__file__))
-script_path = os.path.join(base_path, 'sample.py')
+def main():
+    base_dir = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    script_path = os.path.join(base_dir, 'dashboard.py')
+    subprocess.Popen([sys.executable, "-m", "streamlit", "run", script_path])
+    input("Streamlit launched. Press Enter to exit...")
 
-# Use python.exe directly from system or known venv
-python_path = os.path.join(base_path, 'python', 'python.exe')  # Optional if shipping a portable Python
+if __name__ == "__main__":
+    main()
 
-# Or just rely on system Python if available
-subprocess.Popen(["python", "-m", "streamlit", "run", script_path])
 
-input("Streamlit launched. Press Enter to exit...")
+pyinstaller --onefile --noconsole launcher.py
