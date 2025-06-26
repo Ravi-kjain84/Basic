@@ -1,3 +1,27 @@
+from cx_Freeze import setup, Executable
+import os, sys
+
+def resolve_path(path):
+    return os.path.abspath(os.path.join(os.getcwd(), path))
+
+setup(
+    name="StreamlitApp",
+    version="0.1",
+    description="Streamlit wrapper EXE",
+    executables=[Executable("sample.py")],
+    options={
+        "build_exe": {
+            "build_exe": "build_output",  # <== force output to safe folder
+        }
+    }
+)
+
+
+
+
+
+
+
 
 python setup.py build --build-base=build_folder
 
