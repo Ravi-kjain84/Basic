@@ -1,4 +1,33 @@
 
+import os
+import tempfile
+import subprocess
+
+# ✅ Your Streamlit app code as a string
+streamlit_code = """
+import streamlit as st
+st.title("Embedded Streamlit App")
+st.write("This app is launched from within an EXE!")
+"""
+
+def main():
+    # 🔧 Save to a temporary .py file
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".py", mode='w') as tmp:
+        tmp.write(streamlit_code)
+        tmp_path = tmp.name
+
+    # 🚀 Run the streamlit app using subprocess
+    subprocess.run(["streamlit", "run", tmp_path])
+
+if __name__ == "__main__":
+    main()
+
+
+
+
+
+
+
 launcher.py
 
 import os
