@@ -1,3 +1,7 @@
+
+python setup.py build --build-base=build_folder
+
+
 import streamlit
 import pandas
 import streamlit.web.cli as stcli
