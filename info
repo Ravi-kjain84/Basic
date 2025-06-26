@@ -1,4 +1,38 @@
 
+launcher.py
+
+import os
+import sys
+import streamlit.web.cli as stcli
+
+if __name__ == "__main__":
+    sys.argv = [
+        "streamlit",
+        "run",
+        os.path.abspath("sample.py")
+    ]
+    sys.exit(stcli.main())
+
+
+setup.py
+
+from cx_Freeze import setup, Executable
+
+setup(
+    name="StreamlitApp",
+    version="0.1",
+    description="Streamlit wrapper EXE",
+    executables=[Executable("launcher.py")],
+    options={
+        "build_exe": {
+            "build_exe": "build_output"
+        }
+    }
+)
+
+
+
+
 import os
 import sys
 import streamlit
