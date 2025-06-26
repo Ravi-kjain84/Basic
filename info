@@ -1,3 +1,7 @@
+=LEFT(CELL("filename", A1), FIND("[", CELL("filename", A1)) - 1)
+
+
+
 let
     Source = Excel.CurrentWorkbook(){[Name="BasePathHelper"]}[Content],
     FolderPath = Source{0}[Column1]
