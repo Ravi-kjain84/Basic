@@ -1,18 +1,5 @@
-import streamlit as st
-import pythoncom
-
-st.title("Regression Dashboard Excel Creation")
-
-template_file = st.file_uploader("Excel Template Path:", type=["xlsx", "xlsm"])
-config_file = st.file_uploader("Config file Path:", type=["xlsx", "xlsm"])
-output_folder = st.text_input("Enter Output Folder Path (e.g., C:/Users/YourName/Downloads/output)")
-
-def connect_outlook_and_read(config_file_path, template_path, output_path):
-    try:
-        pythoncom.CoInitialize()
-        st.write("Running main")
-        main(config_file_path, template_path, output_path)
-    except Exception as e:
-        return f"Error: {e}"
-    finally:
-        pythoncom.CoUninitialize()
+let
+    Source = Excel.CurrentWorkbook(){[Name="BasePathHelper"]}[Content],
+    FolderPath = Source{0}[Column1]
+in
+    FolderPath
