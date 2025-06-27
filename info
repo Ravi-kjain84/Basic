@@ -1,1 +1,67 @@
-ss
+Field,Response
+Parent AI Use Case,GenAI-Driven Test Case Generation and Impact Assessment
+Solution Type,Pilot
+Does this use case leverage Novel AI (including Generative AI)?,Yes
+Does your AI use case perform any of the following functions?,"Test case generation, impact analysis, traceability mapping"
+Confirm that the proposed service only uses fully approved HSBC AI Products and Services,"Pending approval (e.g., OpenAI, internal models)"
+Has business case funding been approved?,Pending / Under review
+Project funding type,Innovation / Pilot Funding
+Estimated Annual Benefit (USD),"$50,000"
+Estimated Long-term Benefit (USD),"$150,000"
+Were any alternative approaches to the business problem considered?,Manual test design and Excel-based traceability matrices were considered but lacked scalability and consistency.
+Planned Live Date,2025-09-01
+Is the output of the AI solution used externally?,No
+Number of Users,25 (initial TCoE group)
+Does your AI Solution require software licenses?,Yes
+Is there a Human in the loop?,Yes
+Does the use of the AI solution require any specialist skills or training?,Yes � Prompt engineering and domain QA knowledge
+Is there adequate subject matter knowledge/expertise in place to oversee the use of the AI solution?,Yes
+Does the initiative impact the onboarding of Customers or Third Parties?,No
+Does the initiative impact new or existing Customer Offerings?,No
+What development/design approach will be used for your AI solution?,Retrieval-Augmented Generation with fine-tuned LLMs
+Hosting Platform,Internal HSBC cloud / Streamlit local environments
+Are you using a 3rd party product to deliver this AI solution?,"Yes � Open Source & Cloud APIs (e.g., OpenAI, HuggingFace models)"
+Will any other 3rd party service or data be used?,"Yes � Open-source LLMs, SQL lineage data"
+Select the AI Model which the AI solution is using,"OpenAI GPT-3.5, TinyLLaMA, Mistral (via APIs or local deployment)"
+Identify any related models associated with this AI Solution,Instruction-tuned LLMs for test case generation
+Are you using a Free and Open Source Model (FOSS)?,Yes
+Will the risk of infringing third party intellectual property be reviewed and accepted before the AI solution's output is used externally?,Yes
+Will the bank's intellectual property be excluded from training the AI solution outside of the bank's control?,Yes
+"Where the AI solution is supplied or serviced by a Third-Party, will service providers make the bank aware of changes?",Yes
+Does the AI solution adhere to HSBC�s Principles for the Ethical Use of Data and AI?,Yes
+Will the AI solution compete with any technology/service used for similar purposes?,No
+"Does it result in HSBC data/IP being shared with third party (e.g., CSP)?",No
+Does the AI solution involve any joint development with a competitor of HSBC?,No
+Does the AI solution involve pricing algorithms that use competitor data?,No
+Will the AI solution be used to support regulatory requirements?,Yes � supports Basel/COREP-related QA
+Are there any local market AI regulations that need to be met?,No
+Would the launch of this AI solution require regulator notification?,No
+Will your AI solution use sensitive or material non-public info?,No
+Will the AI solution be used to support customer engagement/sales?,No
+Data Sources,"JIRA tickets, Policy docs, Test case archives, SQL lineage, Reporting metadata"
+Data Types Required,"Text, tabular (Excel, CSV, SQL, JSON)"
+Data Categories,Internal requirements and documentation
+Processes or Stores Customer / Personal Identification Data,No
+Countries Using/Receiving the Service,"India, UK"
+Data Originating Countries,"India, UK"
+Hosting Jurisdictions,"India, UK"
+Is all your required data on public cloud?,No
+Will the AI solution support operation of a material business service?,Yes � QA and Testing operations
+"Will the AI solution support production of a material financial, regulatory, or BCBS-239 report?",Yes
+Are there any known quality issues in the data inputted into or used to train the AI?,No
+Describe the volume and types of data used for training or deploying the AI,"The model uses structured requirement-response pairs, historical test cases (~5,000), and reference rules (~100+ logic tables) across regulatory domains like Basel III, COREP, and IFRS. Data is anonymized and embedded into vector databases for retrieval."
+Will AI performance be assessed by an expert during use?,Yes
+Will the AI be excluded from acting on HSBC customers without human check?,Yes
+Outline the Success Criteria of the solution,"- Successful auto-generation of test cases with 80% accuracy vs. manual benchmarks
+- Detection of 90%+ missing acceptance criteria in JIRA
+- Integration with Streamlit UI and BigQuery RAFT framework for traceable, usable outputs
+- Demonstrated time savings and test coverage improvement in pilot"
+What outputs will the AI solution generate and what medium will they be presented in?,"Structured test cases (markdown table format), regression dashboard test entries, exploratory and downstream-impact test scenarios. Mediums include Excel, Streamlit UI, and BigQuery."
+Will the outputs be used as inputs to other HSBC systems or AI solutions?,No
+Is the AI solution used to generate outputs that will support external financial/statistical/regulatory reporting?,No (Indirect QA support only)
+"Will the AI solution result in a change to business process, system, or control that is in-scope of SOX?",No
+Procurement Contacts,[To be provided by project sponsor]
+Architecture Contacts,[To be provided by testing platform lead]
+Data Contacts,[Data Engineering SME / RAFT support team]
+Legal Contacts,[To be assigned by Legal & Compliance]
+Business Line Sponsor,Testing Center of Excellence Lead / QA Governance Sponsor
