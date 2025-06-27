@@ -1,3 +1,8 @@
+pyinstaller --noconfirm --onedir --console --add-data "C:\Users\Arnav\Documents\Python\streamlit\app.py;." --collect-all "streamlit"  "C:\Users\Arnav\Documents\Python\streamlit\executor.py"
+
+----------------------
+
+
 import streamlit.web.cli as stcli
 import sys, os, subprocess, socket
 from datetime import datetime
