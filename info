@@ -1,146 +1,26 @@
-
-import os
-import tempfile
-import subprocess
-
-# ✅ Your Streamlit app code as a string
-streamlit_code = """
-import streamlit as st
-st.title("Embedded Streamlit App")
-st.write("This app is launched from within an EXE!")
-"""
-
-def main():
-    # 🔧 Save to a temporary .py file
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".py", mode='w') as tmp:
-        tmp.write(streamlit_code)
-        tmp_path = tmp.name
-
-    # 🚀 Run the streamlit app using subprocess
-    subprocess.run(["streamlit", "run", tmp_path])
-
-if __name__ == "__main__":
-    main()
-
-
-
-
-
-
-
-launcher.py
-
-import os
-import sys
 import streamlit.web.cli as stcli
+import sys, os, subprocess, socket
+
+def resolve_path(filename):
+    base_dir = sys._MEIPASS if getattr(sys, 'frozen', False) else os.path.dirname(__file__)
+    return os.path.join(base_dir, filename)
+
+def free_port(port):
+    try:
+        s = socket.socket()
+        s.bind(("localhost", port))
+        s.close()
+    except OSError:
+        print(f"Port {port} in use. Freeing it...")
+        if os.name == 'nt':
+            subprocess.run(f'for /f "tokens=5" %a in (\'netstat -aon ^| findstr :{port}\') do taskkill /f /pid %a', shell=True)
 
 if __name__ == "__main__":
+    free_port(8501)
     sys.argv = [
-        "streamlit",
-        "run",
-        os.path.abspath("sample.py")
-    ]
-    sys.exit(stcli.main())
-
-
-setup.py
-
-from cx_Freeze import setup, Executable
-
-setup(
-    name="StreamlitApp",
-    version="0.1",
-    description="Streamlit wrapper EXE",
-    executables=[Executable("launcher.py")],
-    options={
-        "build_exe": {
-            "build_exe": "build_output"
-        }
-    }
-)
-
-
-
-
-import os
-import sys
-import streamlit
-import pandas as pd
-import streamlit.web.cli as stcli
-from cx_Freeze import setup, Executable
-
-def resolve_path(path):
-    resolved_path = os.path.abspath(os.path.join(os.getcwd(), path))
-    return resolved_path
-
-if __name__ == "__main__":
-    sys.argv = [
-        "streamlit",
-        "run",
-        resolve_path("sample.py"),
-    ]
-    sys.exit(stcli.main())
-
-# --- cx_Freeze Configuration (added at the bottom) ---
-setup(
-    name="StreamlitApp",
-    version="0.1",
-    description="Streamlit wrapper EXE",
-    executables=[Executable("setup.py")],  # or sample.py if you want
-    options={
-        "build_exe": {
-            "build_exe": "build_output",  # This avoids writing to system folders
-        }
-    }
-)
-
-
-
-
-
-
-from cx_Freeze import setup, Executable
-import os, sys
-
-def resolve_path(path):
-    return os.path.abspath(os.path.join(os.getcwd(), path))
-
-setup(
-    name="StreamlitApp",
-    version="0.1",
-    description="Streamlit wrapper EXE",
-    executables=[Executable("sample.py")],
-    options={
-        "build_exe": {
-            "build_exe": "build_output",  # <== force output to safe folder
-        }
-    }
-)
-
-
-
-
-
-
-
-
-python setup.py build --build-base=build_folder
-
-
-import streamlit
-import pandas
-import streamlit.web.cli as stcli
-import os, sys
-
-def resolve_path(path):
-    resolved_path = os.path.abspath(os.path.join(os.getcwd(), path))
-    return resolved_path
-
-if __name__ == "__main__":
-    sys.argv = [
-        "streamlit",
-        "run",
-        resolve_path("app.py"),
-        # "--global.developmentMode=false",  # Commented out
+        "streamlit", "run", resolve_path("app.py"),
+        "--server.headless=true",
+        "--server.port=8501",
+        "--global.developmentMode=false"
     ]
     sys.exit(stcli.main())
