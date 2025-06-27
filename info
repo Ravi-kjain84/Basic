@@ -1,26 +1,55 @@
 import streamlit.web.cli as stcli
 import sys, os, subprocess, socket
+from datetime import datetime
 
 def resolve_path(filename):
     base_dir = sys._MEIPASS if getattr(sys, 'frozen', False) else os.path.dirname(__file__)
     return os.path.join(base_dir, filename)
 
+def log_launch_info(app_path, port_killed=None, pids_killed=None):
+    log_path = os.path.join(os.path.dirname(app_path), "launch_log.txt")
+    with open(log_path, "a") as log:
+        log.write("\n===== Streamlit EXE Launch =====\n")
+        log.write(f"Timestamp       : {datetime.now()}\n")
+        log.write(f"Executor Path   : {os.path.abspath(sys.argv[0])}\n")
+        log.write(f"Resolved App.py : {app_path}\n")
+        log.write(f"Working Dir     : {os.getcwd()}\n")
+        if port_killed:
+            log.write(f"Port Freed      : {port_killed}\n")
+            log.write(f"Killed PIDs     : {', '.join(pids_killed) if pids_killed else 'Unknown'}\n")
+        log.write("================================\n")
+
 def free_port(port):
+    killed_pids = []
     try:
         s = socket.socket()
         s.bind(("localhost", port))
         s.close()
     except OSError:
-        print(f"Port {port} in use. Freeing it...")
+        print(f"Port {port} in use. Attempting to kill occupying process(es)...")
         if os.name == 'nt':
-            subprocess.run(f'for /f "tokens=5" %a in (\'netstat -aon ^| findstr :{port}\') do taskkill /f /pid %a', shell=True)
+            result = subprocess.run(
+                f'netstat -aon | findstr :{port}',
+                shell=True, capture_output=True, text=True
+            )
+            lines = result.stdout.strip().splitlines()
+            for line in lines:
+                parts = line.strip().split()
+                if parts and parts[-1].isdigit():
+                    pid = parts[-1]
+                    killed_pids.append(pid)
+                    subprocess.run(f"taskkill /PID {pid} /F", shell=True)
+    return killed_pids
 
 if __name__ == "__main__":
-    free_port(8501)
+    port = 8501
+    app_script_path = resolve_path("app.py")
+    pids_killed = free_port(port)
+    log_launch_info(app_script_path, port_killed=port if pids_killed else None, pids_killed=pids_killed)
     sys.argv = [
-        "streamlit", "run", resolve_path("app.py"),
-        "--server.headless=true",
-        "--server.port=8501",
+        "streamlit", "run", app_script_path,
+        # "--server.headless=true",
+        f"--server.port={port}",
         "--global.developmentMode=false"
     ]
     sys.exit(stcli.main())
