@@ -1,10 +1,6 @@
-def ensure_nested_folder(parent, child):
-    full_path = os.path.join(parent, child)
-    if not os.path.exists(full_path):
-        os.makedirs(full_path)
-        print(f"Created folder: {full_path}")
-    else:
-        print(f"Folder already exists: {full_path}")
+dot = Digraph()
 
-# Example usage
-ensure_nested_folder("output", "regression_dashboards")
+# Set graph to center and increase font size
+dot.attr(rankdir="TB", layout="dot", fontsize="20", concentrate="true", center="true")
+dot.attr("node", fontsize="20", style="filled", fillcolor="white", shape="ellipse")
+dot.attr("edge", fontsize="16")
