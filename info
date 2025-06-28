@@ -1,6 +1,4 @@
-dot = Digraph()
-
-# Set graph to center and increase font size
-dot.attr(rankdir="TB", layout="dot", fontsize="20", concentrate="true", center="true")
-dot.attr("node", fontsize="20", style="filled", fillcolor="white", shape="ellipse")
-dot.attr("edge", fontsize="16")
+st.markdown(
+    '<a href="https://openai.com" target="_blank">Click here to visit OpenAI</a>',
+    unsafe_allow_html=True
+)
