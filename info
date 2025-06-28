@@ -1,9 +1,10 @@
-def ensure_folder_exists(folder_path):
-    if not os.path.exists(folder_path):
-        os.makedirs(folder_path)
-        print(f"Created folder: {folder_path}")
+def ensure_nested_folder(parent, child):
+    full_path = os.path.join(parent, child)
+    if not os.path.exists(full_path):
+        os.makedirs(full_path)
+        print(f"Created folder: {full_path}")
     else:
-        print(f"Folder already exists: {folder_path}")
+        print(f"Folder already exists: {full_path}")
 
 # Example usage
-ensure_folder_exists("output")
+ensure_nested_folder("output", "regression_dashboards")
