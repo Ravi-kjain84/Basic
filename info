@@ -1,4 +1,26 @@
 
+if __name__ == "__main__":
+    import os
+    import sys
+
+    # Force kill anything on port 8501 (Windows)
+    os.system("for /f \"tokens=5\" %a in ('netstat -aon ^| findstr :8501') do taskkill /F /PID %a >nul 2>&1")
+
+    port = 8501
+    app_script_path = resolve_path("app.py")
+    
+    sys.argv = [
+        "streamlit", "run", app_script_path,
+        "--server.headless=true",
+        f"--server.port={port}",
+        "--global.developmentMode=false"
+    ]
+
+    os.environ["STREAMLIT_CONFIG_FILE"] = resolve_path(".streamlit/config.toml")
+    sys.exit(stcli.main())
+
+
+
 st.markdown(
     "<h4 style='font-size:18px; color:darkblue;'>Step 1: Enter or Upload Requirements</h4>",
     unsafe_allow_html=True
