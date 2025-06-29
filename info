@@ -1,4 +1,12 @@
-st.markdown(
-    '<a href="https://openai.com" target="_blank">Click here to visit OpenAI</a>',
-    unsafe_allow_html=True
-)
+# main diagram nodes here...
+
+# add legend subgraph
+with dot.subgraph(name='cluster_legend') as legend:
+    legend.attr(label="Legend", fontsize="20", style="dashed", color="gray")
+    legend.attr("node", shape="rectangle", style="filled", fontname="Arial", fontsize="12")
+    legend.node("legend_green", "Live Dashboards", fillcolor="lightgreen")
+    legend.node("legend_yellow", "Manual Steps / Validation", fillcolor="lightyellow")
+    legend.node("legend_blue", "Data Tools / Utilities", fillcolor="lightblue")
+    legend.node("legend_gray", "JIRA Controls", fillcolor="lightsteelblue")
+
+# then define your dot.edges([...])
