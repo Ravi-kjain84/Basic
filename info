@@ -1,3 +1,16 @@
+
+import streamlit as st
+
+st.set_page_config(
+    page_title="Flowchart Navigation",
+    layout="centered",   # This disables wide mode
+    initial_sidebar_state="auto"
+)
+
+
+
+
+
 # main diagram nodes here...
 
 # add legend subgraph
