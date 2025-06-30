@@ -1,54 +1,36 @@
+# 🔧 SETUP: Define Cloud SDK installation path
+$gcloudPath = "C:\swtools\google-cloud-sdk-356.0.0-windows"
 
-if __name__ == "__main__":
-    import os
-    import sys
+# ✅ Step 1: Set environment variable GCLOUD_HOME
+[Environment]::SetEnvironmentVariable("GCLOUD_HOME", $gcloudPath, "User")
+Write-Host "`n✔️ GCLOUD_HOME set to $gcloudPath"
 
-    # Force kill anything on port 8501 (Windows)
-    os.system("for /f \"tokens=5\" %a in ('netstat -aon ^| findstr :8501') do taskkill /F /PID %a >nul 2>&1")
+# ✅ Step 2: Add GCLOUD_HOME\bin to PATH (if not already present)
+$currentPath = [Environment]::GetEnvironmentVariable("Path", "User")
+$newEntry = "$gcloudPath\bin"
+if ($currentPath -notlike "*$newEntry*") {
+    [Environment]::SetEnvironmentVariable("Path", "$currentPath;$newEntry", "User")
+    Write-Host "✔️ Added $newEntry to PATH"
+} else {
+    Write-Host "✔️ PATH already contains GCLOUD_HOME\bin"
+}
 
-    port = 8501
-    app_script_path = resolve_path("app.py")
-    
-    sys.argv = [
-        "streamlit", "run", app_script_path,
-        "--server.headless=true",
-        f"--server.port={port}",
-        "--global.developmentMode=false"
-    ]
+# ✅ Step 3: Set proxy configuration
+& "$gcloudPath\bin\gcloud.cmd" config set proxy/type http_no_tunnel
+& "$gcloudPath\bin\gcloud.cmd" config set proxy/address googleapis-prod.gcp.cloud.uk.<<ORG_NAME_LOWER>>  # Replace with actual proxy
+& "$gcloudPath\bin\gcloud.cmd" config set proxy/port 3128
 
-    os.environ["STREAMLIT_CONFIG_FILE"] = resolve_path(".streamlit/config.toml")
-    sys.exit(stcli.main())
+Write-Host "`n✔️ Proxy configuration set for gcloud"
 
+# ✅ Step 4: Confirm gcloud configuration
+Write-Host "`n📋 Current gcloud configuration:"
+& "$gcloudPath\bin\gcloud.cmd" config list
 
+# ✅ Step 5: Begin gcloud authentication
+Write-Host "`n🌐 Launching browser for gcloud CLI login..."
+& "$gcloudPath\bin\gcloud.cmd" auth login
 
-st.markdown(
-    "<h4 style='font-size:18px; color:darkblue;'>Step 1: Enter or Upload Requirements</h4>",
-    unsafe_allow_html=True
-)
+Write-Host "`n🌐 Launching browser for application-default login (for Python SDK)..."
+& "$gcloudPath\bin\gcloud.cmd" auth application-default login
 
-
-
-import streamlit as st
-
-st.set_page_config(
-    page_title="Flowchart Navigation",
-    layout="centered",   # This disables wide mode
-    initial_sidebar_state="auto"
-)
-
-
-
-
-
-# main diagram nodes here...
-
-# add legend subgraph
-with dot.subgraph(name='cluster_legend') as legend:
-    legend.attr(label="Legend", fontsize="20", style="dashed", color="gray")
-    legend.attr("node", shape="rectangle", style="filled", fontname="Arial", fontsize="12")
-    legend.node("legend_green", "Live Dashboards", fillcolor="lightgreen")
-    legend.node("legend_yellow", "Manual Steps / Validation", fillcolor="lightyellow")
-    legend.node("legend_blue", "Data Tools / Utilities", fillcolor="lightblue")
-    legend.node("legend_gray", "JIRA Controls", fillcolor="lightsteelblue")
-
-# then define your dot.edges([...])
+Write-Host "`n✅ All steps executed. You may now use GCP via CLI or EXE-based testing tools."
