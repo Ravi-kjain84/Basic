@@ -1,38 +1,36 @@
 from openpyxl import load_workbook
-import pandas as pd
+from openpyxl.utils.dataframe import dataframe_to_rows
 
 def copy_prod_data(df, file_path, sheet_name, row):
     try:
-        # Step 1 & 2: Add columns
+        # Step 1: Add columns
         df['ApproachAndClass'] = df['POST_CRM_PRA_Reporting_Approach'] + df['POST_CRM_Corep_Exposure_Class']
         df['Modified_Customer_Group'] = df['Customer_group'].apply(lambda x: 'PFS' if x == 'GPB' else x)
 
-        # Step 3: Open workbook with VBA support
-        book = load_workbook(file_path, keep_vba=True)
+        # Step 2: Load workbook with macros
+        wb = load_workbook(file_path, keep_vba=True)
 
-        # Step 4: Remove existing sheet safely
-        if sheet_name in book.sheetnames:
-            std = book[sheet_name]
-            book.remove(std)
+        # Step 3: Remove sheet if it exists
+        if sheet_name in wb.sheetnames:
+            wb.remove(wb[sheet_name])
 
-        # Step 5: Write new sheet with pandas
-        with pd.ExcelWriter(file_path, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
-            writer.book = book
-            writer.sheets = {ws.title: ws for ws in book.worksheets}
-            df.to_excel(writer, sheet_name=sheet_name, index=False)
+        # Step 4: Add new sheet and write rows
+        ws = wb.create_sheet(title=sheet_name)
+        for r in dataframe_to_rows(df, index=False, header=True):
+            ws.append(r)
 
-        # Step 5.1: Write to specific cells in 'Start' sheet
-        ws = book['Start']
+        # Step 5: Write specific cell values in 'Start' sheet
+        start_ws = wb['Start']
         if sheet_name == 'Production Data':
-            ws['F10'] = row['Project']
-            ws['G10'] = row['Batch']
+            start_ws['F10'] = row['Project']
+            start_ws['G10'] = row['Batch']
         elif sheet_name == 'Test Data':
-            ws['F11'] = row['Project']
-            ws['G11'] = row['Batch']
+            start_ws['F11'] = row['Project']
+            start_ws['G11'] = row['Batch']
 
-        # Step 6: Save final workbook
-        book.save(file_path)
-        print(f"✅ Data written successfully to sheet: {sheet_name}")
+        # Step 6: Save with macros retained
+        wb.save(file_path)
+        print(f"✅ Data written successfully to '{sheet_name}'")
 
     except Exception as e:
         print(f"❌ Error in copy_prod_data: {e}")
