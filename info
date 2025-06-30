@@ -1,6 +1,6 @@
-st.title("Regression Dashboard Excel Creation")
+force_refresh = st.checkbox("Force Refresh BigQuery Data?", value=False)
 
-st.markdown(
-    "[📁 Download Required Template Folder from SharePoint](https://your-org.sharepoint.com/sites/your-site/Shared%20Documents/DashboardTemplates)",
-    unsafe_allow_html=True
-)
+if force_refresh:
+    main_bq_loader_force_refresh_true()
+else:
+    main_bq_loader_force_refresh_false()
