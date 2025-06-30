@@ -1,6 +1,46 @@
-force_refresh = st.checkbox("Force Refresh BigQuery Data?", value=False)
+import pandas as pd
 
-if force_refresh:
-    main_bq_loader_force_refresh_true()
-else:
-    main_bq_loader_force_refresh_false()
+def process_jira_xlsx(filepath: str) -> pd.DataFrame:
+    """
+    Reads and transforms the Jira requirement Excel file
+    to produce a dataframe similar to 'csv_reqs' in the Streamlit app.
+    """
+
+    # Load the 'general_report' sheet
+    df = pd.read_excel(filepath, sheet_name='general_report', header=None)
+
+    # Skip top rows if needed (assuming 2 rows similar to Table.Skip)
+    df.columns = df.iloc[2]  # Promote headers from 3rd row (0-indexed)
+    df = df[3:].reset_index(drop=True)
+
+    # Filter only rows where 'Issue Type' == 'Requirement'
+    df = df[df['Issue Type'].astype(str).str.strip() == 'Requirement']
+
+    # Drop rows where 'Issue Type' is 'Generated' (mimicking Text.Contains negation)
+    df = df[~df['Issue Type'].astype(str).str.contains('Generated', na=False)]
+
+    # Select relevant columns
+    columns_to_keep = [
+        "Issue Type", "Status", "Key", "Summary", "Clarity ID",
+        "Components", "Created", "Linked Issues", "Parent Link", "Priority",
+        "Reporter", "Updated", "Σ Time Spent", "RAG Status", "Resolution",
+        "Resolution_1", "Resolution Notes", "Resolved to Close",
+        "Time to close after resolution", "Time to resolution"
+    ]
+    df = df[[col for col in columns_to_keep if col in df.columns]]
+
+    # Rename 'Summary' column to 'requirement' to match Streamlit expectation
+    df = df.rename(columns={'Summary': 'requirement'})
+
+    return df
+
+
+
+if uploaded_file:
+    # Use the function instead of direct CSV read
+    df_uploaded = process_jira_xlsx(uploaded_file)
+    if 'requirement' in df_uploaded.columns:
+        csv_reqs = df_uploaded['requirement'].dropna().tolist()
+        st.success(f"✅ {len(csv_reqs)} requirements loaded from XLSX.")
+    else:
+        st.error("❌ XLSX file must contain a column named 'requirement'.")
