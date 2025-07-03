@@ -1,22 +1,19 @@
-Of course. Here’s a simplified and more natural version of your email that still keeps it professional and collaborative:
+a = Analysis(
+    ...
+    hiddenimports=[
+        'google.api_core',
+        'google.api_core.path_template',
+        'google.api_core.exceptions',
+        'google.api_core.retry',
+        'google.cloud',
+        'google.cloud.bigquery',
+        'google.cloud.bigquery.table',
+    ],
+    ...
+)
 
-⸻
+pip install google-cloud-bigquery
+pip install google-api-core
 
-Subject: Re: SNOW for Testing Gen AI Use Case
-
-Hi Piyush,
-
-Thanks for connecting us – I agree, there’s a clear overlap in our use cases and a good opportunity to work together and strengthen the solution by sharing ideas.
-
-In our case, we’re using the RAG methodology to generate functional test cases based on JIRA requirements, policy documents, test guidelines, and previous test cases. The AI is expected to generate test cases that are categorised as functional, downstream, automated, and aligned to acceptance criteria.
-
-I believe the Cucumber-based approach that Sebastian is exploring would add great value, especially in identifying and generating automated test cases.
-
-Hi Sebastian, hi all – I’d be happy to set up a quick call next week to connect and have a high-level discussion on both use cases. Let me know if that works, and I’ll send out an invite.
-
-Best regards,
-Ravi
-
-⸻
-
-Let me know if you want to include a suggested time or calendar hold in the same message.
+import google.api_core
+print("api_core loaded from:", google.api_core.__file__)
