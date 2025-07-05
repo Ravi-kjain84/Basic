@@ -1,9 +1,25 @@
-import sys
 import os
+import sys
 
-# Base path where the EXE is running or script is launched
-base_path = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(__file__)
+def get_base_path():
+    try:
+        # For PyInstaller bundled executable
+        if getattr(sys, 'frozen', False):
+            return sys._MEIPASS if hasattr(sys, '_MEIPASS') else os.path.dirname(sys.executable)
+        # For standard .py scripts
+        elif '__file__' in globals():
+            return os.path.dirname(os.path.abspath(__file__))
+        else:
+            # For Jupyter Notebook or interactive shell
+            return os.getcwd()
+    except Exception as e:
+        print("Error detecting base path:", e)
+        return os.getcwd()
 
-# External templates folder
+base_path = get_base_path()
 template_dir = os.path.join(base_path, 'templates')
+
 dashboard_template_path = os.path.join(template_dir, 'Dashboard_Template.xlsm')
+consol_template_path = os.path.join(template_dir, 'Consol_Template.xlsm')
+
+print("Template folder path:", template_dir)
