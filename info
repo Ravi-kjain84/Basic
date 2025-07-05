@@ -1,12 +1,13 @@
-df_config = pd.read_excel("config_details.xlsx", sheet_name='Config')
+# Step: Validate uniqueness of Regulator + Source + Site + Date
+dup_keys = ['Regulator', 'Source', 'Site', 'Date']
 
-# Step 1: Filter rows based on Process Flag
-df_config['Process_Flag'] = df_config['Process_Flag'].fillna('N')
-df_config = df_config[df_config['Process_Flag'].str.upper().eq('Y')]
+# Find duplicated combinations
+duplicate_rows = df_config[df_config.duplicated(subset=dup_keys, keep=False)]
 
-# Step 2: Trim leading/trailing spaces from Batch_Id and Table_Name
-df_config['Batch_Id'] = df_config['Batch_Id'].astype(str).str.strip()
-df_config['Table_Name'] = df_config['Table_Name'].astype(str).str.strip()
-
-# Step 3: Construct 'Batch' column as Batch_Id.Table_Name
-df_config['Batch'] = df_config['Batch_Id'] + '.' + df_config['Table_Name']
+if not duplicate_rows.empty:
+    grouped = duplicate_rows.groupby(dup_keys).size().reset_index(name='Count')
+    for _, row in grouped.iterrows():
+        print(f"⚠️ Duplicate rows found for Regulator: {row['Regulator']}, Source: {row['Source']}, Site: {row['Site']}, Date: {row['Date']} — Skipping this combination.")
+    
+    # Remove all rows that match the duplicate combinations
+    df_config = df_config[~df_config.set_index(dup_keys).index.isin(grouped.set_index(dup_keys).index)]
