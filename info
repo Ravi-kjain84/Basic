@@ -1,17 +1,2 @@
-import sys
-import os
-
-def get_base_path():
-    try:
-        if getattr(sys, 'frozen', False):
-            # ✅ For PyInstaller bundled EXE: use location of the EXE, not _MEIPASS
-            return os.path.dirname(sys.executable)
-        elif '__file__' in globals():
-            # ✅ For .py scripts
-            return os.path.dirname(os.path.abspath(__file__))
-        else:
-            # ✅ For Jupyter Notebook
-            return os.getcwd()
-    except Exception as e:
-        print("Error detecting base path:", e)
-        return os.getcwd()
+df_config['Process Flag'] = df_config['Process Flag'].fillna('N')
+df_config = df_config[df_config['Process Flag'].str.upper().eq('Y')]
