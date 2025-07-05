@@ -1,17 +1,19 @@
-# Define full and base keys
-full_keys = ['Regulator', 'Site', 'Date', 'Source']
-base_keys = ['Regulator', 'Site', 'Date']
+# Step 1: Read the flat input format
+df_flat = pd.read_excel("config_details.xlsx", sheet_name='Config')
 
-# Step 1: Find duplicates on full key (including Source)
-duplicate_rows = df_config[df_config.duplicated(subset=full_keys, keep=False)]
+# Step 2: Expand into two rows: Baseline and Test
+baseline_df = df_flat.copy()
+baseline_df['Source'] = 'Baseline'
+baseline_df['Project'] = baseline_df['Baseline_Project']
+baseline_df['Batch_Id'] = baseline_df['Baseline_Batch_Id']
 
-# Step 2: Get affected combinations excluding Source
-affected_combinations = duplicate_rows[base_keys].drop_duplicates()
+test_df = df_flat.copy()
+test_df['Source'] = 'Test'
+test_df['Project'] = test_df['Test_Project']
+test_df['Batch_Id'] = test_df['Test_Batch_Id']
 
-# Step 3: Print and drop all rows matching those (Regulator, Site, Date) combinations
-if not affected_combinations.empty:
-    for _, row in affected_combinations.iterrows():
-        print(f"⚠️ Duplicate rows found under Source for Regulator: {row['Regulator']}, Site: {row['Site']}, Date: {row['Date']} — Skipping this combination.")
-    
-    # Drop all rows where (Regulator, Site, Date) match
-    df_config = df_config[~df_config.set_index(base_keys).index.isin(affected_combinations.set_index(base_keys).index)]
+# Step 3: Concatenate both
+df_config = pd.concat([baseline_df, test_df], ignore_index=True)
+
+# Step 4: Drop the flattened columns (optional)
+df_config.drop(columns=['Baseline_Project', 'Baseline_Batch_Id', 'Test_Project', 'Test_Batch_Id'], inplace=True)
