@@ -1,19 +1,16 @@
-a = Analysis(
-    ...
-    hiddenimports=[
-        'google.api_core',
-        'google.api_core.path_template',
-        'google.api_core.exceptions',
-        'google.api_core.retry',
-        'google.cloud',
-        'google.cloud.bigquery',
-        'google.cloud.bigquery.table',
-    ],
-    ...
-)
+import sys
+import os
 
-pip install google-cloud-bigquery
-pip install google-api-core
+if getattr(sys, 'frozen', False):
+    # Running as bundled exe
+    base_path = sys._MEIPASS if hasattr(sys, '_MEIPASS') else os.path.dirname(sys.executable)
+else:
+    # Running as script
+    base_path = os.path.dirname(os.path.abspath(__file__))
 
-import google.api_core
-print("api_core loaded from:", google.api_core.__file__)
+
+dashboard_template_path = os.path.join(base_path, 'Dashboard_Template.xlsm')
+console_template_path = os.path.join(base_path, 'Consol_Template.xlsm')
+consol_workbook = os.path.join(base_path, 'output', 'consol_workbook.xlsm')
+consol_workbook_path = os.path.join(base_path, 'output', 'consol_workbook_path.xlsm')
+output_folder = os.path.join(base_path, 'output')
