@@ -7,3 +7,6 @@ google-auth
 google-cloud-bigquery
 google-api-core
 pywin32
+
+
+pip install -r requirements.txt
