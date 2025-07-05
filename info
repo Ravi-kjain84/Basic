@@ -1,20 +1,9 @@
-pyinstaller --onefile --noconsole ^
---hidden-import=win32com.client ^
---hidden-import=xlwings ^
---hidden-import=xlwings.reports ^
---hidden-import=xlwings.utils ^
---hidden-import=google.cloud ^
---hidden-import=google.cloud.bigquery ^
---hidden-import=google.api_core ^
---hidden-import=google.api_core.exceptions ^
---hidden-import=google.auth ^
---hidden-import=pytz ^
---hidden-import=numpy ^
---hidden-import=dateutil ^
---add-data "input_folder\\;input_folder" ^
---add-data "config\\settings.yaml;config" ^
---add-data "templates\\template.xlsx;templates" ^
---distpath dist ^
---workpath build ^
---specpath specs ^
-"main_script.py"
+pandas
+openpyxl
+tqdm
+shutilwhich
+xlwings
+google-auth
+google-cloud-bigquery
+google-api-core
+pywin32
