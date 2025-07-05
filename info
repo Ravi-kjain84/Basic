@@ -1,20 +1,20 @@
-import sys
-import os
-
-try:
-    # Running as a bundled executable
-    if getattr(sys, 'frozen', False):
-        base_path = sys._MEIPASS if hasattr(sys, '_MEIPASS') else os.path.dirname(sys.executable)
-    else:
-        # Running from a script
-        base_path = os.path.dirname(os.path.abspath(__file__))
-except NameError:
-    # Fallback for Jupyter Notebook or interactive sessions
-    base_path = os.getcwd()
-
-
-dashboard_template_path = os.path.join(base_path, 'Dashboard_Template.xlsm')
-console_template_path = os.path.join(base_path, 'Consol_Template.xlsm')
-consol_workbook = os.path.join(base_path, 'output', 'consol_workbook.xlsm')
-consol_workbook_path = os.path.join(base_path, 'output', 'consol_workbook_path.xlsm')
-output_folder = os.path.join(base_path, 'output')
+pyinstaller --onefile --noconsole ^
+--hidden-import=win32com.client ^
+--hidden-import=xlwings ^
+--hidden-import=xlwings.reports ^
+--hidden-import=xlwings.utils ^
+--hidden-import=google.cloud ^
+--hidden-import=google.cloud.bigquery ^
+--hidden-import=google.api_core ^
+--hidden-import=google.api_core.exceptions ^
+--hidden-import=google.auth ^
+--hidden-import=pytz ^
+--hidden-import=numpy ^
+--hidden-import=dateutil ^
+--add-data "input_folder\\;input_folder" ^
+--add-data "config\\settings.yaml;config" ^
+--add-data "templates\\template.xlsx;templates" ^
+--distpath dist ^
+--workpath build ^
+--specpath specs ^
+"main_script.py"
