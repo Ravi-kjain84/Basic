@@ -1,13 +1,19 @@
-# Step: Validate uniqueness of Regulator + Source + Site + Date
-dup_keys = ['Regulator', 'Source', 'Site', 'Date']
+# Define the key combination for uniqueness *excluding* 'Source'
+dup_keys = ['Regulator', 'Site', 'Date']
 
-# Find duplicated combinations
-duplicate_rows = df_config[df_config.duplicated(subset=dup_keys, keep=False)]
+# Find duplicate combinations (ignoring Source)
+duplicate_groups = (
+    df_config
+    .groupby(dup_keys)
+    .size()
+    .reset_index(name='Count')
+    .query("Count > 1")
+)
 
-if not duplicate_rows.empty:
-    grouped = duplicate_rows.groupby(dup_keys).size().reset_index(name='Count')
-    for _, row in grouped.iterrows():
-        print(f"⚠️ Duplicate rows found for Regulator: {row['Regulator']}, Source: {row['Source']}, Site: {row['Site']}, Date: {row['Date']} — Skipping this combination.")
-    
-    # Remove all rows that match the duplicate combinations
-    df_config = df_config[~df_config.set_index(dup_keys).index.isin(grouped.set_index(dup_keys).index)]
+# Print and drop all rows that match these (Regulator, Site, Date) combos
+if not duplicate_groups.empty:
+    for _, row in duplicate_groups.iterrows():
+        print(f"⚠️ Duplicate detected: Regulator: {row['Regulator']}, Site: {row['Site']}, Date: {row['Date']} — Skipping all rows for this combination.")
+
+    # Remove all rows in df_config matching those (Regulator, Site, Date) keys
+    df_config = df_config[~df_config.set_index(dup_keys).index.isin(duplicate_groups.set_index(dup_keys).index)]
