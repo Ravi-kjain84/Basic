@@ -1,16 +1,13 @@
 import sys
 import os
 
-if getattr(sys, 'frozen', False):
-    # Running as bundled exe
-    base_path = sys._MEIPASS if hasattr(sys, '_MEIPASS') else os.path.dirname(sys.executable)
-else:
-    # Running as script
-    base_path = os.path.dirname(os.path.abspath(__file__))
-
-
-dashboard_template_path = os.path.join(base_path, 'Dashboard_Template.xlsm')
-console_template_path = os.path.join(base_path, 'Consol_Template.xlsm')
-consol_workbook = os.path.join(base_path, 'output', 'consol_workbook.xlsm')
-consol_workbook_path = os.path.join(base_path, 'output', 'consol_workbook_path.xlsm')
-output_folder = os.path.join(base_path, 'output')
+try:
+    # Running as a bundled executable
+    if getattr(sys, 'frozen', False):
+        base_path = sys._MEIPASS if hasattr(sys, '_MEIPASS') else os.path.dirname(sys.executable)
+    else:
+        # Running from a script
+        base_path = os.path.dirname(os.path.abspath(__file__))
+except NameError:
+    # Fallback for Jupyter Notebook or interactive sessions
+    base_path = os.getcwd()
