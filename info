@@ -1,12 +1,9 @@
-pandas
-openpyxl
-tqdm
-shutilwhich
-xlwings
-google-auth
-google-cloud-bigquery
-google-api-core
-pywin32
+import sys
+import os
 
+# Base path where the EXE is running or script is launched
+base_path = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(__file__)
 
-pip install -r requirements.txt
+# External templates folder
+template_dir = os.path.join(base_path, 'templates')
+dashboard_template_path = os.path.join(template_dir, 'Dashboard_Template.xlsm')
