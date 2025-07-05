@@ -1,2 +1,8 @@
-df_config['Process Flag'] = df_config['Process Flag'].fillna('N')
-df_config = df_config[df_config['Process Flag'].str.upper().eq('Y')]
+df_config = pd.read_excel("config_details.xlsx", sheet_name='Config')
+
+# Filter rows based on Process Flag
+df_config['Process_Flag'] = df_config['Process_Flag'].fillna('N')
+df_config = df_config[df_config['Process_Flag'].str.upper() == 'Y']
+
+# Construct the original-style 'Batch' column from separate columns
+df_config['Batch'] = df_config['Batch_Id'].astype(str) + '.' + df_config['Table_Name'].astype(str)
