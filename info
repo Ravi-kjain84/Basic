@@ -1,8 +1,12 @@
 df_config = pd.read_excel("config_details.xlsx", sheet_name='Config')
 
-# Filter rows based on Process Flag
+# Step 1: Filter rows based on Process Flag
 df_config['Process_Flag'] = df_config['Process_Flag'].fillna('N')
-df_config = df_config[df_config['Process_Flag'].str.upper() == 'Y']
+df_config = df_config[df_config['Process_Flag'].str.upper().eq('Y')]
 
-# Construct the original-style 'Batch' column from separate columns
-df_config['Batch'] = df_config['Batch_Id'].astype(str) + '.' + df_config['Table_Name'].astype(str)
+# Step 2: Trim leading/trailing spaces from Batch_Id and Table_Name
+df_config['Batch_Id'] = df_config['Batch_Id'].astype(str).str.strip()
+df_config['Table_Name'] = df_config['Table_Name'].astype(str).str.strip()
+
+# Step 3: Construct 'Batch' column as Batch_Id.Table_Name
+df_config['Batch'] = df_config['Batch_Id'] + '.' + df_config['Table_Name']
