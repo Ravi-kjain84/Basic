@@ -1,22 +1,19 @@
-df["ingestion_ts"] = pd.Timestamp.utcnow()
+def upload_excel_to_bq(...):
+    ...
+    # configure job_config here
 
+    df["ingestion_ts"] = pd.Timestamp.utcnow()
 
-if (not force_refresh and table_exists and
-    write_disp == bigquery.WriteDisposition.WRITE_APPEND):
+    # 🟡 Insert replacement logic here
+    release_labels_to_replace = df["release_label"].dropna().unique().tolist()
+    if release_labels_to_replace:
+        release_labels_str = ', '.join([f"'{label}'" for label in release_labels_to_replace])
+        delete_sql = f"""
+        DELETE FROM `{table_id}`
+        WHERE release_label IN ({release_labels_str})
+        """
+        client.query(delete_sql).result()
+        print("Old rows deleted for matching release_label values.")
 
-    dedupe_sql = f"""
-    CREATE OR REPLACE TABLE `{table_id}` AS
-    WITH ranked AS (
-        SELECT *,
-               ROW_NUMBER() OVER (
-                   PARTITION BY release_label
-                   ORDER BY ingestion_ts DESC
-               ) AS rn
-        FROM `{table_id}`
-    )
-    SELECT * EXCEPT(rn)
-    FROM ranked
-    WHERE rn = 1
-    """
-    client.query(dedupe_sql).result()
-    print("Deduplication complete.")
+    load_job = client.load_table_from_dataframe(df, table_id, job_config=job_config)
+    ...
