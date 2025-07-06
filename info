@@ -1,1 +1,22 @@
-{"role": "system", "content": "You are a helpful assistant"}
+df["ingestion_ts"] = pd.Timestamp.utcnow()
+
+
+if (not force_refresh and table_exists and
+    write_disp == bigquery.WriteDisposition.WRITE_APPEND):
+
+    dedupe_sql = f"""
+    CREATE OR REPLACE TABLE `{table_id}` AS
+    WITH ranked AS (
+        SELECT *,
+               ROW_NUMBER() OVER (
+                   PARTITION BY release_label
+                   ORDER BY ingestion_ts DESC
+               ) AS rn
+        FROM `{table_id}`
+    )
+    SELECT * EXCEPT(rn)
+    FROM ranked
+    WHERE rn = 1
+    """
+    client.query(dedupe_sql).result()
+    print("Deduplication complete.")
