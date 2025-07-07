@@ -1,10 +1,14 @@
 if release_labels_to_replace:
-    release_labels_str = ",".join(f"'{label.replace(\"'\", \"''\")}'" for label in release_labels_to_replace)
+    # Properly escape single quotes in each label
+    release_labels_str = ",".join(["'" + label.replace("'", "''") + "'" for label in release_labels_to_replace])
+
     print("Removing old data for filter_label")
+
     delete_sql = f"""
     DELETE FROM `{table_id}`
     WHERE `{key_to_replace}` IN ({release_labels_str})
     """
+
     print(delete_sql)
     client.query(delete_sql).result()
     print("Old rows deleted for matching release label values.")
