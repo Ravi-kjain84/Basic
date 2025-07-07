@@ -1,14 +1,20 @@
-if release_labels_to_replace:
-    # Properly escape single quotes in each label
-    release_labels_str = ",".join(["'" + label.replace("'", "''") + "'" for label in release_labels_to_replace])
+Certainly. Here is the updated version with specific dates mentioned:
 
-    print("Removing old data for filter_label")
+⸻
 
-    delete_sql = f"""
-    DELETE FROM `{table_id}`
-    WHERE `{key_to_replace}` IN ({release_labels_str})
-    """
+Subject: Meeting Request: Connect with Kiran Pisapati (Head – Finance Transformation CoE)
 
-    print(delete_sql)
-    client.query(delete_sql).result()
-    print("Old rows deleted for matching release label values.")
+Dear [Name],
+
+Hope you’re doing well.
+
+As suggested by Arpita, I’m reaching out to set up a brief connect between you and Kiran Pisapati, who has recently joined as the Head of Finance Transformation CoE. Kiran will be at the Gurugram office between 15th and 17th July, and is looking forward to meeting colleagues leading key initiatives.
+
+I’ll be setting up the call and will share a proposed time shortly based on your availability.
+
+Thanks in advance,
+Ravi
+
+⸻
+
+Let me know if you’d like to convert this into calendar invite text or tailor it per recipient.
