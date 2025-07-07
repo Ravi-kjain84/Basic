@@ -1,9 +1,1 @@
-print(df_config.columns)
-print(df_config.iloc[0])
-print(df_config['SQL'].iloc[0])
-
-class SafeDict(dict):
-    def __missing__(self, key):
-        return f'{{{key}}}'  # Keeps the placeholder as-is
-
-df_config['SQL'] = df_config.apply(lambda row: row['SQL'].format_map(SafeDict(row)), axis=1)
+aa
