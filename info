@@ -1,4 +1,11 @@
 @echo off
-call "%~dp0env\Scripts\activate.bat"
-python "%~dp0my_script.py"
+REM Step 1: Set the full path to Python in your venv
+set PYTHON_PATH="C:\Users\43707738\pythonenv\myenv\Scripts\python.exe"
+
+REM Step 2: Set the full path to your script (quoted to handle spaces)
+set SCRIPT_PATH="C:\Users\43707738\Desktop\June 2025 TCoE Automation\gov-main\streamlit\run_app_dashboard_refresh.py"
+
+REM Step 3: Call Python directly without activating the environment
+%PYTHON_PATH% %SCRIPT_PATH%
+
 pause
