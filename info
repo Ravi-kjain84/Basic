@@ -7,3 +7,4 @@ if release_labels_to_replace:
     """
     print(delete_sql)
     client.query(delete_sql).result()
+    print("Old rows deleted for matching release label values.")
