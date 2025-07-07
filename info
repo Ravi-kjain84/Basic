@@ -1,1 +1,22 @@
-fr
+You’re right — the current placement of introductions might feel abrupt, especially coming right after technical context. A smoother flow would be to set the purpose of the upcoming meeting first, then naturally introduce the stakeholders who will participate. Here’s the improved version with a more logical and natural introduction flow:
+
+⸻
+
+Subject: Follow-up on AI Test Automation Discussion
+
+Hi Simon,
+
+Just to update you—Salrow, Amos, and I connected last week, and I want to thank both of them for providing a detailed demo of the solution. It’s a very impressive product and aligns closely with our own use case. We’re also working on generating test scripts based on JIRA requirements, enriched by supporting documents such as policy guidelines.
+
+As Salrow mentioned, your team is also exploring ways to incorporate PDF and other attachments to enhance test script generation. On our side, we’ve initiated a similar Gen-AI-based POC, which is currently under review. There appears to be strong synergy between our approaches, and I believe there’s meaningful scope for collaboration.
+
+To explore this further, I’ll be setting up a call later this week. Joining me on this discussion will be Kiran Pisapati, who recently took over as Head of Finance Transformation CoE and is actively engaged with us on Gen-AI initiatives, and Piyush Gupta, who is supporting this use case from an AI governance standpoint.
+
+I’ll send the meeting invite shortly. Please let me know if you’d like any changes.
+
+Best regards,
+Ravi
+
+⸻
+
+This version gives proper context for the meeting before introducing participants, making it more natural and structured. Let me know if you’d like a lighter or more concise version.
