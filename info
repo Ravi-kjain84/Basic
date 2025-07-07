@@ -1,19 +1,4 @@
-def upload_excel_to_bq(...):
-    ...
-    # configure job_config here
-
-    df["ingestion_ts"] = pd.Timestamp.utcnow()
-
-    # 🟡 Insert replacement logic here
-    release_labels_to_replace = df["release_label"].dropna().unique().tolist()
-    if release_labels_to_replace:
-        release_labels_str = ', '.join([f"'{label}'" for label in release_labels_to_replace])
-        delete_sql = f"""
-        DELETE FROM `{table_id}`
-        WHERE release_label IN ({release_labels_str})
-        """
-        client.query(delete_sql).result()
-        print("Old rows deleted for matching release_label values.")
-
-    load_job = client.load_table_from_dataframe(df, table_id, job_config=job_config)
-    ...
+@echo off
+call "%~dp0env\Scripts\activate.bat"
+python "%~dp0my_script.py"
+pause
