@@ -1,1 +1,13 @@
-aa
+You are a QA analyst with expertise in banking systems and regulatory compliance. Based on the requirement below, generate Cucumber-style test scenarios following the Gherkin syntax. Ensure each scenario reflects a specific business logic, includes preconditions, steps, and validations.
+
+Use the following format:
+Feature: <Short requirement title>
+  Scenario: <What we are testing>
+    Given <initial system/data state>
+    When <action performed>
+    Then <expected outcome>
+
+Ensure each scenario tests one logical case. Create multiple scenarios if needed to ensure adequate test coverage. Add tags if relevant, e.g., @rwa @lta @regression.
+
+Requirement:
+REQ-4546: "Verify that Entity 4521 CIU is treated under Look Through Approach (LTA) for RWA calculation"
