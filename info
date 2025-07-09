@@ -1,13 +1,27 @@
-You are a QA analyst with expertise in banking systems and regulatory compliance. Based on the requirement below, generate Cucumber-style test scenarios following the Gherkin syntax. Ensure each scenario reflects a specific business logic, includes preconditions, steps, and validations.
+You’re absolutely right to question the use of both “likely” and “probably” in close succession—they introduce redundancy and can weaken the clarity of intent. Here’s a cleaner revision with firmer and more consistent wording:
 
-Use the following format:
-Feature: <Short requirement title>
-  Scenario: <What we are testing>
-    Given <initial system/data state>
-    When <action performed>
-    Then <expected outcome>
+⸻
 
-Ensure each scenario tests one logical case. Create multiple scenarios if needed to ensure adequate test coverage. Add tags if relevant, e.g., @rwa @lta @regression.
+Subject: RE: Testing CoE summarized ppt, solution walkthrough video and other updates
 
-Requirement:
-REQ-4546: "Verify that Entity 4521 CIU is treated under Look Through Approach (LTA) for RWA calculation"
+Hi Ruchan,
+
+I think Bo has had to move our internal discussion call to tomorrow instead of today. Meanwhile, may I request Bo to consider sending a placeholder invite for the wider testing leads call on Friday? Sending it today would help ensure timely acceptance and maximum participation from the team.
+
+In case we are unable to connect with them this Friday, then considering your upcoming leave, we will need to push our discussion by another week. That could make it difficult for us to propose 15th August as a feasible target date.
+
+Also, if we are able to proceed with the wider session this Friday, I can immediately start follow-up connects with the individual leads next week and maintain momentum on the suggested actions.
+
+Regards,
+Ravi Kumar Jain
+SVP, Testing CoE Lead
+Global Finance Transformation
+HSBC Electronic Data Processing India Pvt. Ltd
+
+⸻
+
+This version:
+	•	Removes “likely” and keeps only “could” to reflect uncertainty where appropriate.
+	•	Maintains a confident, clear, and professional tone.
+
+Let me know if you’d like to slightly soften or strengthen the wording further.
