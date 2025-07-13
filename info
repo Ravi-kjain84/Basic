@@ -1,4 +1,11 @@
 
+
+Text.Replace(
+    Text.Replace([Test Data], "<project_id>", [Project ID]),
+    "<batch_id>", [Batch ID]
+)
+
+
 Table.AddIndexColumn([GroupedData], "Step Number", 1, 1, Int64.Type)
 
 
