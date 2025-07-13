@@ -1,27 +1,26 @@
 let
-    // Step 1: Get the path of the current Excel workbook
-    SourceFilePath = Excel.CurrentWorkbook(){0}[Item],
-    HostPath = Text.BeforeDelimiter(SourceFilePath, "\", {Occurrence.Last}),
-    
-    // Step 2: Define the relative folder path
-    RelativeFolderPath = HostPath & "\test cases requirement test cases",
-    
-    // Step 3: Load all files in the subfolder
-    FolderContents = Folder.Files(RelativeFolderPath),
+    // Step 1: Get the base path from the Excel named range [Filepath]
+    Filepath = Excel.CurrentWorkbook(){[Name="Filepath"]}[Content]{0}[Column1],
 
-    // Step 4: Filter only Excel files (you can add more types if needed)
+    // Step 2: Define the subfolder containing the test case files
+    TestCaseFolder = Filepath & "\Requirements_Test_Cases",
+
+    // Step 3: Load all files in the folder
+    FolderContents = Folder.Files(TestCaseFolder),
+
+    // Step 4: Filter Excel files only (.xlsx and .xls)
     ExcelFilesOnly = Table.SelectRows(FolderContents, each Text.EndsWith([Extension], ".xlsx") or Text.EndsWith([Extension], ".xls")),
-    
-    // Step 5: Extract the "data" sheet from each file (case-sensitive)
+
+    // Step 5: Extract the 'data' sheet from each file (case-sensitive match)
     AddDataSheet = Table.AddColumn(ExcelFilesOnly, "Data", each try Excel.Workbook([Content], true){[Item="data", Kind="Sheet"]}[Data] otherwise null),
 
-    // Step 6: Remove files where "data" sheet is not found
+    // Step 6: Remove files where 'data' sheet is not found
     RemoveNulls = Table.SelectRows(AddDataSheet, each [Data] <> null),
 
-    // Step 7: Expand the data table
+    // Step 7: Expand the 'data' sheet content
     ExpandedData = Table.ExpandTableColumn(RemoveNulls, "Data", Table.ColumnNames(RemoveNulls{0}[Data])),
 
-    // Step 8: Optional – Add file name for traceability
+    // Step 8: Add file name as 'Source File' for traceability
     WithFileName = Table.AddColumn(ExpandedData, "Source File", each [Name])
 in
     WithFileName
