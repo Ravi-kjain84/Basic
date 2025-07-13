@@ -1,3 +1,7 @@
+
+Table.AddIndexColumn([GroupedData], "Step Number", 1, 1, Int64.Type)
+
+
 let
     // Step 1: Get the base path from the Excel named range [Filepath]
     Filepath = Excel.CurrentWorkbook(){[Name="Filepath"]}[Content]{0}[Column1],
