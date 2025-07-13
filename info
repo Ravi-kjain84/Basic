@@ -1,22 +1,27 @@
-Certainly. Here is a professionally redrafted version of your email:
+let
+    // Step 1: Get the path of the current Excel workbook
+    SourceFilePath = Excel.CurrentWorkbook(){0}[Item],
+    HostPath = Text.BeforeDelimiter(SourceFilePath, "\", {Occurrence.Last}),
+    
+    // Step 2: Define the relative folder path
+    RelativeFolderPath = HostPath & "\test cases requirement test cases",
+    
+    // Step 3: Load all files in the subfolder
+    FolderContents = Folder.Files(RelativeFolderPath),
 
-⸻
+    // Step 4: Filter only Excel files (you can add more types if needed)
+    ExcelFilesOnly = Table.SelectRows(FolderContents, each Text.EndsWith([Extension], ".xlsx") or Text.EndsWith([Extension], ".xls")),
+    
+    // Step 5: Extract the "data" sheet from each file (case-sensitive)
+    AddDataSheet = Table.AddColumn(ExcelFilesOnly, "Data", each try Excel.Workbook([Content], true){[Item="data", Kind="Sheet"]}[Data] otherwise null),
 
-Subject: Follow-up on Today’s Discussion – Testing Priorities and GenAI Review Coordination
+    // Step 6: Remove files where "data" sheet is not found
+    RemoveNulls = Table.SelectRows(AddDataSheet, each [Data] <> null),
 
-Dear All,
+    // Step 7: Expand the data table
+    ExpandedData = Table.ExpandTableColumn(RemoveNulls, "Data", Table.ColumnNames(RemoveNulls{0}[Data])),
 
-Thank you for joining the call today.
-
-Please find attached the presentation we discussed. As mentioned during the meeting, below are the key testing priorities and target timelines. We will be reaching out to the respective teams to align on the priorities and plan the next steps for the GenAI test case review activity.
-
-Kindly share the relevant contact details by replying to this email, so that I can coordinate and schedule the upcoming discussions accordingly.
-
-Please feel free to reach out to me in case of any queries or concerns.
-
-Thank you,
-[Your Name]
-
-⸻
-
-Let me know if you’d like to include the actual priorities or any deadlines directly in the mail body.
+    // Step 8: Optional – Add file name for traceability
+    WithFileName = Table.AddColumn(ExpandedData, "Source File", each [Name])
+in
+    WithFileName
