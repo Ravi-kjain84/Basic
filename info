@@ -1,7 +1,37 @@
 let
-    Source = YourPreviousStep,  // replace with your actual previous step name
-    GroupedRows = Table.Group(Source, {"Teams"}, {
+    Source = Excel.CurrentWorkbook(){[Name="Table5"]}[Content],
+    
+    // Step 1: Change column types
+    #"Changed Type" = Table.TransformColumnTypes(Source, {
+        {"Teams", type text}, 
+        {"Leads", type text}, 
+        {"Working Group memebers", type any}
+    }),
+
+    // Step 2: Split Leads column if needed (can remove if unnecessary)
+    #"Split Column by Delimiter" = Table.SplitColumn(#"Changed Type", "Leads", Splitter.SplitTextByDelimiter(",", QuoteStyle.Csv), {"Leads.1", "Leads.2", "Leads.3", "Leads.4"}),
+
+    // Step 3: Convert split columns to text
+    #"Changed Type1" = Table.TransformColumnTypes(#"Split Column by Delimiter", {
+        {"Leads.1", type text}, 
+        {"Leads.2", type text}, 
+        {"Leads.3", type text}, 
+        {"Leads.4", type text}
+    }),
+
+    // Step 4: Remove unused lead columns
+    #"Removed Columns" = Table.RemoveColumns(#"Changed Type1", {"Leads.2", "Leads.3", "Leads.4"}),
+
+    // Step 5: Rename Leads.1 to Leads
+    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns", {{"Leads.1", "Leads"}}),
+
+    // Step 6: Capitalize names
+    #"Capitalized Each Word" = Table.TransformColumns(#"Renamed Columns", {{"Leads", Text.Proper, type text}}),
+
+    // Step 7: Group by Teams and combine Leads with newlines
+    #"Grouped Rows" = Table.Group(#"Capitalized Each Word", {"Teams"}, {
         {"Leads", each Text.Combine(List.Transform([Leads], Text.From), "#(lf)"), type text}
     })
+
 in
-    GroupedRows
+    #"Grouped Rows"
