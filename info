@@ -1,24 +1,38 @@
-Thank you. Below is a professionally refined version of your draft response. I have kept your structure and message intact while improving clarity, tone, and flow:
+Certainly. Here’s the refined version with bullet points for clarity and easier readability:
 
 ⸻
 
-Subject: RE: Next steps: Testing CoE Priorities and Targets
-
-Hi Atifa,
-
-As per the current Testing CoE Priorities and Targets, we would like to follow up with the testing teams involved across different VS/SVS. I have included the high-level hierarchy view from Rob’s sheet for Treasury.
-
-We would need inputs from both Liquidity and IRRBB streams, as the underlying systems and testing approaches differ.
-	•	Naveen Singla is part of the Testing Advisory Group (nominated by Richard) and had connected me to Saurabh Saxena, who has a strong understanding of the area. I would suggest having either Naveen or Saurabh nominate someone from their team (or we can proceed with Saurabh if preferable).
-	•	Arjun and Ray are already part of the ongoing discussions and could either continue in the working group or nominate a representative.
-	•	So far, we have had no interaction from Jothi’s area. It would be helpful to identify a contact point from her team to initiate discussions and represent the area in the working group.
-	•	Similarly, for Ram and Milena, we haven’t engaged with their respective teams yet. I would request Stephen to identify someone suitable to join from their side.
-
-This could serve as the initial high-level RACI based on current visibility and expectations from the VS/SVS side.
-
-Best regards,
-Ravi
+Target Date: 15th Aug ’25
+	•	Reusable Test Cases:
+	•	Identify a representative who can:
+	•	Assess past testing cycles
+	•	Determine which test cases can be reused for current and upcoming releases
+	•	Evaluation of Existing Testing Tools:
+	•	Identify someone who can:
+	•	Review current testing tools in use
+	•	Evaluate their effectiveness
+	•	Recommend reuse or improvements based on testing needs
+	•	Automation Requirements:
+	•	Nominate a representative who can:
+	•	Identify automation needs for regression and requirement-based test cases
+	•	Provide inputs from a process efficiency perspective
 
 ⸻
 
-Let me know if you’d like to append the table content or reformat it for inclusion in a presentation or summary document.
+Target Date: 31st Aug ’25
+	•	Review of GenAI-Generated Test Cases:
+	•	We will provide test cases generated via GenAI using JIRA requirements
+	•	A nominated person should:
+	•	Review the corresponding JIRA requirements
+	•	Validate the generated test cases
+	•	Provide structured feedback on what is accurate, missing, or needs correction
+	•	JIRA Usage and Test Case Upload Best Practices:
+	•	Teams are expected to use JIRA for uploading test cases and evidence
+	•	A representative should:
+	•	Explore and support bulk upload options
+	•	Share or establish best practices for uploading and managing test artifacts
+	•	Assist in troubleshooting any related issues
+
+⸻
+
+Let me know if you’d like this inserted into a formatted Word or PowerPoint template.
