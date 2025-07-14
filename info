@@ -1,26 +1,7 @@
-Here is the revised version with your updates applied:
-
-⸻
-
-Subject: Follow-up on Leadership Connect – Request to Nominate Working Group Members
-
-Dear All,
-
-As discussed during our recent Leadership Connect session, I would like to follow up on the next steps. We are in the process of setting up dedicated working group discussions for each team to:
-	•	Review specific action items,
-	•	Share available tools for automation, and
-	•	Align on responsibilities related to reviewing GenAI-generated test cases.
-
-The agenda for these discussions will cover the key focus areas outlined in the table shared earlier, including Reusability, Automation, GenAI Test Case Preparation, and Governance.
-
-To proceed, I request you to kindly share the names of the team members who should be part of this working group. This will help us schedule focused sessions with the respective teams. Please feel free to delegate this to your leads if required.
-
-Looking forward to working with you.
-
-Best regards,
-Ravi JAIN
-Testing CoE Lead
-
-⸻
-
-Let me know if you’d like a shorter version or one tailored for a follow-up reminder.
+let
+    Source = YourPreviousStep,  // replace with your actual previous step name
+    GroupedRows = Table.Group(Source, {"Teams"}, {
+        {"Leads", each Text.Combine(List.Transform([Leads], Text.From), "#(lf)"), type text}
+    })
+in
+    GroupedRows
