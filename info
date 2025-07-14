@@ -1,37 +1,30 @@
+Understood. Here’s the revised, concise version that keeps your introduction brief and preserves the structure and wording from the earlier draft:
 
+⸻
 
-Text.Replace(
-    Text.Replace([Test Data], "<project_id>", [Project ID]),
-    "<batch_id>", [Batch ID]
-)
+Subject: Request for Discussion on DAP-Aligned Features and Capabilities (as referred by Graham)
 
+Dear Kostav,
 
-Table.AddIndexColumn([GroupedData], "Step Number", 1, 1, Int64.Type)
+I hope you’re doing well.
 
+I am Ravi Jain, currently leading the Testing CoE and reporting to Roshan.
 
-let
-    // Step 1: Get the base path from the Excel named range [Filepath]
-    Filepath = Excel.CurrentWorkbook(){[Name="Filepath"]}[Content]{0}[Column1],
+As referred by Graham in the email below, I wanted to connect with you regarding the DAP-aligned structure of features and capabilities.
 
-    // Step 2: Define the subfolder containing the test case files
-    TestCaseFolder = Filepath & "\Requirements_Test_Cases",
+We are currently working on a Testing CoE initiative where, based on a POC, we have identified and are in the process of raising requests for IT development to support automation of test case generation. To progress further, we need to map our technical requirements to DAP-aligned features and capabilities.
 
-    // Step 3: Load all files in the folder
-    FolderContents = Folder.Files(TestCaseFolder),
+I would greatly appreciate it if you could help me understand the DAP structure or guide me to the appropriate contact who can walk me through it.
 
-    // Step 4: Filter Excel files only (.xlsx and .xls)
-    ExcelFilesOnly = Table.SelectRows(FolderContents, each Text.EndsWith([Extension], ".xlsx") or Text.EndsWith([Extension], ".xls")),
+Please let me know if a short call can be scheduled at your convenience.
 
-    // Step 5: Extract the 'data' sheet from each file (case-sensitive match)
-    AddDataSheet = Table.AddColumn(ExcelFilesOnly, "Data", each try Excel.Workbook([Content], true){[Item="data", Kind="Sheet"]}[Data] otherwise null),
+Best regards,
+Ravi Kumar Jain
+SVP, Testing CoE Lead
+Global Finance Transformation
+HSBC Electronic Data Processing India Pvt. Ltd.
+📱 +91 95713 99956 | ✉️ ravi1.jain@hsbc.co.in
 
-    // Step 6: Remove files where 'data' sheet is not found
-    RemoveNulls = Table.SelectRows(AddDataSheet, each [Data] <> null),
+⸻
 
-    // Step 7: Expand the 'data' sheet content
-    ExpandedData = Table.ExpandTableColumn(RemoveNulls, "Data", Table.ColumnNames(RemoveNulls{0}[Data])),
-
-    // Step 8: Add file name as 'Source File' for traceability
-    WithFileName = Table.AddColumn(ExpandedData, "Source File", each [Name])
-in
-    WithFileName
+Let me know if you’d like to mention any specific dates or expected timelines for the call.
