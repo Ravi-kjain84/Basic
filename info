@@ -1,83 +1,30 @@
-import streamlit as st
-import pandas as pd
-import time
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
+You are a test strategy assistant. You are given a list of structured test cases with the following fields:
+- Summary
+- Test Step Description
+- Expected Result
 
-st.title("Excel‑Driven Google Search Automation")
+Each test case has a unique identifier such as TC_1, TC_2, etc.
 
-# --- INPUTS ---
-excel_file = st.text_input("Excel file (with path)", "search_terms.xlsx")
-sheet_name = st.text_input("Sheet name", "Sheet1")
-search_col = st.text_input("Column name with search terms", "SearchCommand")
-search_button = st.text_input("Search button selector (CSS or XPath)", "input[name='btnK']")
-download_enabled = st.checkbox("Enable download click?", value=False)
+Your task is to identify and extract reusable test cases by analyzing similarities across the scenarios. A test case is considered reusable if:
+- It follows a recurring validation pattern (e.g., field validation, segment ID check, comparison between systems)
+- It can be made generic by parameterizing specific data elements like field names, exposure classes, thresholds, etc.
 
-# --- FUNCTION: Perform Google Search ---
-def perform_web_task(driver, search_term, search_button_selector, download_enabled):
-    driver.get("https://www.google.com")
-    time.sleep(1)  # Ensure page loads
+For each reusable test case you identify:
+1. **Provide a short summary** of what the test case verifies.
+2. **Write a generic, reusable test case description**, using angle brackets `< >` to highlight parameterized inputs (e.g., `<FieldName>`, `<Threshold>`, `<System1>`, `<System2>`).
+3. **Write the expected result**, also using angle brackets to show parameterized elements.
+4. Group together all original TC IDs that the reusable case covers.
 
-    # Step 1: Enter search term
-    search_box = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.NAME, "q"))
-    )
-    search_box.clear()
-    search_box.send_keys(search_term)
+Example format:
 
-    # Step 2: Trigger search
-    try:
-        search_btn = WebDriverWait(driver, 5).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, search_button_selector))
-        )
-        search_btn.click()
-    except:
-        search_box.send_keys(Keys.ENTER)
+---
+**Reusable Test Case 1**
+- **Covers**: TC_1, TC_2
+- **Summary**: Validate that a field is populated only when a numeric threshold condition is met.
+- **Test Case Description**: Validate that the field `<FieldName>` is populated only if it exceeds `<Threshold>` in `<System>`.
+- **Expected Result**: `<FieldName>` should be populated only when its value exceeds `<Threshold>` in `<System>`, unless exception conditions apply.
 
-    # Step 3: Wait for results
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "search"))
-    )
+---
 
-    # Step 4: Optionally click download (not applicable to Google)
-    if download_enabled:
-        try:
-            dl_btn = WebDriverWait(driver, 5).until(
-                EC.element_to_be_clickable((By.CSS_SELECTOR, "#download-btn"))
-            )
-            dl_btn.click()
-        except:
-            pass
-
-    return driver.current_url
-
-# --- MAIN EXECUTION ---
-if st.button("Run Automation"):
-    try:
-        # Load Excel file
-        df = pd.read_excel(excel_file, sheet_name=sheet_name)
-        terms = df[search_col].dropna().astype(str).tolist()
-        st.write(f"Loaded {len(terms)} search term(s).")
-
-        # Setup browser
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-        driver.maximize_window()
-
-        results = []
-        for term in terms:
-            st.write(f"Processing: **{term}**")
-            result_url = perform_web_task(driver, term, search_button, download_enabled)
-            results.append(result_url)
-            time.sleep(1)
-
-        driver.quit()
-        st.success("Automation completed!")
-        st.write("Search Result URLs:", results)
-
-    except Exception as e:
-        st.error(f"Error: {e}")
+Please begin by analyzing the following test cases:
+[Paste the text or transcription of the test cases here from the PDF or image]
