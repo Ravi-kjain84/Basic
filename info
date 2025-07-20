@@ -1,30 +1,69 @@
-You are a test strategy assistant. You are given a list of structured test cases with the following fields:
-- Summary
-- Test Step Description
-- Expected Result
+#!/bin/bash
 
-Each test case has a unique identifier such as TC_1, TC_2, etc.
+# Step 1: Create project folder
+mkdir -p langgraph_project
+cd langgraph_project || exit
 
-Your task is to identify and extract reusable test cases by analyzing similarities across the scenarios. A test case is considered reusable if:
-- It follows a recurring validation pattern (e.g., field validation, segment ID check, comparison between systems)
-- It can be made generic by parameterizing specific data elements like field names, exposure classes, thresholds, etc.
+# Step 2: Create validate_input.py
+cat << 'EOF' > validate_input.py
+def run(input_data):
+    print("Running validate_input...")
+    if isinstance(input_data, str) and input_data.strip():
+        return {"validated": True, "data": input_data}
+    else:
+        return {"validated": False, "error": "Invalid input"}
+EOF
 
-For each reusable test case you identify:
-1. **Provide a short summary** of what the test case verifies.
-2. **Write a generic, reusable test case description**, using angle brackets `< >` to highlight parameterized inputs (e.g., `<FieldName>`, `<Threshold>`, `<System1>`, `<System2>`).
-3. **Write the expected result**, also using angle brackets to show parameterized elements.
-4. Group together all original TC IDs that the reusable case covers.
+# Step 3: Create transform_data.py
+cat << 'EOF' > transform_data.py
+def run(state):
+    print("Running transform_data...")
+    data = state.get("data", "")
+    transformed = data.upper()
+    return {"transformed_data": transformed}
+EOF
 
-Example format:
+# Step 4: Create main.py
+cat << 'EOF' > main.py
+from langgraph.graph import StateGraph
+import importlib.util
 
----
-**Reusable Test Case 1**
-- **Covers**: TC_1, TC_2
-- **Summary**: Validate that a field is populated only when a numeric threshold condition is met.
-- **Test Case Description**: Validate that the field `<FieldName>` is populated only if it exceeds `<Threshold>` in `<System>`.
-- **Expected Result**: `<FieldName>` should be populated only when its value exceeds `<Threshold>` in `<System>`, unless exception conditions apply.
+def run_python_file(file_path, input_data):
+    spec = importlib.util.spec_from_file_location("module.name", file_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.run(input_data)
 
----
+def validate_node(state):
+    return run_python_file("validate_input.py", state["input"])
 
-Please begin by analyzing the following test cases:
-[Paste the text or transcription of the test cases here from the PDF or image]
+def transform_node(state):
+    return run_python_file("transform_data.py", state)
+
+builder = StateGraph(dict)
+builder.set_entry_point("validate")
+builder.add_node("validate", validate_node)
+builder.add_node("transform", transform_node)
+builder.add_edge("validate", "transform")
+graph = builder.compile()
+
+if __name__ == "__main__":
+    initial_input = {"input": "sample string"}
+    result = graph.invoke(initial_input)
+    print("Final Result:", result)
+EOF
+
+# Step 5: Create requirements.txt
+cat << 'EOF' > requirements.txt
+langgraph==0.0.38
+langchain==0.1.20
+EOF
+
+# Step 6: Set up virtual environment and install packages
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+
+# Step 7: Run the workflow
+python main.py
