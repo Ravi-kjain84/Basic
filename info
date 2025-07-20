@@ -1,112 +1,59 @@
-#!/bin/bash
+Here is the modified and structured prompt that clearly defines the expectations, incorporates the use of the two specific PDFs, and aligns with your requirement for reusable test case usage, automation tagging, and structured output format:
 
-# Create folders
-mkdir -p langgraph_streamlit_demo/nodes
-cd langgraph_streamlit_demo || exit
+⸻
 
-# ----------------------------
-# validate_input.py
-# ----------------------------
-cat << 'EOF' > nodes/validate_input.py
-def run(input_data):
-    print("Running validate_input...")
-    if isinstance(input_data, str) and input_data.strip():
-        return {"validated": True, "data": input_data}
-    else:
-        return {"validated": False, "error": "Empty or invalid input"}
-EOF
+✅ Final Prompt:
 
-# ----------------------------
-# transform_data.py
-# ----------------------------
-cat << 'EOF' > nodes/transform_data.py
-def run(state):
-    print("Running transform_data...")
-    data = state.get("data", "")
-    transformed = data.upper()
-    return {"transformed_data": transformed}
-EOF
+⸻
 
-# ----------------------------
-# langgraph_logic.py
-# ----------------------------
-cat << 'EOF' > langgraph_logic.py
-from langgraph.graph import StateGraph
-import importlib.util
+You are a test strategy assistant. You are given the responsibility to generate structured test cases based on a specific user story and associated requirements. Use the following two reference PDFs:
+	•	Requirement_Document.pdf – Contains the detailed requirement descriptions.
+	•	Reusable_TestCases.pdf – Contains a list of reusable test cases.
 
-def run_python_file(file_path, input_data):
-    spec = importlib.util.spec_from_file_location("module.name", file_path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module.run(input_data)
+⸻
 
-def validate_node(state):
-    return run_python_file("nodes/validate_input.py", state["input"])
+🔶 Instructions:
+	1.	Read and understand each requirement from Requirement_Document.pdf.
+	2.	For every requirement:
+	•	Identify whether a relevant test case already exists in Reusable_TestCases.pdf.
+	•	If found, reuse it as-is or modify it only slightly to adapt to the requirement while preserving the structure and naming as close as possible.
+	•	If no reusable test case fits, create a new test case from scratch.
+	3.	Prioritize using reusable test cases to maintain consistency and avoid redundancy.
+	4.	Each generated test case must:
+	•	Address the requirement clearly and completely.
+	•	Include appropriate test steps and expected results.
+	•	Use NA in the Sample SQL field if SQL is not required.
+	•	Generate a sample SQL in CASE format if test validation needs SQL.
+	5.	Ensure the final output table contains the following columns exactly in this order:
 
-def transform_node(state):
-    return run_python_file("nodes/transform_data.py", state)
+| Test Case ID | Test Case Description | Preconditions | Test Steps | Expected Results | Postconditions | Actual Outcome | Sample SQL | Requirement ID | Reusable | Automated |
 
-def build_graph():
-    builder = StateGraph(dict)
-    builder.add_node("validate", validate_node)
-    builder.add_node("transform", transform_node)
-    builder.set_entry_point("validate")
-    builder.add_edge("validate", "transform")
-    builder.set_finish_point("transform")
-    return builder.compile()
 
-if __name__ == "__main__":
-    graph = build_graph()
-    result = graph.invoke({"input": "test input"})
-    print("Result:", result)
-EOF
 
-# ----------------------------
-# streamlit_app.py
-# ----------------------------
-cat << 'EOF' > streamlit_app.py
-import streamlit as st
-from langgraph_logic import build_graph
-from graphviz import Digraph
+⸻
 
-st.set_page_config(layout="wide")
-st.title("LangGraph + Streamlit Workflow")
+🔷 Column Definitions:
+	•	Test Case ID: Must follow the format TC<Number>-<Short_Name> (e.g., TC001-RD_UpdateCheck).
+	•	Requirement ID: Mention the ID from the requirement document (e.g., Req 1).
+	•	Reusable: Yes if it is reused from Reusable_TestCases.pdf, else No.
+	•	Automated: Yes if a SQL has been generated or can be automated; else No.
+	•	Postconditions, Actual Outcome: Leave these blank.
+	•	Sample SQL: Must contain SQL CASE logic if validation is needed; otherwise NA.
 
-user_input = st.text_input("Enter input string:")
+⸻
 
-if st.button("Run Flow") and user_input:
-    graph = build_graph()
-    result = graph.invoke({"input": user_input})
-    st.success("✅ Flow executed successfully!")
-    st.json(result)
+🔸 Formatting Guidelines:
+	•	Every test step should be on a new line within the cell.
+	•	Expected results should directly correspond to the test steps.
+	•	SQL must be valid and relevant to the validation scenario.
+	•	Avoid vague steps or assertions.
 
-    # Visualize graph
-    dot = Digraph()
-    dot.node("validate", "🧪 validate")
-    dot.node("transform", "🔧 transform")
-    dot.edge("validate", "transform", label="→")
-    st.graphviz_chart(dot)
-EOF
+⸻
 
-# ----------------------------
-# requirements.txt
-# ----------------------------
-cat << 'EOF' > requirements.txt
-streamlit==1.35.0
-langgraph==0.0.38
-langchain==0.1.20
-graphviz==0.20.1
-EOF
+⚠️ Output Format:
 
-# ----------------------------
-# Python virtual env + install
-# ----------------------------
-python -m venv .venv
-source .venv/Scripts/activate
+The final output should be a single structured table with one row per test case. No additional formatting or visual styling is needed.
 
-pip install -r requirements.txt
+⸻
 
-# ----------------------------
-# Run Streamlit app
-# ----------------------------
-streamlit run streamlit_app.py
+Let me know if you’d like a sample row as a template or if this prompt needs to be tailored further for a specific platform (Excel, Power BI, JIRA, etc.).
