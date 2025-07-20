@@ -1,21 +1,20 @@
 #!/bin/bash
 
-# Step 1: Create project folder
-mkdir -p langgraph_project
-cd langgraph_project || exit
+# Step 1: Create folders
+mkdir -p nodes
 
 # Step 2: Create validate_input.py
-cat << 'EOF' > validate_input.py
+cat << 'EOF' > nodes/validate_input.py
 def run(input_data):
     print("Running validate_input...")
     if isinstance(input_data, str) and input_data.strip():
         return {"validated": True, "data": input_data}
     else:
-        return {"validated": False, "error": "Invalid input"}
+        return {"validated": False, "error": "Empty or invalid input"}
 EOF
 
 # Step 3: Create transform_data.py
-cat << 'EOF' > transform_data.py
+cat << 'EOF' > nodes/transform_data.py
 def run(state):
     print("Running transform_data...")
     data = state.get("data", "")
@@ -23,8 +22,8 @@ def run(state):
     return {"transformed_data": transformed}
 EOF
 
-# Step 4: Create main.py
-cat << 'EOF' > main.py
+# Step 4: Create langgraph_logic.py
+cat << 'EOF' > langgraph_logic.py
 from langgraph.graph import StateGraph
 import importlib.util
 
@@ -35,35 +34,49 @@ def run_python_file(file_path, input_data):
     return module.run(input_data)
 
 def validate_node(state):
-    return run_python_file("validate_input.py", state["input"])
+    return run_python_file("nodes/validate_input.py", state["input"])
 
 def transform_node(state):
-    return run_python_file("transform_data.py", state)
+    return run_python_file("nodes/transform_data.py", state)
 
-builder = StateGraph(dict)
-builder.set_entry_point("validate")
-builder.add_node("validate", validate_node)
-builder.add_node("transform", transform_node)
-builder.add_edge("validate", "transform")
-graph = builder.compile()
-
-if __name__ == "__main__":
-    initial_input = {"input": "sample string"}
-    result = graph.invoke(initial_input)
-    print("Final Result:", result)
+def build_graph():
+    builder = StateGraph(dict)
+    builder.set_entry_point("validate")
+    builder.add_node("validate", validate_node)
+    builder.add_node("transform", transform_node)
+    builder.add_edge("validate", "transform")
+    return builder.compile()
 EOF
 
-# Step 5: Create requirements.txt
+# Step 5: Create streamlit_app.py
+cat << 'EOF' > streamlit_app.py
+import streamlit as st
+from langgraph_logic import build_graph
+
+st.title("LangGraph + Streamlit Demo")
+user_input = st.text_input("Enter input string:")
+
+if st.button("Run Workflow") and user_input:
+    graph = build_graph()
+    result = graph.invoke({"input": user_input})
+    
+    st.subheader("LangGraph Output")
+    st.json(result)
+EOF
+
+# Step 6: Create requirements.txt
 cat << 'EOF' > requirements.txt
+streamlit==1.35.0
 langgraph==0.0.38
 langchain==0.1.20
 EOF
 
-# Step 6: Set up virtual environment and install packages
-python3 -m venv .venv
-source .venv/bin/activate
-pip install --upgrade pip
+# Step 7: Create venv and install requirements
+python -m venv .venv
+source .venv/Scripts/activate
+
+# Install required packages
 pip install -r requirements.txt
 
-# Step 7: Run the workflow
-python main.py
+# Step 8: Launch the Streamlit app
+streamlit run streamlit_app.py
