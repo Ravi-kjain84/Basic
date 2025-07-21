@@ -1,25 +1,21 @@
-= Table.AddColumn(#"Previous Step", "Updated_SQL", each
-    let
-        original = [SQL],
-        startPos = Text.PositionOf(original, "FROM "),
-        fromSegment = if startPos <> -1 then Text.Range(original, startPos + 5) else "",
-        
-        // Check each possible clause and find their position
-        wherePos = Text.PositionOf(fromSegment, " WHERE "),
-        groupPos = Text.PositionOf(fromSegment, " GROUP "),
-        orderPos = Text.PositionOf(fromSegment, " ORDER "),
+Here is a crisp and professional version of your email, with a clear and collaborative tone:
 
-        // Create a list of valid positions (exclude -1)
-        positions = List.Select({wherePos, groupPos, orderPos}, each _ <> -1),
-        tableEnd = if List.Count(positions) > 0 then List.Min(positions) else Text.Length(fromSegment),
+⸻
 
-        tableRef = Text.Start(fromSegment, tableEnd),
-        quotedTable = "'" & Text.Trim(tableRef) & "'",
+Subject: GenAI Solution for Test Case Generation – Request for Demo and Collaboration
 
-        updatedSQL = if startPos <> -1 then
-            Text.Start(original, startPos + 5) & Text.Replace(fromSegment, tableRef, quotedTable)
-        else
-            original
-    in
-        updatedSQL
-)
+Hi Adonis, Charlie, and Alka,
+
+We are currently working on a Generative AI solution aimed at automating test case generation. While the results so far are promising, the effectiveness of the solution depends heavily on the clarity and quality of requirement writing. We believe there is strong potential to further enhance both the solution and the upstream process.
+
+I would like to walk you through a quick demo to show how the GenAI solution is supporting us—particularly in generating the first draft of test cases—and explore how we can collaborate to improve the end-to-end process.
+
+Please let me know if I can set up a time for the walkthrough and to gather your valuable input.
+
+Best regards,
+Ravi
+Testing Center of Excellence Lead
+
+⸻
+
+Let me know if you’d like to add a proposed time slot or attach a brief summary before the demo.
