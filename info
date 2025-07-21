@@ -1,7 +1,6 @@
-= Table.AddColumn(#"Replaced Value4", "Updated_SQL", each 
-    let
-        original = [SQL],
-        dotCount = Text.Length(original) - Text.Length(Text.Remove(original, "."))
-    in
-        if dotCount = 2 then "'" & original & "'" else original
+= Table.AddColumn(#"PreviousStep", "Updated_SQL", each 
+    Text.RegexReplace([SQL], 
+        "[A-Za-z0-9\-]+(?:\.[A-Za-z0-9_]+){2}", 
+        each "'" & _ & "'"
+    )
 )
