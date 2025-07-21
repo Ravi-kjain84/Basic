@@ -1,1 +1,1 @@
-gg
+= if Text.Count([YourColumnName], ".") = 2 then "'" & [YourColumnName] & "'" else [YourColumnName]
