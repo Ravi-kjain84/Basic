@@ -1,1 +1,7 @@
-= if Text.Count([YourColumnName], ".") = 2 then "'" & [YourColumnName] & "'" else [YourColumnName]
+= Table.AddColumn(#"Replaced Value4", "Updated_SQL", each 
+    let
+        original = [SQL],
+        dotCount = Text.Length(original) - Text.Length(Text.Remove(original, "."))
+    in
+        if dotCount = 2 then "'" & original & "'" else original
+)
