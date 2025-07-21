@@ -3,9 +3,19 @@
         original = [SQL],
         startPos = Text.PositionOf(original, "FROM "),
         fromSegment = if startPos <> -1 then Text.Range(original, startPos + 5) else "",
-        tableEnd = Text.PositionOfAny(fromSegment, {" ", "WHERE", "GROUP", "ORDER"}, Occurrence.First),
-        tableRef = if tableEnd <> -1 then Text.Start(fromSegment, tableEnd) else fromSegment,
+        
+        // Check each possible clause and find their position
+        wherePos = Text.PositionOf(fromSegment, " WHERE "),
+        groupPos = Text.PositionOf(fromSegment, " GROUP "),
+        orderPos = Text.PositionOf(fromSegment, " ORDER "),
+
+        // Create a list of valid positions (exclude -1)
+        positions = List.Select({wherePos, groupPos, orderPos}, each _ <> -1),
+        tableEnd = if List.Count(positions) > 0 then List.Min(positions) else Text.Length(fromSegment),
+
+        tableRef = Text.Start(fromSegment, tableEnd),
         quotedTable = "'" & Text.Trim(tableRef) & "'",
+
         updatedSQL = if startPos <> -1 then
             Text.Start(original, startPos + 5) & Text.Replace(fromSegment, tableRef, quotedTable)
         else
