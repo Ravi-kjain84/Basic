@@ -1,6 +1,15 @@
-= Table.AddColumn(#"PreviousStep", "Updated_SQL", each 
-    Text.RegexReplace([SQL], 
-        "[A-Za-z0-9\-]+(?:\.[A-Za-z0-9_]+){2}", 
-        each "'" & _ & "'"
-    )
+= Table.AddColumn(#"Previous Step", "Updated_SQL", each
+    let
+        original = [SQL],
+        startPos = Text.PositionOf(original, "FROM "),
+        fromSegment = if startPos <> -1 then Text.Range(original, startPos + 5) else "",
+        tableEnd = Text.PositionOfAny(fromSegment, {" ", "WHERE", "GROUP", "ORDER"}, Occurrence.First),
+        tableRef = if tableEnd <> -1 then Text.Start(fromSegment, tableEnd) else fromSegment,
+        quotedTable = "'" & Text.Trim(tableRef) & "'",
+        updatedSQL = if startPos <> -1 then
+            Text.Start(original, startPos + 5) & Text.Replace(fromSegment, tableRef, quotedTable)
+        else
+            original
+    in
+        updatedSQL
 )
