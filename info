@@ -1,26 +1,63 @@
-import os
-import pandas as pd
+import re
 
-def convert_xls_to_xlsx(source_folder):
-    output_folder = os.path.join(source_folder, "converted_xlsx")
-    os.makedirs(output_folder, exist_ok=True)
+def get_matching_files(self):
+    """
+    Get list of Excel .xls files that exist in all three folders.
+    Matching is done after removing date after first dash and timestamp before last dash.
+    
+    Returns:
+        list: List of matching full file names from new_folder.
+    """
 
-    for file_name in os.listdir(source_folder):
-        if file_name.lower().endswith('.xls') and not file_name.startswith('~$'):
-            xls_path = os.path.join(source_folder, file_name)
-            xlsx_file_name = os.path.splitext(file_name)[0] + '.xlsx'
-            xlsx_path = os.path.join(output_folder, xlsx_file_name)
+    def normalize_name(name: str) -> str:
+        """
+        Removes the date after the first dash and the timestamp before the last dash or underscore.
+        """
+        name = name.strip().lower()
+        # Remove date (e.g., 31-10-2024) after first dash
+        parts = name.split(" - ")
+        if len(parts) > 2 and re.match(r"\d{2}-\d{2}-\d{4}", parts[1]):
+            parts.pop(1)  # remove date
+        name = " - ".join(parts)
 
-            try:
-                # Read .xls file
-                xls = pd.read_excel(xls_path, sheet_name=None, engine='xlrd')  # Load all sheets
-                # Write each sheet to .xlsx
-                with pd.ExcelWriter(xlsx_path, engine='openpyxl') as writer:
-                    for sheet_name, df in xls.items():
-                        df.to_excel(writer, sheet_name=sheet_name, index=False)
-                print(f"Converted: {file_name} → {xlsx_file_name}")
-            except Exception as e:
-                print(f"Failed to convert {file_name}: {e}")
+        # Remove timestamp pattern (14 digits) just before last underscore
+        name = re.sub(r"-\s*\d{14}(?=[-_])", "", name)
+        return name
 
-# Usage:
-convert_xls_to_xlsx(r"C:\Path\To\Your\Folder")
+    def get_normalized_map(folder):
+        """
+        Returns a dict of {normalized_name: original_name}
+        """
+        return {
+            normalize_name(f.name): f.name
+            for f in folder.glob("*.xls")
+            if f.is_file() and not f.name.startswith("~")
+        }
+
+    try:
+        new_map = get_normalized_map(self.new_folder)
+        prev_map = get_normalized_map(self.prev_folder)
+        template_map = get_normalized_map(self.template_folder)
+
+        # Find intersection keys
+        common_keys = set(new_map.keys()) & set(prev_map.keys()) & set(template_map.keys())
+
+        if not common_keys:
+            self.log_message("No matching Excel files (after normalization) found in all folders.", "WARNING")
+            self.log_message(f"New keys: {list(new_map.keys())}", "INFO")
+            self.log_message(f"Prev keys: {list(prev_map.keys())}", "INFO")
+            self.log_message(f"Template keys: {list(template_map.keys())}", "INFO")
+            return []
+
+        # Return original filenames from new_folder corresponding to common keys
+        matched_files = sorted([new_map[k] for k in common_keys])
+
+        self.log_message(f"Found {len(matched_files)} matching files (normalized)", "SUCCESS")
+        for f in matched_files:
+            self.log_message(f"{f}", "INFO")
+
+        return matched_files
+
+    except Exception as e:
+        self.log_message(f"Error in get_matching_files: {e}", "ERROR")
+        return []
