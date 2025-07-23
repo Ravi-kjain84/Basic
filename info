@@ -1,10 +1,39 @@
-wb = excel.Workbooks.Open(str(file.resolve()))
+import os
+import requests
+from requests.auth import HTTPBasicAuth
 
-new_file = file.with_suffix('.xlsx')  # This keeps it in the same folder
+# --- Configuration ---
+JIRA_BASE_URL = "https://your-domain.atlassian.net"
+USERNAME = "your.email@example.com"
+API_TOKEN = "your_api_token"
+ATTACHMENT_FOLDER = "path/to/your/folder"  # E.g., "./evidence_files"
 
-save_path = str(new_file.resolve())   # Ensures full path
+# --- Headers ---
+headers = {
+    "X-Atlassian-Token": "no-check"  # Required for attachments
+}
 
-print(f"💾 Saving to: {save_path}")
+# --- Function to upload attachment ---
+def upload_attachment(issue_key, file_path):
+    url = f"{JIRA_BASE_URL}/rest/api/3/issue/{issue_key}/attachments"
+    with open(file_path, "rb") as f:
+        files = {
+            "file": (os.path.basename(file_path), f, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        }
+        response = requests.post(url, headers=headers, auth=HTTPBasicAuth(USERNAME, API_TOKEN), files=files)
+        if response.status_code == 200 or response.status_code == 201:
+            print(f"[SUCCESS] Uploaded to {issue_key}: {os.path.basename(file_path)}")
+        else:
+            print(f"[ERROR] Failed to upload to {issue_key}: {response.status_code} - {response.text}")
 
-wb.SaveAs(save_path, FileFormat=51)
-wb.Close(SaveChanges=False)
+# --- Main Loop ---
+def upload_all_attachments(folder_path):
+    for file_name in os.listdir(folder_path):
+        if file_name.endswith(".xlsx"):
+            issue_key = os.path.splitext(file_name)[0]  # Remove .xlsx
+            full_path = os.path.join(folder_path, file_name)
+            upload_attachment(issue_key, full_path)
+
+# --- Run ---
+if __name__ == "__main__":
+    upload_all_attachments(ATTACHMENT_FOLDER)
