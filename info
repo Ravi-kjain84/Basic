@@ -13,27 +13,27 @@ def convert_xls_to_xlsx_in_folder(folder_path):
                 continue
 
             try:
-                # Define full target path explicitly
-                new_file_path = folder / (file.stem + ".xlsx")
+                xls_path = file.resolve()
+                xlsx_path = file.with_suffix('.xlsx').resolve()
 
-                wb = excel.Workbooks.Open(str(file.resolve()))
-                wb.SaveAs(str(new_file_path.resolve()), FileFormat=51)
+                print(f"🔄 Attempting: {xls_path.name} → {xlsx_path.name}")
+
+                wb = excel.Workbooks.Open(str(xls_path))
+                wb.SaveAs(str(xlsx_path), FileFormat=51)  # FileFormat=51 = xlsx
                 wb.Close(SaveChanges=False)
 
-                print(f"✅ Converted: {file.name} → {new_file_path.name}")
-                file.unlink()
-                print(f"🗑️ Removed original .xls: {file.name}")
-
-                # Confirm file was saved
-                if not new_file_path.exists():
-                    print(f"❌ File not saved: {new_file_path}")
+                # ✅ Confirm the new file exists before deleting
+                if xlsx_path.exists():
+                    print(f"✅ Saved: {xlsx_path.name}")
+                    file.unlink()
+                    print(f"🗑️ Deleted original .xls: {xls_path.name}")
                 else:
-                    print(f"📁 File saved at: {new_file_path.resolve()}")
+                    print(f"❌ Save failed, NOT deleting: {xls_path.name}")
 
             except Exception as e:
-                print(f"❌ Failed to convert {file.name}: {e}")
+                print(f"❌ Exception for {file.name}: {e}")
 
         excel.Quit()
 
     except Exception as e:
-        print(f"🔥 Excel COM Automation failed: {e}")
+        print(f"🔥 Excel COM failed: {e}")
