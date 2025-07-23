@@ -1,39 +1,10 @@
-import os
-import win32com.client
-from pathlib import Path
+wb = excel.Workbooks.Open(str(file.resolve()))
 
-def convert_xls_to_xlsx_in_folder(folder_path):
-    folder = Path(folder_path)
-    try:
-        excel = win32com.client.DispatchEx('Excel.Application')
-        excel.Visible = False
+new_file = file.with_suffix('.xlsx')  # This keeps it in the same folder
 
-        for file in folder.glob("*.xls"):
-            if file.name.startswith('~$'):
-                continue
+save_path = str(new_file.resolve())   # Ensures full path
 
-            try:
-                xls_path = file.resolve()
-                xlsx_path = file.with_suffix('.xlsx').resolve()
+print(f"💾 Saving to: {save_path}")
 
-                print(f"🔄 Attempting: {xls_path.name} → {xlsx_path.name}")
-
-                wb = excel.Workbooks.Open(str(xls_path))
-                wb.SaveAs(str(xlsx_path), FileFormat=51)  # FileFormat=51 = xlsx
-                wb.Close(SaveChanges=False)
-
-                # ✅ Confirm the new file exists before deleting
-                if xlsx_path.exists():
-                    print(f"✅ Saved: {xlsx_path.name}")
-                    file.unlink()
-                    print(f"🗑️ Deleted original .xls: {xls_path.name}")
-                else:
-                    print(f"❌ Save failed, NOT deleting: {xls_path.name}")
-
-            except Exception as e:
-                print(f"❌ Exception for {file.name}: {e}")
-
-        excel.Quit()
-
-    except Exception as e:
-        print(f"🔥 Excel COM failed: {e}")
+wb.SaveAs(save_path, FileFormat=51)
+wb.Close(SaveChanges=False)
