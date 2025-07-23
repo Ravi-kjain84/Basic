@@ -1,21 +1,3 @@
-# Step 1: Navigate to your project folder
-cd "C:\Users\4077738\Desktop\Testing Automation tools final versions\2 Manual Dashboard Automation\Excel_REG_DASHBOARD_AUTOMATION_11_JULY_2025"
-
-# Step 2: Create .gitignore file to exclude all .exe files
-echo *.exe > .gitignore
-
-# Step 3: Initialize Git repository
-git init
-
-# Step 4: Add all files (excluding the .exe files per .gitignore)
-git add .
-
-# Step 5: Commit the changes
-git commit -m "Initial commit - Excel Reg Dashboard Automation (excluding .exe files)"
-
-# Step 6: Add your GitHub repo as the remote (replace <your-username> and <repo-name>)
-git remote add origin https://github.com/<your-username>/excel-reg-dashboard-automation.git
-
-# Step 7: Push to GitHub
-git branch -M main
-git push -u origin main
+new_files = set(f.name for f in self.new_folder.glob("*.[xX][lL][sS]*") if not f.name.startswith("~"))
+prev_files = set(f.name for f in self.prev_folder.glob("*.[xX][lL][sS]*") if not f.name.startswith("~"))
+template_files = set(f.name for f in self.template_folder.glob("*.[xX][lL][sS]*") if not f.name.startswith("~"))
