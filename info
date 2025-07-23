@@ -5,7 +5,7 @@ from pathlib import Path
 def convert_xls_to_xlsx_in_folder(folder_path):
     folder = Path(folder_path)
     try:
-        excel = win32com.client.DispatchEx('Excel.Application')  # Use DispatchEx for better isolation
+        excel = win32com.client.DispatchEx('Excel.Application')
         excel.Visible = False
 
         for file in folder.glob("*.xls"):
@@ -13,16 +13,27 @@ def convert_xls_to_xlsx_in_folder(folder_path):
                 continue
 
             try:
-                wb = excel.Workbooks.Open(str(file))
-                new_file = file.with_suffix('.xlsx')
-                wb.SaveAs(str(new_file), FileFormat=51)  # 51 = .xlsx
+                # Define full target path explicitly
+                new_file_path = folder / (file.stem + ".xlsx")
+
+                wb = excel.Workbooks.Open(str(file.resolve()))
+                wb.SaveAs(str(new_file_path.resolve()), FileFormat=51)
                 wb.Close(SaveChanges=False)
-                print(f"✅ Converted: {file.name} → {new_file.name}")
+
+                print(f"✅ Converted: {file.name} → {new_file_path.name}")
                 file.unlink()
                 print(f"🗑️ Removed original .xls: {file.name}")
+
+                # Confirm file was saved
+                if not new_file_path.exists():
+                    print(f"❌ File not saved: {new_file_path}")
+                else:
+                    print(f"📁 File saved at: {new_file_path.resolve()}")
+
             except Exception as e:
                 print(f"❌ Failed to convert {file.name}: {e}")
 
         excel.Quit()
+
     except Exception as e:
         print(f"🔥 Excel COM Automation failed: {e}")
