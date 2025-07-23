@@ -1,3 +1,13 @@
-new_files = set(f.name for f in self.new_folder.glob("*.[xX][lL][sS]*") if not f.name.startswith("~"))
-prev_files = set(f.name for f in self.prev_folder.glob("*.[xX][lL][sS]*") if not f.name.startswith("~"))
-template_files = set(f.name for f in self.template_folder.glob("*.[xX][lL][sS]*") if not f.name.startswith("~"))
+import pandas as pd
+import os
+
+def read_excel_file(filepath):
+    ext = os.path.splitext(filepath)[1].lower()
+    if ext == '.xls':
+        # Use xlrd for old format
+        return pd.read_excel(filepath, engine='xlrd')
+    elif ext == '.xlsx':
+        # Use openpyxl for new format
+        return pd.read_excel(filepath, engine='openpyxl')
+    else:
+        raise ValueError("Unsupported file format")
