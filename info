@@ -1,18 +1,21 @@
-# Step 1: Navigate to the root project folder (skip if already there)
+# Step 1: Navigate to your project folder
 cd "C:\Users\4077738\Desktop\Testing Automation tools final versions\2 Manual Dashboard Automation\Excel_REG_DASHBOARD_AUTOMATION_11_JULY_2025"
 
-# Step 2: Initialize Git
+# Step 2: Create .gitignore file to exclude all .exe files
+echo *.exe > .gitignore
+
+# Step 3: Initialize Git repository
 git init
 
-# Step 3: Add all files
+# Step 4: Add all files (excluding the .exe files per .gitignore)
 git add .
 
-# Step 4: Commit changes
-git commit -m "Initial commit - Excel Reg Dashboard Automation"
+# Step 5: Commit the changes
+git commit -m "Initial commit - Excel Reg Dashboard Automation (excluding .exe files)"
 
-# Step 5: Link to your GitHub repository (replace <username> and <repo>)
+# Step 6: Add your GitHub repo as the remote (replace <your-username> and <repo-name>)
 git remote add origin https://github.com/<your-username>/excel-reg-dashboard-automation.git
 
-# Step 6: Push to GitHub
+# Step 7: Push to GitHub
 git branch -M main
 git push -u origin main
