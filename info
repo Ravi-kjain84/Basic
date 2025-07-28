@@ -1,1 +1,47 @@
-nn
+WITH source_transformed AS (
+    SELECT
+        {source_key_select},
+        {safe_derivation_logic} AS calculated_{target_column}
+    FROM {source_ref}
+    GROUP BY {source_key_group}
+),
+
+target_reference AS (
+    SELECT
+        {source_key_select},  -- assuming same join keys as source
+        {target_column}
+    FROM {target_ref}
+),
+
+joined_data AS (
+    SELECT
+        s.{source_key_select},
+        s.calculated_{target_column},
+        t.{target_column} AS actual_{target_column},
+        CASE
+            WHEN CAST(s.calculated_{target_column} AS STRING) = CAST(t.{target_column} AS STRING)
+            THEN 'PASS'
+            ELSE 'FAIL'
+        END AS comparison_result
+    FROM source_transformed s
+    JOIN target_reference t
+        ON s.{source_key_select} = t.{source_key_select}  -- adapt if composite key
+),
+
+validation_summary AS (
+    SELECT
+        COUNT(*) AS total_rows,
+        COUNTIF(comparison_result = 'PASS') AS pass_count,
+        COUNTIF(comparison_result = 'FAIL') AS fail_count
+    FROM joined_data
+)
+
+SELECT
+    CASE
+        WHEN fail_count = 0 THEN 'PASS'
+        ELSE 'FAIL'
+    END AS validation_status,
+    total_rows AS row_count,
+    ROUND(pass_count * 100.0 / NULLIF(total_rows, 0), 2) AS percentage,
+    CONCAT('Validation completed. Pass: ', CAST(pass_count AS STRING), ', Fail: ', CAST(fail_count AS STRING)) AS comment
+FROM validation_summary
