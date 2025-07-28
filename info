@@ -1,15 +1,58 @@
+def create_enhanced_transformation_sql(source_table, target_table, source_join_key, target_join_key, target_column, derivation_logic, project_id, dataset_id):
+    """Enhanced SQL generation with true row-level comparison for non-aggregated logic."""
+
+    source_ref = f"`{project_id}.{dataset_id}.{source_table}`"
+    target_ref = f"`{project_id}.{dataset_id}.{target_table}`"
+
+    # Parse join keys
+    source_keys = parse_join_keys(source_join_key)
+    target_keys = parse_join_keys(target_join_key)
+
+    if not source_keys or not target_keys or len(source_keys) != len(target_keys):
+        return f"-- Error: Invalid or mismatched join keys.\n-- Source: '{source_join_key}'\n-- Target: '{target_join_key}'"
+
+    # SQL comments
+    key_comment = f"Composite Key: {', '.join(source_keys)} → {', '.join(target_keys)}" if len(source_keys) > 1 else f"Key: {source_keys[0]}"
+
+    # Construct SQL key selection
+    source_key_select = ', '.join(source_keys)
+    target_key_select = ', '.join(target_keys)
+    source_key_group = ', '.join(source_keys)
+
+    # Safe derivation logic (column or expression)
+    safe_derivation_logic = convert_business_logic_to_safe_sql(derivation_logic, source_table, project_id, dataset_id)
+
+    # Detect if this is an aggregation
+    is_aggregation = any(func in derivation_logic.upper() for func in ['SUM(', 'COUNT(', 'AVG(', 'MAX(', 'MIN('])
+
+    if is_aggregation:
+        # Keep original aggregation logic for aggregation types
+        return create_transformation_validation_sql(
+            source_table, target_table, source_join_key, target_join_key, target_column, derivation_logic, project_id, dataset_id
+        )
+
+    # Create join condition
+    join_condition = create_join_condition(source_keys, target_keys, source_alias='s', target_alias='t')
+
+    # Build comparison SQL
+    sql = f"""
+-- Direct Comparison Validation: {target_column}
+-- Source Table: {source_table}
+-- Target Table: {target_table}
+-- {key_comment}
+-- Derivation Logic: {derivation_logic}
+
 WITH source_transformed AS (
-    SELECT
+    SELECT 
         {source_key_select},
         {safe_derivation_logic} AS calculated_{target_column}
     FROM {source_ref}
-    GROUP BY {source_key_group}
 ),
 
-target_reference AS (
+target_data AS (
     SELECT
-        {source_key_select},  -- assuming same join keys as source
-        {target_column}
+        {target_key_select},
+        {target_column} AS actual_{target_column}
     FROM {target_ref}
 ),
 
@@ -17,31 +60,33 @@ joined_data AS (
     SELECT
         s.{source_key_select},
         s.calculated_{target_column},
-        t.{target_column} AS actual_{target_column},
+        t.actual_{target_column},
         CASE
-            WHEN CAST(s.calculated_{target_column} AS STRING) = CAST(t.{target_column} AS STRING)
-            THEN 'PASS'
+            WHEN CAST(s.calculated_{target_column} AS STRING) = CAST(t.actual_{target_column} AS STRING) THEN 'PASS'
             ELSE 'FAIL'
         END AS comparison_result
     FROM source_transformed s
-    JOIN target_reference t
-        ON s.{source_key_select} = t.{source_key_select}  -- adapt if composite key
+    JOIN target_data t
+        ON {join_condition}
 ),
 
 validation_summary AS (
     SELECT
         COUNT(*) AS total_rows,
-        COUNTIF(comparison_result = 'PASS') AS pass_count,
-        COUNTIF(comparison_result = 'FAIL') AS fail_count
+        COUNTIF(comparison_result = 'PASS') AS pass_rows,
+        COUNTIF(comparison_result = 'FAIL') AS fail_rows
     FROM joined_data
 )
 
 SELECT
     CASE
-        WHEN fail_count = 0 THEN 'PASS'
+        WHEN fail_rows = 0 THEN 'PASS'
         ELSE 'FAIL'
     END AS validation_status,
     total_rows AS row_count,
-    ROUND(pass_count * 100.0 / NULLIF(total_rows, 0), 2) AS percentage,
-    CONCAT('Validation completed. Pass: ', CAST(pass_count AS STRING), ', Fail: ', CAST(fail_count AS STRING)) AS comment
+    ROUND(pass_rows * 100.0 / NULLIF(total_rows, 0), 2) AS percentage,
+    CONCAT('Row-level comparison completed: ', CAST(pass_rows AS STRING), ' out of ', CAST(total_rows AS STRING), ' rows matched') AS details
 FROM validation_summary
+WHERE total_rows > 0
+"""
+    return sql.strip()
