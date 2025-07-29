@@ -1,4 +1,25 @@
-def parse_join_keys(join_key_str):
-    if not isinstance(join_key_str, str):
-        join_key_str = str(join_key_str) if not pd.isna(join_key_str) else ''
-    return [key.strip() for key in join_key_str.split(',') if key.strip()]
+Certainly. Here’s a professionally reworded version of your email, keeping the intent, tone, and content intact:
+
+⸻
+
+Subject: RE: AI use cases across teams in Finance (Luke follow-up)
+
+Hi Piyush,
+
+I’ll follow up with the respective VS contacts to obtain the required names. Let’s connect to align and consolidate the list you already have.
+
+Hi Luke,
+
+I’ll arrange a discussion to provide a briefing on Tailwind, based on the previous demo and the specific use cases you’ve outlined.
+
+Best regards,
+Ravi Kumar Jain
+SVP, Testing CoE Lead
+Global Finance Transformation
+HSBC Electronic Data Processing India Pvt. Ltd.
+Phone: +91 (0) 124 666 53407 | Tieline: 71912653407 | Mobile: +91 (0) 9971399550
+Email: ravi1jain@hsbc.co.in
+
+⸻
+
+Let me know if you’d like to make the tone more formal or include additional context.
