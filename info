@@ -1,3 +1,19 @@
-CREATE TABLE `project_id.dataset_id.new_table_name` AS
-SELECT *
-FROM `project_id.dataset_id.existing_table_name`;
+Certainly. Here’s the final version incorporating your instruction:
+
+⸻
+
+Subject: Confirmation of Alignment with Testing Activities – Training Invite
+
+Dear All,
+
+We have shared the meeting invite for the upcoming training session on Testing Automation and Governance processes with a broader group based on the current distribution list.
+
+If you are no longer directly involved in testing-related activities and would prefer to be excluded from this training invite, we kindly request you to reply to this email and let us know. This will help us ensure the session remains targeted to the relevant group.
+
+Best regards,
+[Your Name]
+[Your Team/Department Name]
+
+⸻
+
+Let me know if you’d like to personalize it further or include any internal references.
