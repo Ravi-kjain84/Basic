@@ -1,17 +1,27 @@
-let
-    Source = Resources_list,
-    #"Removed Other Columns" = Table.SelectColumns(Source, {"Value Stream", "Unit Test", "Environment/ Smoke Test", "Functional Test", "Regression Test", "UAT", "Validation Test", "Test Mangers"}),
-    #"Unpivoted Other Columns" = Table.UnpivotOtherColumns(#"Removed Other Columns", {"Value Stream"}, "Attribute", "Value"),
-    #"Grouped Rows" = Table.Group(#"Unpivoted Other Columns", {"Value Stream", "Attribute"}, {{"Effort", each List.Sum([Value]), type number}}),
-    #"Sorted Rows" = Table.Sort(#"Grouped Rows", {{"Effort", Order.Descending}}),
-    
-    // Calculate Total Effort
-    TotalEffort = List.Sum(#"Sorted Rows"[Effort]),
-    
-    // Add Percentage Column
-    #"Added Percent Column" = Table.AddColumn(#"Sorted Rows", "Effort %", each [Effort] / TotalEffort, type number),
-    
-    // Optional: Format Percentage
-    #"Formatted Percent Column" = Table.TransformColumnTypes(#"Added Percent Column", {{"Effort %", Percentage.Type}})
-in
-    #"Formatted Percent Column"
+Understood. Here’s the updated version with “user base” instead of “finance user base” and with a more cautious phrasing around the user count:
+
+⸻
+
+Subject: Access Planning for AI Pilot – Finance Transformation
+
+Dear Simar,
+
+Hope you are doing well.
+
+As suggested by Maxim, we are currently progressing discussions with the Finance governance teams to secure the necessary approvals for access to the AI solution as part of the pilot collaboration.
+
+Before we proceed with initiating the formal access request, we wanted to check with you if there are any constraints or considerations from your side regarding the number of users that can be granted access.
+
+We are currently considering requesting access for at least 5% of the user base, which would be approximately 100 users, based on an estimated population of around 2,000 colleagues. This is to ensure we have sufficient coverage for meaningful engagement during the pilot phase.
+
+Please do let us know if this scale would be manageable, or if there are any limitations we should be aware of before moving forward.
+
+Thank you for all your support.
+
+Best regards,
+Ravi Jain
+On behalf of the Finance Transformation team
+
+⸻
+
+Let me know if you’d like to add a follow-up line offering to discuss this on a call.
