@@ -1,19 +1,17 @@
-Certainly. Here’s the final version incorporating your instruction:
-
-⸻
-
-Subject: Confirmation of Alignment with Testing Activities – Training Invite
-
-Dear All,
-
-We have shared the meeting invite for the upcoming training session on Testing Automation and Governance processes with a broader group based on the current distribution list.
-
-If you are no longer directly involved in testing-related activities and would prefer to be excluded from this training invite, we kindly request you to reply to this email and let us know. This will help us ensure the session remains targeted to the relevant group.
-
-Best regards,
-[Your Name]
-[Your Team/Department Name]
-
-⸻
-
-Let me know if you’d like to personalize it further or include any internal references.
+let
+    Source = Resources_list,
+    #"Removed Other Columns" = Table.SelectColumns(Source, {"Value Stream", "Unit Test", "Environment/ Smoke Test", "Functional Test", "Regression Test", "UAT", "Validation Test", "Test Mangers"}),
+    #"Unpivoted Other Columns" = Table.UnpivotOtherColumns(#"Removed Other Columns", {"Value Stream"}, "Attribute", "Value"),
+    #"Grouped Rows" = Table.Group(#"Unpivoted Other Columns", {"Value Stream", "Attribute"}, {{"Effort", each List.Sum([Value]), type number}}),
+    #"Sorted Rows" = Table.Sort(#"Grouped Rows", {{"Effort", Order.Descending}}),
+    
+    // Calculate Total Effort
+    TotalEffort = List.Sum(#"Sorted Rows"[Effort]),
+    
+    // Add Percentage Column
+    #"Added Percent Column" = Table.AddColumn(#"Sorted Rows", "Effort %", each [Effort] / TotalEffort, type number),
+    
+    // Optional: Format Percentage
+    #"Formatted Percent Column" = Table.TransformColumnTypes(#"Added Percent Column", {{"Effort %", Percentage.Type}})
+in
+    #"Formatted Percent Column"
