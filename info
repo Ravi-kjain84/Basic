@@ -1,20 +1,70 @@
-Certainly. Here’s a slightly more formal version while still keeping the language clear and approachable:
+Here’s a detailed, structured prompt you can give to an LLM model along with your PDF to extract and summarize the hierarchical testing resource data into actionable pieces for your dashboard work.
 
 ⸻
 
-Subject: RE: Gen AI Use Case Preparation
+Prompt:
 
-Hi Charlie,
+You are given a PDF document containing a hierarchical view of testing resources, their job titles, and reporting lines. Your task is to analyze the document and produce structured outputs that can be directly used for creating a dashboard.
 
-Thank you for sharing these well-thought-out ideas. I believe many of them are quite feasible and worth exploring further. It will require some joint discussions and planning to shape them effectively.
-
-Starting with the initial set of requirements you highlighted sounds like a good approach. I’ll go ahead and schedule a call for next week to take this forward.
-
-Appreciate your continued support.
-
-Best regards,
-Ravi
+Please complete the following steps:
 
 ⸻
 
-Let me know if you’d like to add any specific agenda points for the meeting.
+1. Data Extraction
+	•	Read the PDF and extract all names, job titles, and departments exactly as they appear.
+	•	Maintain the hierarchical structure (i.e., who reports to whom) if visible.
+
+⸻
+
+2. Categorization by Department
+	•	Identify the department or function for each resource based on their title (e.g., Regulatory Reporting, Liquidity, Finance Transformation, Data, Testing).
+	•	Create a table for each department:
+	•	Department Name
+	•	Name of Resource
+	•	Job Title
+
+⸻
+
+3. Resource Counts
+	•	For each department, calculate:
+	•	Total number of resources
+	•	Number of VPs
+	•	Number of Analysts
+	•	Number of Managers
+	•	Number of other roles
+
+⸻
+
+4. Commentary Summary
+	•	Write a short paragraph per department summarizing:
+	•	Team size
+	•	Seniority mix
+	•	Any visible concentration of roles (e.g., more managers vs. analysts)
+	•	Observations about reporting hierarchy (e.g., centralised vs. spread across multiple leads)
+
+⸻
+
+5. Consolidated Summary Table
+
+Create one final dashboard-friendly summary table:
+	•	Department | Total Resources | VP Count | Manager Count | Analyst Count | Other Roles Count
+
+⸻
+
+6. Format Requirements
+	•	All tables should be clean, consistent, and CSV-ready.
+	•	Maintain exact spelling of names and titles.
+	•	If the department is unclear from the title, mark it as “Unspecified” but still include it in the tables.
+
+⸻
+
+Deliverables:
+	1.	Individual tables per department with detailed listings.
+	2.	Departmental commentary as short bullet points or paragraphs.
+	3.	Consolidated summary table for quick dashboard integration.
+
+⸻
+
+If you like, I can also give you an enhanced version of this prompt that includes instructions for role classification logic so the LLM knows exactly how to detect “VP,” “Manager,” “Analyst,” etc., even if the titles vary. That would make your extraction more accurate.
+
+Do you want me to prepare that enhanced classification version?
