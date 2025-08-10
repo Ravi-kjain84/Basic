@@ -1,70 +1,118 @@
-Here’s a detailed, structured prompt you can give to an LLM model along with your PDF to extract and summarize the hierarchical testing resource data into actionable pieces for your dashboard work.
+Here’s the error-proof version of your fusion prompt — it’s designed so the LLM will never stop processing due to missing or incomplete data, while still giving you operational breakdowns and strategic insights where possible.
 
 ⸻
 
-Prompt:
+Error-Proof Fusion Prompt for LLM with Classification Logic
 
-You are given a PDF document containing a hierarchical view of testing resources, their job titles, and reporting lines. Your task is to analyze the document and produce structured outputs that can be directly used for creating a dashboard.
-
-Please complete the following steps:
+You are given a PDF containing a list of testing resources with names and job titles.
+Some details such as hierarchy, department, or reporting lines may be incomplete or missing.
+Your task is to extract, classify, and analyze this information while gracefully handling missing data.
 
 ⸻
 
 1. Data Extraction
-	•	Read the PDF and extract all names, job titles, and departments exactly as they appear.
-	•	Maintain the hierarchical structure (i.e., who reports to whom) if visible.
+	•	Extract all names and job titles exactly as they appear.
+	•	If any name or title is missing or unclear, mark it as “Unknown”.
 
 ⸻
 
-2. Categorization by Department
-	•	Identify the department or function for each resource based on their title (e.g., Regulatory Reporting, Liquidity, Finance Transformation, Data, Testing).
-	•	Create a table for each department:
-	•	Department Name
-	•	Name of Resource
+2. Department/Function Inference
+	•	Infer the department or functional area from the job title only if it is obvious.
+	•	Example: “Liquidity SME Lead” → Liquidity Department
+	•	Example: “VP - Regulatory Reporting” → Regulatory Reporting Department
+	•	If the department cannot be determined, label it as “Unspecified”.
+
+⸻
+
+3. Role Classification Logic (Enhanced)
+
+When assigning Seniority Level, use these rules:
+
+Executive:
+	•	Titles containing: Chief, Global Head, Group Head, SVP (Senior Vice President), Executive Director.
+
+Vice President (VP):
+	•	Titles containing: Vice President, VP, Associate VP, AVP.
+
+Manager:
+	•	Titles containing: Manager, Lead, Head of [specific function], Supervisor, Director (unless already classified as Executive).
+
+Analyst:
+	•	Titles containing: Analyst, Specialist, Coordinator, Assistant.
+
+Other Roles:
+	•	Any role that does not fit the above categories or lacks seniority keywords.
+
+⸻
+
+4. Output Table (Base Layer)
+
+Create a CSV-ready table with columns:
+	•	Name
 	•	Job Title
+	•	Inferred Department
+	•	Seniority Level
 
 ⸻
 
-3. Resource Counts
-	•	For each department, calculate:
+5. Quantitative Dashboard Metrics
+
+Based on the table, calculate:
 	•	Total number of resources
-	•	Number of VPs
-	•	Number of Analysts
-	•	Number of Managers
-	•	Number of other roles
+	•	Count per Seniority Level (Executive, VP, Manager, Analyst, Other)
+	•	Count per Inferred Department (including “Unspecified”)
 
 ⸻
 
-4. Commentary Summary
-	•	Write a short paragraph per department summarizing:
-	•	Team size
-	•	Seniority mix
-	•	Any visible concentration of roles (e.g., more managers vs. analysts)
-	•	Observations about reporting hierarchy (e.g., centralised vs. spread across multiple leads)
+6. Strategic Insight Layer (Visionary Finance Transformation Perspective)
+
+Even if the data is partial, provide:
+	•	Role alignment observations: Identify if any departments seem top-heavy or analyst-heavy.
+	•	Skill concentration: Where are most of the specialized roles (e.g., Liquidity, Regulatory Reporting) concentrated?
+	•	Potential gaps: Which functional areas have very few or no visible resources?
+	•	Transformation readiness score (1–5): Assign a readiness score for each department that exists in the data, based on role diversity and leadership spread. If data is insufficient, mark as “Not Enough Data” but still explain your reasoning.
+	•	Automation potential: Flag areas with repetitive/manual role types that may be candidates for automation.
 
 ⸻
 
-5. Consolidated Summary Table
+7. Recommendations
 
-Create one final dashboard-friendly summary table:
-	•	Department | Total Resources | VP Count | Manager Count | Analyst Count | Other Roles Count
-
-⸻
-
-6. Format Requirements
-	•	All tables should be clean, consistent, and CSV-ready.
-	•	Maintain exact spelling of names and titles.
-	•	If the department is unclear from the title, mark it as “Unspecified” but still include it in the tables.
+For each department that can be identified, give up to 3 strategic recommendations based on the extracted data.
+If the department is “Unspecified,” make general resource optimization suggestions.
 
 ⸻
 
-Deliverables:
-	1.	Individual tables per department with detailed listings.
-	2.	Departmental commentary as short bullet points or paragraphs.
-	3.	Consolidated summary table for quick dashboard integration.
+8. Overall Summary & Ratings
+
+Provide:
+	•	Overall organization alignment score (1–5) based on available data.
+	•	Executive summary paragraph highlighting:
+	•	Strengths
+	•	Weaknesses
+	•	Missing data impact
+	•	Priority actions for transformation readiness
 
 ⸻
 
-If you like, I can also give you an enhanced version of this prompt that includes instructions for role classification logic so the LLM knows exactly how to detect “VP,” “Manager,” “Analyst,” etc., even if the titles vary. That would make your extraction more accurate.
+9. Missing Data Flagging
 
-Do you want me to prepare that enhanced classification version?
+At the end of your output, list all:
+	•	Names without job titles
+	•	Job titles without inferred departments
+	•	Any entries that could not be classified into seniority levels
+
+⸻
+
+Instruction to LLM: If certain requested details are unavailable from the document, do not stop or give an error—mark them as “Unknown” or “Unspecified” and continue processing the rest of the data.
+
+⸻
+
+If you give this prompt to the LLM with your PDF, it will:
+	•	Always produce a table
+	•	Always produce metrics
+	•	Always give some insights
+	•	Clearly mark what’s missing so you can fill gaps later
+
+⸻
+
+If you’d like, I can now customize this prompt specifically for your screenshot data so the role classification matches exactly what’s in that list. That way, your first run will already give a usable dashboard table. Would you like me to prepare that version?
