@@ -1,50 +1,32 @@
-Here’s a slide-ready breakdown of your discussion with Simon from the IWPB team, with pros, cons, and suggested additional points clearly marked.
-
-⸻
-
-Key Discussion Points – Meeting with Simon Chhen (IWPB Team)
-
-Pros / Advantages of the Central Pool Model
-	•	Flexible Resource Allocation:
-	•	Resources can be assigned by percentage to different value streams or sites based on funding from VSIP.
-	•	Ability to cross-utilize resources across value streams.
-	•	Flexi Pool & SMEs:
-	•	Dedicated value stream SMEs who can train other SMEs.
-	•	Ring-fencing possible for specific value streams to ensure resource availability when needed.
-	•	Technology Self-Sufficiency:
-	•	Separate technology team to develop solutions independently when IT support is unavailable.
-	•	Hired automation architect first, followed by automation resources, enabling internal capability building.
-	•	Support for Peak Loads:
-	•	Extra resources from the central pool can be provided to value streams during peak demand.
-	•	Testing Leadership:
-	•	Recommendation for each value stream to have a Testing Team Lead to manage and guide testing activities.
-
-⸻
-
-Cons / Limitations Highlighted
-	•	UAT Focus Gap:
-	•	Central pool resources focus mainly on change-related testing, not UAT or BAU, requiring BAU to handle initial stages.
-	•	Resource Allocation Challenges:
-	•	If pods outnumber available testers, allocation is percentage-based, which may dilute focus and ownership.
-	•	Dependency on Allocation Data:
-	•	Need to check historical resource allocation and peak demand data for effective planning.
-	•	Potential Comfort Gap for Value Streams:
-	•	Even with ring-fencing, some value streams may feel uncertain about resource continuity.
-
-⸻
-
-Suggested Additional Points (Not discussed but aligned with conversation)
-	•	Clear SLAs for Central Pool Support:
-	•	Define turnaround times for onboarding resources from the pool to avoid delays.
-	•	Skill Matrix & Certification Tracking:
-	•	Maintain a skills inventory for all central pool resources to enable faster and more accurate deployment.
-	•	UAT Engagement Model:
-	•	Introduce a partial UAT support framework so central pool testers can assist during critical releases.
-	•	Automation Coverage Metrics:
-	•	Track automation ROI to ensure the automation team delivers measurable benefits to all value streams.
-	•	Forecasting & Demand Planning:
-	•	Use historical allocation data to forecast future testing needs and adjust hiring proactively.
-
-⸻
-
-If you want, I can now condense this into a clean one-slide visual format where pros and cons are side-by-side, and suggested points appear in a separate box at the bottom so it’s presentation-ready. That will make it visually sharp for your PPT deck. Would you like me to prepare that version?
+WITH dup_keys AS (
+  SELECT
+    crca_entity_identifier,
+    account_or_deal_identifier,
+    account_or_deal_system_identifier,
+    Undrawn_Flag,
+    CRM_ID,
+    WBER_Mitigant_ID,
+    Collateralized_Flag,
+    Post_CRM_Corep_Exposure_Class_Valid_Flag,
+    account_or_deal_leg_identifier,
+    account_or_deal_leg_record_identifier
+  FROM `project.dataset.table`
+  GROUP BY 1,2,3,4,5,6,7,8,9,10
+  HAVING COUNT(*) = 4           -- or > 1, as needed
+)
+SELECT t.*
+FROM `project.dataset.table` t
+JOIN dup_keys d
+USING (
+  crca_entity_identifier,
+  account_or_deal_identifier,
+  account_or_deal_system_identifier,
+  Undrawn_Flag,
+  CRM_ID,
+  WBER_Mitigant_ID,
+  Collateralized_Flag,
+  Post_CRM_Corep_Exposure_Class_Valid_Flag,
+  account_or_deal_leg_identifier,
+  account_or_deal_leg_record_identifier
+)
+ORDER BY 1,2,3,4,5,6,7,8,9,10;
