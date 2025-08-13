@@ -1,32 +1,4 @@
-WITH dup_keys AS (
-  SELECT
-    crca_entity_identifier,
-    account_or_deal_identifier,
-    account_or_deal_system_identifier,
-    Undrawn_Flag,
-    CRM_ID,
-    WBER_Mitigant_ID,
-    Collateralized_Flag,
-    Post_CRM_Corep_Exposure_Class_Valid_Flag,
-    account_or_deal_leg_identifier,
-    account_or_deal_leg_record_identifier
-  FROM `project.dataset.table`
-  GROUP BY 1,2,3,4,5,6,7,8,9,10
-  HAVING COUNT(*) = 4           -- or > 1, as needed
-)
-SELECT t.*
-FROM `project.dataset.table` t
-JOIN dup_keys d
-USING (
-  crca_entity_identifier,
-  account_or_deal_identifier,
-  account_or_deal_system_identifier,
-  Undrawn_Flag,
-  CRM_ID,
-  WBER_Mitigant_ID,
-  Collateralized_Flag,
-  Post_CRM_Corep_Exposure_Class_Valid_Flag,
-  account_or_deal_leg_identifier,
-  account_or_deal_leg_record_identifier
-)
-ORDER BY 1,2,3,4,5,6,7,8,9,10;
+CREATE TABLE `target_project.target_dataset.target_table`
+AS
+SELECT *
+FROM `source_project.source_dataset.source_table`;
