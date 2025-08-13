@@ -1,4 +1,101 @@
-CREATE TABLE `target_project.target_dataset.target_table`
-AS
-SELECT *
-FROM `source_project.source_dataset.source_table`;
+Got it — I’ve reviewed the screenshots from the other team’s end-to-end presentation.
+We can enrich your PoC proposal with stronger evidence, governance controls, measurable evaluation metrics, and proven business value drawn from their material.
+
+Here’s the upgraded content for your four slides, incorporating the additional insights.
+
+⸻
+
+Slide 1 – PROPOSAL SUMMARY (Enriched)
+
+Problem Statement / Opportunity
+	•	Current requirement-to-test process in finance transformation is manual, fragmented, and prone to delays.
+	•	Variability in requirement interpretation, data lineage validation, and test case preparation leads to rework and compliance risks.
+	•	High resource dependency for BA, PM, PMO, Governance, and Testing functions.
+
+Expected Solution / Outcome
+	•	AI-powered end-to-end automation from requirement ingestion (Word, PDF, policy docs) to test automation.
+	•	Integrated with Agile ceremonies and tools (e.g., JIRA, Confluence, Clarity).
+	•	Accelerates delivery, improves traceability, and ensures compliance readiness.
+	•	Supported by governance, access, and model control measures proven in a similar HSBC deployment.
+
+Process Risk
+	•	Financial/regulatory reporting errors if AI output is inaccurate.
+	•	SOX, RWA, and reputational risks without strong controls.
+	•	Mitigation: Role-based access, audit logging, SME review (HITL), regular model validation, and restricted data classification (INTERNAL / PUBLIC).
+
+Scope (Initial and Potential)
+	•	Initial: Pilot for one finance transformation programme (BA, PM, PMO, Governance, Testing teams; ~20 users).
+	•	Future: All finance transformation programmes across geographies (200+ users).
+
+Strategic Fit
+	•	Supports HSBC’s GenAI adoption strategy, Finance on Cloud transformation, and Basel compliance automation.
+
+Duplication Assessment
+	•	Reviewed internal productivity suite — no other tool provides full requirement-to-test AI automation with embedded compliance controls.
+
+⸻
+
+Slide 2 – BUSINESS CASE (Enriched)
+
+Investment / Cost	Initial Scope	Potential Full Scope
+Business Investment	$50K	$200K
+IT Investment	$30K	$100K
+Ongoing Maint. (Bus.)	$10K p.a.	$40K p.a.
+Ongoing Maint. (IT)	$8K p.a.	$25K p.a.
+
+Direct Benefits
+	•	FTE Reduction: Initial 5 FTEs → $1M p.a.; scaling to 20 FTEs → $3M p.a.
+	•	Cost Saves: Similar PoC delivered $5.7M savings in 2026–27, rising to $7M p.a. from 2027 onwards.
+
+Indirect Benefits
+	•	Capacity creation: ~0.3 FTE freed per user/month.
+	•	Cost avoidance: Avoids additional hires and vendor tool purchases.
+	•	Risk reduction: Embedded governance (Access, Data, Model, Process, Output controls).
+	•	Improved quality: Similar HSBC PoC achieved >80% weighted AI output accuracy across modules.
+
+⸻
+
+Slide 3 – PROCESS COMPARISON WITH and WITHOUT GenAI (Enriched)
+
+Without GenAI
+	•	Manual extraction & structuring of requirements.
+	•	Multiple disconnected tools (Word, Excel, Visio, manual JIRA entries).
+	•	High SME load for design validation and test creation.
+	•	Inconsistent governance and tracking.
+
+With GenAI
+	•	Auto-ingestion from JIRA, Confluence, Clarity; outputs user stories, process flows, RAID logs, project summaries, and test artefacts.
+	•	Market research, gap analysis, and thematic RAID management generated automatically.
+	•	Test cases auto-created with scenarios, simulations, and quality checks.
+	•	Governance embedded: role-based access, SME validation, regular model risk reviews.
+	•	Proven in HSBC PoC: Avg. output accuracy >80%, latency scores >4.5/5.
+
+⸻
+
+Slide 4 – PROOF OF CONCEPT PROPOSAL (Enriched)
+
+Scope of PoC
+	•	Demonstrate AI-driven delivery automation for finance transformation requirements.
+	•	Coverage: BA Assist, PM Assist, PMO Assist, Governance Assist, Testing Assist.
+
+Architecture / Infrastructure
+	•	Hosted on dedicated secure environment; Azure OpenAI API.
+	•	Data sources: INTERNAL only — JIRA, Confluence, Clarity.
+	•	Model version control, encrypted storage, periodic risk reviews.
+
+Duration
+	•	Start: Sept 2025 — End: Dec 2025 (4 months).
+
+Funding
+	•	Innovation budget; aligned with Finance on Cloud AI adoption strategy.
+
+Success Criteria
+	•	≥50% reduction in requirement-to-test cycle time.
+	•	≥90% AI output accuracy in key deliverables (user stories, test cases, RAID logs).
+	•	≥80% SME satisfaction on AI outputs.
+	•	Model governance metrics: zero high-risk hallucinations; latency <3s for standard inputs.
+
+⸻
+
+If you’d like, I can also create an additional “Risk & Controls” slide for your PoC deck, using the detailed governance model (Access/Data/Model/Process/Output/BAU controls) from the other team’s presentation so your proposal looks more enterprise-ready.
+That will strengthen the compliance positioning.
