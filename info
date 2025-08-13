@@ -1,3 +1,8 @@
-	•	Scale delivery across programmes by using AI to generate and update Agile artefacts without increasing headcount.
-	•	Continuously refine backlog and sprint plans through AI-driven analysis of requirements, dependencies, and change impacts.
-	•	Maintain alignment across BA, PM, and testing workflows with AI-enabled artefact updates matched to each sprint cycle.
+Here’s a more specific and tightened version of your Success Criteria without percentages:
+	•	Participation from at least 100 users across value streams, covering roles such as BA, PM, Scrum Master, Design, Testing, and Product Owner.
+	•	AI solution to generate initial drafts for requirements, epics, user stories, and design documents based on provided inputs.
+	•	Ability to identify and highlight gaps or missing requirement details during analysis.
+	•	Pre-population of JIRA requirement templates and creation of traceable test cases linked to user stories.
+	•	Delivery of outputs aligned with Agile sprint cycles for review and refinement by SMEs.
+
+Do you want me to also make a shorter, bullet-light version that fits neatly in your PoC slide without crowding it?
