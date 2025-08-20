@@ -1,12 +1,5 @@
-Subject: Collaboration on GenAI Testing Solution
-
-Hi,
-
-I am Ravi Jain, leading the Testing CoE for Finance Transformation. We have initiated a GenAI PoC for generating test cases from requirements and related documents, and are now considering extending it to cover requirement refinement, user stories, and high-level design. I had also briefly connected with Seb through Piyush, as our PoCs were similar.
-
-Yesterday, Ruchan shared the articles, and it was great to see the progress made by our Treasury IT team. The solution seems highly relevant for Finance Transformation, and I would like to explore the feasibility of collaborating and extending it for wider use. Would you be open to a short call? I can coordinate a suitable time.
-
-Best regards,
-Ravi Jain
-Testing CoE Lead
-Finance Transformation
+pyinstaller --onefile launcher.py ^
+  --hidden-import=altair ^
+  --hidden-import=altair.vegalite.v4 ^
+  --collect-all=altair ^
+  --collect-data=vega_datasets
