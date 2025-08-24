@@ -1,17 +1,106 @@
-Here’s a 1-slide executive summary version of your Testing CoE deck — concise, high-impact, and designed for senior stakeholders:
+Got it 👍 — thanks for pointing that out.
+
+You’re absolutely right: for the regulatory assessment template (Risk Type, Regulator, Basel Approach, etc.), these aren’t really “questions” — they are fields that need to be populated. Writing “Question” there is unnecessary.
+
+So instead, the correct structure is:
+	•	Topic/Field Name
+	•	Suggestions (your blue text)
+	•	Response (the filled value with justification)
 
 ⸻
 
-Testing Center of Excellence – Executive Summary
-	•	Objective: Centralize testing resources to enhance efficiency, flexibility, and quality.
-	•	Efficiency Gains: ~15% via automation and an additional ~15% via AI adoption within 6–18 months (2026–27).
-	•	Key Challenges: Redundant manual testing, inconsistent quality, poor traceability, and UAT misalignment.
-	•	Strategic Approach: Centralized resource pool, standardized automation frameworks, Gen AI–driven test case generation, and skill rotation.
-	•	Benefits: Cost reduction, improved coverage and defect detection, optimized resource utilization across value streams.
-	•	Future State: Agile-integrated, AI-enabled testing ecosystem with continuous improvement through KPI/OKR feedback loops.
+🔹 Refined Prompt for Regulatory Assessment Fields
+
+Persona:
+You are an experienced Finance Transformation leader with extensive expertise in Regulatory governance at HSBC.
+
+High-Level Instructions:
+You are tasked with evaluating the attached regulatory requirement document (e.g., Basel 3.1 guidance) and populating the following regulatory assessment fields.
+
+For each field:
+	1.	Keep the Field Name exactly as written below.
+	2.	Keep the Suggestions exactly as written below.
+	3.	Only generate the Response section.
+	•	The Response must contain the most appropriate value (e.g., “CCR,” “ECB,” “Yes,” “$50m increase,” etc.).
+	•	Provide a short justification, interpreting what the Basel requirement implies for the bank.
+	•	If the document does not explicitly provide the detail, infer the most reasonable value.
+	•	Only state “Information not available in the document” if no inference can be drawn.
+
+Always use this structure:
+
+Field: [unchanged]  
+Suggestions: [unchanged]  
+Response: [Answer + justification]
+
 
 ⸻
 
-⚡This version keeps only the essentials and flows as a board/executive pitch.
+Fields, Suggestions, and Responses
 
-Would you like me to also design this as a visual one-pager layout (with icons/structure for presentation slides), or do you prefer it kept in text for now?
+Regulatory Context
+	•	Field: Risk Type
+	•	Suggestions: NCCR / CCR / Securitisation / Op Risk / Capital / etc
+	•	Response: [Answer + justification]
+	•	Field: Regulator
+	•	Suggestions: BAU PRA/B3.1 PRA / ECB / HKMA / etc
+	•	Response: [Answer + justification]
+	•	Field: Global / Regional / Site Specific
+	•	Suggestions: If not Global, list regions or sites
+	•	Response: [Answer + justification]
+	•	Field: Basel Approach
+	•	Suggestions: STD / FIRB / AIRB / All
+	•	Response: [Answer + justification]
+	•	Field: Regulatory Reference(s)
+	•	Suggestions: where relevant, provide the regulatory text or paragraph references
+	•	Response: [Answer + justification]
+
+⸻
+
+Interpretations and Clarifications
+	•	Field: Policy Interpretation if any
+	•	Suggestions: where relevant. Identifies if any policy interpretation is associated or not.
+	•	Response: [Answer + justification]
+	•	Field: EBA Q & A if any
+	•	Suggestions: where relevant. This should include EBA Q&As if anything associated to that requirements.
+	•	Response: [Answer + justification]
+
+⸻
+
+Operational / Issue Tracking
+	•	Field: Issue Reference
+	•	Suggestions: MSII, DQIM, Liked Aurora IDs or other issue identifier where relevant
+	•	Response: [Answer + justification]
+
+⸻
+
+Capital and RWA Impact
+	•	Field: Estimated RWA Impact
+	•	Suggestions: $xxm increase/decrease
+	•	Response: [Answer + justification]
+	•	Field: Disclosure Impact
+	•	Suggestions: Yes / No
+	•	Response: [Answer + justification]
+
+⸻
+
+Process Adjustments
+	•	Field: Manual Adjustment Removal
+	•	Suggestions: Yes / No
+	•	Response: [Answer + justification]
+	•	Field: B3.1 PRA/HKMA/ECB Impacts
+	•	Suggestions: Yes / No
+	•	Response: [Answer + justification]
+	•	Field: Reference Data Change Only
+	•	Suggestions: Yes / No
+	•	Response: [Answer + justification]
+	•	Field: FCDP Changes Required
+	•	Suggestions: Yes / No
+	•	Response: [Answer + justification]
+
+⸻
+
+✅ This version now matches your exact style — just Field → Suggestions → Response — no “question” wording.
+
+⸻
+
+Would you like me to also merge this with your earlier 9-question Basel evaluation prompt into a single master prompt (so you can cover both templates in one go when giving a requirement)?
