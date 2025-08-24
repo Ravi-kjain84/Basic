@@ -1,56 +1,105 @@
-Got it ✅ — I fully understand your point.
+Perfect ✅ — I see that the screenshot is about Requirement Governance information fields (RWA Book of Work, Driver, BA, Sponsor, Approvals, Stakeholders, etc.), plus the Objective & Key Results (OKR) section.
 
-The Operating Model section should not just restate labels like “new reference data processes” or “new validation rules.” Instead, it should explain the implications of the change:
-	•	What is impacted,
-	•	What new processes or training are required, and
-	•	How the operating model must adapt to ensure regulatory compliance and efficiency.
-
-Here’s a refined prompt that will guide the model to always generate meaningful, change-driven content under each operating model item.
+Here’s a refined prompt in the same structured style we’ve been building:
 
 ⸻
 
-🔹 Prompt for Operating Model Implications
+🔹 Prompt for Requirement Governance Fields
 
 Persona:
-You are an experienced Finance Transformation leader with expertise in Basel regulatory requirements, data governance, and operating model design.
+You are an experienced Finance Transformation leader with extensive expertise in Regulatory governance at HSBC.
 
 High-Level Instructions:
-You are tasked with analyzing the given regulatory requirement and summarizing its operating model implications.
+You are tasked with capturing the Requirement Governance details for a regulatory requirement.
 
-For each operating model item listed below, explain:
-	•	How the requirement introduces changes,
-	•	What needs to be updated or introduced (process, control, training, or system element),
-	•	How this ensures the operating model remains effective and compliant.
+For each field below:
+	1.	Keep the label exactly as written.
+	2.	Keep the Suggestions exactly as written — do not drop them.
+	3.	Generate the Response section:
+	•	Populate with the most relevant answer based on the requirement.
+	•	Where the requirement is high-level, infer the likely governance detail (e.g., typical BA role, stakeholders, approvals).
+	•	If multiple options are possible (e.g., Yes / No / N/A), select the most appropriate and justify briefly.
+	•	Only use “Information not available” as a last resort.
 
-Always output under the following headers:
+Always use this structure:
 
-### Operating Model Implications
+[Label as given]  
+Suggestions: [unchanged text]  
+Response: [Answer + justification/inference]
 
-**New Reference Data Processes**  
-[Explain if new reference data is required, how it will be sourced, governed, and integrated into Finance systems.]
-
-**Changes to Existing Manual Adjustment Processes**  
-[Explain if any manual adjustments will be removed, reduced, or automated. Highlight impact on reconciliation and control.]
-
-**Training for New Reconciliation Processes**  
-[Explain if new reconciliation steps or controls are required. Specify training needed for Finance/Operations teams.]
-
-**New or Changes to MI Dashboards**  
-[Explain if MI dashboards need to be created or enhanced to reflect new metrics, exposures, or risk-weight adjustments.]
-
-**New Validation Rules**  
-[Explain what additional validation rules are required to ensure accuracy, e.g., SME flag validation, currency mismatch check.]
-
-**Efficiency Benefits**  
-[Explain how the change improves efficiency — e.g., reduced manual effort, faster reporting, better audit trail.]
-
-Important:
-	•	Do not just restate the labels.
-	•	Infer practical impacts even if the requirement is high-level.
-	•	Keep responses concise, structured, and implementation-ready.
 
 ⸻
 
-✅ With this, your Operating Model section will always explain what the change means in practice, rather than just repeating placeholders.
+Requirement Governance Fields
 
-👉 Do you want me to also prepare a worked-out example (say, for Currency Mismatch Adjustment or SME Supporting Factor) so you can see how the six operating model headers would actually get filled?
+RWA Book of Work initiative
+Suggestions: Confirm initiative with book of work owner
+Response: [Answer + justification]
+
+Driver
+Suggestions: Confirm driver with book of work owner
+Response: [Answer + justification]
+
+Requirement BA
+Suggestions: Name of the requirement BA
+Response: [Answer + justification]
+
+Requirement sponsor(s)
+Suggestions: Name of the requirement sponsor(s)
+Response: [Answer + justification]
+
+Requirement sponsor approval attached
+Suggestions: Yes / No
+Response: [Answer + justification]
+
+Fin Ops, Reg Reporting teams and other impacted stakeholders informed
+Suggestions: List other impacted regional or Group teams not represented by the sponsor.
+Response: [Answer + justification]
+
+Design (or Delivery) team reviewer
+Suggestions: Name of the Design (or Delivery) team reviewer
+Response: [Answer + justification]
+
+FCDP Data Questionnaire attached
+Suggestions: Yes / No / N/A
+Response: [Answer + justification]
+
+RWA Test Data Questionnaire attached
+Suggestions: Yes / No / N/A
+Response: [Answer + justification]
+
+Related List of Business Data Elements (BDE’s) attached
+Suggestions: Yes / No / N/A
+Response: [Answer + justification]
+
+⸻
+
+Objective and Key Results (OKR) Section
+
+Instructions: Choose one or more criteria from the list below (can be many). Explain why this requirement supports those OKRs.
+	•	Eliminate Critical/High risk manual adjustments in FC processes.
+	•	Reduce the total cost of ownership (TCO) through investment in modernizing systems and operations.
+	•	Reduce the number of non-strategic EIM applications in FC IT estate and review existing applications under ‘Contain’.
+	•	Deliver on required IRR outcomes.
+	•	Timely adoption of new standards and regulations (e.g. B3.1, ESG disclosures, IFRS18, Credit Risk model updates).
+	•	FC systems and capabilities continue to meet BAU service resilience and performance levels, with minimal production incidents.
+	•	Eliminate material reporting issues / restatements through the effective adoption of IRR control standards.
+	•	Remediate Aurora Critical / High data quality issues impacting FC.
+	•	Produce common data assets for all FC owned data.
+	•	Eliminate Critical/High risk EUCs through greater automation.
+
+Response: [Select one or more OKRs relevant to the requirement and justify with context, e.g., SME factor supports timely adoption of B3.1 regulations, reduces manual adjustments, and creates standardized data assets.]
+
+⸻
+
+✅ This way, the Requirement Governance section will always be populated in a clear, structured, and JIRA-ready format, with Suggestions kept and Responses inferred where possible.
+
+⸻
+
+👉 Do you want me to also prepare a combined master prompt that brings together:
+	•	Regulatory Context fields,
+	•	Requirement Summary fields,
+	•	Operating Model implications, and
+	•	Requirement Governance fields,
+
+…so you can generate one end-to-end requirements package in a single run?
