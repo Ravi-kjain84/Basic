@@ -1,59 +1,113 @@
-Excellent point 👍 — you’re absolutely right:
-	•	Fundamentally, there are two stakeholders: Business and Technology.
-	•	Testing/QA is not a separate stakeholder, but rather a lens applied to both.
-	•	If we made it a third section, it could dilute accountability and create overlap.
+Perfect 👍 I now see the requirement summary fields from your screenshots (Test Data, New Data Sourcing, Data Masking, SDI, FCDP, RWA Calculation, etc.). These are very similar to the earlier regulatory context template — but instead of risk/regulator-type fields, these are system/process requirement fields.
 
-So the best approach is:
-	•	Keep two main categories:
-	•	Business/User Acceptance Criteria
-	•	Technology/Implementation Acceptance Criteria
-	•	But within each, embed QA/testability language so that every criterion is framed as clear, testable, and verifiable.
-
-That way, QA is not a “third voice,” but every item is naturally test-ready.
+Let me rewrite the prompt in the exact same “Field → Suggestions → Response” format for this set of requirement categories.
 
 ⸻
 
-🔹 Refined Prompt with Embedded QA/Testability
+🔹 Refined Prompt for Requirement Summary Fields
 
 Persona:
-You are an experienced Finance Transformation leader with expertise in Basel regulatory requirements, testing governance, and system implementation.
+You are an experienced Finance Transformation leader with extensive expertise in Regulatory governance at HSBC.
 
 High-Level Instructions:
-You are tasked with writing acceptance criteria for the given regulatory requirement. Input may include either:
-	1.	Only the initial requirement document, or
-	2.	Both the requirement document and an enriched analysis document (with details such as regulatory context, controls, feeds, adjustments, validations, etc.).
+You are tasked with evaluating the attached regulatory requirement document (e.g., Basel 3.1 guidance) and populating the following requirement summary fields.
 
-In both cases:
-	•	Always generate acceptance criteria.
-	•	If additional analysis is provided, enrich the acceptance criteria using those details.
-	•	Acceptance criteria must be:
-	•	Specific (no vague statements)
-	•	Testable (can be validated by QA or audit evidence)
-	•	Unambiguous (clear pass/fail conditions)
-	•	Split into two perspectives:
-	•	Business/User Acceptance Criteria → focus on compliance, accuracy, reporting, usability, governance.
-	•	Technology/Implementation Acceptance Criteria → focus on data feeds, system changes, controls, adjustments, dashboards, and validations.
-	•	For each criterion, ensure it is written in a way that QA/test teams can verify it without needing additional interpretation.
+For each field:
+	1.	Keep the Field Name exactly as written below.
+	2.	Keep the Suggestions exactly as written below.
+	3.	Only generate the Response section.
+	•	The Response must contain the most appropriate value (e.g., field names, “Yes/No”, references to ETL, MI dashboards, etc.).
+	•	Provide a short justification, interpreting what the Basel requirement implies for the bank’s systems and processes.
+	•	If the document does not explicitly provide the detail, infer the most reasonable value.
+	•	Only state “Information not available in the document” if no inference can be drawn.
 
-Always output in this format:
+Always use this structure:
 
-### Business/User Acceptance Criteria
-1. [Criteria written as a clear, testable statement, e.g., “System reports must separately disclose SME exposures with supporting factor applied.”]
-2. …
+Field: [unchanged]  
+Suggestions: [unchanged]  
+Response: [Answer + justification]
 
-### Technology/Implementation Acceptance Criteria
-1. [Criteria written as a clear, testable statement, e.g., “SME flag field must be present in data feeds and reconciled against counterparty reference table.”]
-2. …
-
-If the requirement document is high-level, infer the most likely practical acceptance criteria based on Basel compliance expectations. Only use “Not specified in the requirement” if nothing at all can be inferred.
 
 ⸻
 
-✅ This way:
-	•	Business criteria are written so that business testers (UAT) can check them in reports, dashboards, disclosures.
-	•	Technology criteria are written so that system testers (SIT/QA) can check data lineage, controls, and reconciliation.
-	•	You don’t need a third “Testing QA” section — testability is baked into both.
+Fields, Suggestions, and Responses
+
+Data and Sourcing
+	•	Field: Test Data Requirements
+	•	Suggestions: Identify if specific test data is needed to meet this requirement. Confirm if upstream data providers have been engaged to provide this test data and provide details of the test data provision timelines and whether the connectivity to Finance systems is already in place. Attach the completed ‘Test Data Questionnaire’ to the requirement.
+	•	Response: [Answer + justification]
+	•	Field: New Data Sourcing Requirements
+	•	Suggestions: Describe any new data requirements. Confirm if non-functional requirements have been agreed with the new data provider (e.g., SLAs).
+	•	Response: [Answer + justification]
+	•	Field: Data Masking Requirements
+	•	Suggestions: Describe any data masking requirements for new feeds into Finance. This should include enhanced data masking for sites like China, Taiwan, Egypt, Oman & Turkey. All data masking requirements should be approved by DAO.
+	•	Response: [Answer + justification]
 
 ⸻
 
-👉 Would you like me to now draft a worked-out acceptance criteria example for one real Basel 3.1 requirement (say, Currency Mismatch Adjustment), using this refined format so you see how QA/testability is embedded in both roles?
+Integration and Processing
+	•	Field: SDI Requirements
+	•	Suggestions: Explain the impact on the SDI schema or SDI stitching logic.
+	•	Response: [Answer + justification]
+	•	Field: FCDP Common Datasets
+	•	Suggestions: Describe the changes required to the FCDP Common ETL.
+	•	Response: [Answer + justification]
+	•	Field: FCDP Reference Data
+	•	Suggestions: Describe any new reference data needed. Provide the name of any FCDP owned reference data tables requiring a change and describe the change. Identify the reference data table owners.
+	•	Response: [Answer + justification]
+	•	Field: Other FCDP Requirements (Data Assets, Load Info Deployment, DRU Tool, etc.)
+	•	Suggestions: Document all other FCDP requirements not covered above.
+	•	Response: [Answer + justification]
+
+⸻
+
+RWA and Reporting
+	•	Field: RWA Calculation (Cloud, HBAP Fermat, CORB3, etc.)
+	•	Suggestions: Detail the RWA calculation changes needed to meet the requirement.
+	•	Response: [Answer + justification]
+	•	Field: RWA Reference Data
+	•	Suggestions: Describe any new reference data needed. Provide the name of any RWA owned reference data tables requiring a change and describe the change. Identify the relevant reference data table owners.
+	•	Response: [Answer + justification]
+	•	Field: Reporting & Consolidation (RARE, HBAP Fermat, RCT, etc.)
+	•	Suggestions: Capture any implications on the R&C Tools (e.g., RCT / HBAP Fermat).
+	•	Response: [Answer + justification]
+	•	Field: Regulatory Returns impacted
+	•	Suggestions: Mention the Return names impacted due to this change.
+	•	Response: [Answer + justification]
+	•	Field: RWA Outputs & MI
+	•	Suggestions: List the changes to the PGIF / RWA Data Assets / other site specific extracts and new or changing MI Dashboards.
+	•	Response: [Answer + justification]
+	•	Field: Other Downstream RWA Consumers (IFRS9, etc.)
+	•	Suggestions: Highlight the impacts on other consumers of RWA data.
+	•	Response: [Answer + justification]
+
+⸻
+
+Assumptions and Constraints
+	•	Field: Assumptions if any Reporting, Design, Calculations etc.
+	•	Suggestions: Please capture any Data, calculation and reporting assumptions used here.
+	•	Response: [Answer + justification]
+	•	Field: Limitations and Constraints if any Data, systems, etc.
+	•	Suggestions: Please capture any limitations in Data, system design and interpretation.
+	•	Response: [Answer + justification]
+
+⸻
+
+Operating Model
+	•	Field: Operating Model
+	•	Suggestions: Summarise the operating model implications:
+	•	New reference data processes
+	•	Changes to existing manual adjustment processes
+	•	Training for new reconciliation processes
+	•	New or changes to MI Dashboards
+	•	New validation rules
+	•	Efficiency Benefits
+	•	Response: [Answer + justification]
+
+⸻
+
+✅ Now you have a parallel structured prompt for the Requirement Summary fields (data, sourcing, FCDP, RWA, operating model) — exactly aligned with the “Field → Suggestions → Response” style we built earlier.
+
+⸻
+
+Would you like me to merge this new Requirement Summary template with your earlier Regulatory Context template so you end up with a single master prompt covering both (Regulatory fields + Requirement summary fields)?
