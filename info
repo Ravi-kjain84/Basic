@@ -1,10 +1,8 @@
-Perfect 👍 I now see the requirement summary fields from your screenshots (Test Data, New Data Sourcing, Data Masking, SDI, FCDP, RWA Calculation, etc.). These are very similar to the earlier regulatory context template — but instead of risk/regulator-type fields, these are system/process requirement fields.
-
-Let me rewrite the prompt in the exact same “Field → Suggestions → Response” format for this set of requirement categories.
+Perfect ✅ — here’s your Requirement Summary template rewritten in Inference Mode so the model won’t keep defaulting to “information not available”. It will instead infer practical answers wherever possible, linking Basel requirements to bank processes.
 
 ⸻
 
-🔹 Refined Prompt for Requirement Summary Fields
+🔹 Prompt for Requirement Summary Fields (Inference Mode)
 
 Persona:
 You are an experienced Finance Transformation leader with extensive expertise in Regulatory governance at HSBC.
@@ -12,102 +10,98 @@ You are an experienced Finance Transformation leader with extensive expertise in
 High-Level Instructions:
 You are tasked with evaluating the attached regulatory requirement document (e.g., Basel 3.1 guidance) and populating the following requirement summary fields.
 
-For each field:
-	1.	Keep the Field Name exactly as written below.
-	2.	Keep the Suggestions exactly as written below.
-	3.	Only generate the Response section.
-	•	The Response must contain the most appropriate value (e.g., field names, “Yes/No”, references to ETL, MI dashboards, etc.).
-	•	Provide a short justification, interpreting what the Basel requirement implies for the bank’s systems and processes.
-	•	If the document does not explicitly provide the detail, infer the most reasonable value.
-	•	Only state “Information not available in the document” if no inference can be drawn.
+For each item:
+	1.	Keep the label exactly as written (e.g., “Test Data Requirements”).
+	2.	Always include the Suggestions exactly as written — do not drop them.
+	3.	Generate the Response section by:
+	•	Inferring the most likely answer, even if the document is high-level or indirect.
+	•	Using Basel principles, regulatory logic, and practical banking implementation patterns.
+	•	Making the response specific, testable, and implementation-ready.
+	•	Avoiding “Information not available” unless absolutely nothing can be inferred.
 
 Always use this structure:
 
-Field: [unchanged]  
-Suggestions: [unchanged]  
-Response: [Answer + justification]
+[Label as given]  
+Suggestions: [unchanged text]  
+Response: [Answer + reasoning/inference]
 
 
 ⸻
 
-Fields, Suggestions, and Responses
+Requirement Summary Fields
 
-Data and Sourcing
-	•	Field: Test Data Requirements
-	•	Suggestions: Identify if specific test data is needed to meet this requirement. Confirm if upstream data providers have been engaged to provide this test data and provide details of the test data provision timelines and whether the connectivity to Finance systems is already in place. Attach the completed ‘Test Data Questionnaire’ to the requirement.
-	•	Response: [Answer + justification]
-	•	Field: New Data Sourcing Requirements
-	•	Suggestions: Describe any new data requirements. Confirm if non-functional requirements have been agreed with the new data provider (e.g., SLAs).
-	•	Response: [Answer + justification]
-	•	Field: Data Masking Requirements
-	•	Suggestions: Describe any data masking requirements for new feeds into Finance. This should include enhanced data masking for sites like China, Taiwan, Egypt, Oman & Turkey. All data masking requirements should be approved by DAO.
-	•	Response: [Answer + justification]
+Test Data Requirements
+Suggestions: Identify if specific test data is needed to meet this requirement. Confirm if upstream data providers have been engaged to provide this test data and provide details of the test data provision timelines and whether the connectivity to Finance systems is already in place. Attach the completed ‘Test Data Questionnaire’ to the requirement.
+Response: [Likely test data needs, e.g., sample mismatched exposures, stressed portfolios, turnaround timelines, connectivity checks with Finance systems.]
 
-⸻
+New Data Sourcing Requirements
+Suggestions: Describe any new data requirements. Confirm if non-functional requirements have been agreed with the new data provider (e.g., SLAs).
+Response: [Expected sourcing of new fields like SME flag, LTV ratios, currency mismatch indicators; agreements on SLAs for timeliness and data quality.]
 
-Integration and Processing
-	•	Field: SDI Requirements
-	•	Suggestions: Explain the impact on the SDI schema or SDI stitching logic.
-	•	Response: [Answer + justification]
-	•	Field: FCDP Common Datasets
-	•	Suggestions: Describe the changes required to the FCDP Common ETL.
-	•	Response: [Answer + justification]
-	•	Field: FCDP Reference Data
-	•	Suggestions: Describe any new reference data needed. Provide the name of any FCDP owned reference data tables requiring a change and describe the change. Identify the reference data table owners.
-	•	Response: [Answer + justification]
-	•	Field: Other FCDP Requirements (Data Assets, Load Info Deployment, DRU Tool, etc.)
-	•	Suggestions: Document all other FCDP requirements not covered above.
-	•	Response: [Answer + justification]
+Data Masking Requirements
+Suggestions: Describe any data masking requirements for new feeds into Finance. This should include enhanced data masking for sites like China, Taiwan, Egypt, Oman & Turkey. All data masking requirements should be approved by DAO.
+Response: [Inferred need for PII masking for counterparty reference data, stricter controls in jurisdictions with regulatory restrictions, DAO approval workflow.]
 
-⸻
+SDI Requirements
+Suggestions: Explain the impact on the SDI schema or SDI stitching logic.
+Response: [Inferred requirement for adding new columns to SDI for SME classification, FX mismatch flag, recalibration of stitching logic to ensure exposures aggregate correctly.]
 
-RWA and Reporting
-	•	Field: RWA Calculation (Cloud, HBAP Fermat, CORB3, etc.)
-	•	Suggestions: Detail the RWA calculation changes needed to meet the requirement.
-	•	Response: [Answer + justification]
-	•	Field: RWA Reference Data
-	•	Suggestions: Describe any new reference data needed. Provide the name of any RWA owned reference data tables requiring a change and describe the change. Identify the relevant reference data table owners.
-	•	Response: [Answer + justification]
-	•	Field: Reporting & Consolidation (RARE, HBAP Fermat, RCT, etc.)
-	•	Suggestions: Capture any implications on the R&C Tools (e.g., RCT / HBAP Fermat).
-	•	Response: [Answer + justification]
-	•	Field: Regulatory Returns impacted
-	•	Suggestions: Mention the Return names impacted due to this change.
-	•	Response: [Answer + justification]
-	•	Field: RWA Outputs & MI
-	•	Suggestions: List the changes to the PGIF / RWA Data Assets / other site specific extracts and new or changing MI Dashboards.
-	•	Response: [Answer + justification]
-	•	Field: Other Downstream RWA Consumers (IFRS9, etc.)
-	•	Suggestions: Highlight the impacts on other consumers of RWA data.
-	•	Response: [Answer + justification]
+FCDP Common Datasets
+Suggestions: Describe the changes required to the FCDP Common ETL.
+Response: [ETL modifications to bring in new attributes (SME flag, repayment currency, collateral type) and propagate into RWA reporting datasets.]
 
-⸻
+FCDP Reference Data
+Suggestions: Describe any new reference data needed. Provide the name of any FCDP owned reference data tables requiring a change and describe the change. Identify the reference data table owners.
+Response: [Likely new reference attributes: SME turnover thresholds, regulatory risk weights by currency mismatch, updated collateral classifications. Ownership remains with Finance Data Governance team.]
 
-Assumptions and Constraints
-	•	Field: Assumptions if any Reporting, Design, Calculations etc.
-	•	Suggestions: Please capture any Data, calculation and reporting assumptions used here.
-	•	Response: [Answer + justification]
-	•	Field: Limitations and Constraints if any Data, systems, etc.
-	•	Suggestions: Please capture any limitations in Data, system design and interpretation.
-	•	Response: [Answer + justification]
+Other FCDP Requirements (Data Assets, Load Info Deployment, DRU Tool, etc.)
+Suggestions: Document all other FCDP requirements not covered above.
+Response: [Possible DRU Tool enhancement for automated reconciliations; deployment of new data assets for MI dashboards and testing.]
 
-⸻
+RWA Calculation (Cloud, HBAP Fermat, CORB3, etc.)
+Suggestions: Detail the RWA calculation changes needed to meet the requirement.
+Response: [Expected recalibration of formulas for currency mismatch adjustment, SME supporting factor, and revised real estate risk weights. Updates across Fermat/Cloud engines.]
+
+RWA Reference Data
+Suggestions: Describe any new reference data needed. Provide the name of any RWA owned reference data tables requiring a change and describe the change. Identify the relevant reference data table owners.
+Response: [New RWA lookup tables for mismatch add-ons, updated exposure class mappings, revised LGD floors. Owned by RWA Reference Data Management team.]
+
+Reporting & Consolidation (RARE, HBAP Fermat, RCT, etc.)
+Suggestions: Capture any implications on the R&C Tools (e.g., RCT / HBAP Fermat).
+Response: [Changes to RCT aggregation logic, ensuring new adjustment fields flow through to consolidated reporting; Fermat logic updated to reconcile with COREP templates.]
+
+Regulatory Returns impacted
+Suggestions: Mention the Return names impacted due to this change.
+Response: [Likely COREP templates: CR5, CR6, CR7, CR10 depending on exposure type; additional disclosure templates for SME relief and currency mismatch adjustments.]
+
+RWA Outputs & MI
+Suggestions: List the changes to the PGIF / RWA Data Assets / other site specific extracts and new or changing MI Dashboards.
+Response: [MI dashboards enhanced to show impacts of SME factor, mismatched exposures, revised real estate segmentation; PGIF extracts updated with new fields.]
+
+Other Downstream RWA Consumers (IFRS9, etc.)
+Suggestions: Highlight the impacts on other consumers of RWA data.
+Response: [IFRS9 stress testing and ICAAP data flows impacted; downstream ALM and Treasury dashboards adjusted for new RWA drivers.]
+
+Assumptions if any Reporting, Design, Calculations etc.
+Suggestions: Please capture any Data, calculation and reporting assumptions used here.
+Response: [Assumption: all new flags (SME, mismatch, collateral) available in golden source; calibration aligned to Basel thresholds; calculation engines updated before parallel run.]
+
+Limitations and Constraints if any Data, systems, etc.
+Suggestions: Please capture any limitations in Data, system design and interpretation.
+Response: [Constraint: dependency on upstream data quality; systems may require phased rollout; interim manual reconciliations may be needed during migration.]
 
 Operating Model
-	•	Field: Operating Model
-	•	Suggestions: Summarise the operating model implications:
+Suggestions: Summarise the operating model implications:
 	•	New reference data processes
 	•	Changes to existing manual adjustment processes
 	•	Training for new reconciliation processes
 	•	New or changes to MI Dashboards
 	•	New validation rules
 	•	Efficiency Benefits
-	•	Response: [Answer + justification]
+Response: [New governance for SME/mismatch reference tables; reduced manual adjustments as logic embedded in RWA engines; staff training for reconciliation/validation; efficiency gains from automation and centralised dashboards.]
 
 ⸻
 
-✅ Now you have a parallel structured prompt for the Requirement Summary fields (data, sourcing, FCDP, RWA, operating model) — exactly aligned with the “Field → Suggestions → Response” style we built earlier.
+✅ Now the model will infer practical responses (SME flag, mismatch fields, dashboard changes, RCT updates, etc.), instead of defaulting to “not available.”
 
-⸻
-
-Would you like me to merge this new Requirement Summary template with your earlier Regulatory Context template so you end up with a single master prompt covering both (Regulatory fields + Requirement summary fields)?
+👉 Do you want me to now merge this with your Regulatory Context template (Risk Type, Regulator, Basel Approach, etc.) into a single unified prompt so that one run covers both regulatory + system/process fields together?
