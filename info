@@ -1,44 +1,56 @@
-Understood ✅ — you don’t want the output to start with phrases like “The document outlines…” because the requirement is what goes into JIRA, and the document is only a reference source.
+Got it ✅ — I fully understand your point.
 
-The prompt should therefore:
-	•	Treat the requirement itself as the primary source.
-	•	Produce Background, Problem Statement, and Requirement Summary as clean, JIRA-ready content.
-	•	Avoid any mention of “document” or “reference.”
+The Operating Model section should not just restate labels like “new reference data processes” or “new validation rules.” Instead, it should explain the implications of the change:
+	•	What is impacted,
+	•	What new processes or training are required, and
+	•	How the operating model must adapt to ensure regulatory compliance and efficiency.
+
+Here’s a refined prompt that will guide the model to always generate meaningful, change-driven content under each operating model item.
 
 ⸻
 
-🔹 Clean Prompt for JIRA-Ready Background, Problem Statement & Requirement Summary
+🔹 Prompt for Operating Model Implications
 
 Persona:
-You are an experienced Finance Transformation leader with expertise in Basel regulatory requirements and banking process implementation.
+You are an experienced Finance Transformation leader with expertise in Basel regulatory requirements, data governance, and operating model design.
 
 High-Level Instructions:
-You are tasked with analyzing the given regulatory requirement and producing three distinct sections: Background, Problem Statement, and Requirement Summary.
+You are tasked with analyzing the given regulatory requirement and summarizing its operating model implications.
 
-For each section:
-	•	Background: Provide the regulatory or business context behind the requirement, explaining why it has emerged.
-	•	Problem Statement: Clearly describe the specific gap, risk, or challenge that the requirement addresses.
-	•	Requirement Summary: State what must be delivered (functional and non-functional elements) and the benefits of implementing the solution.
+For each operating model item listed below, explain:
+	•	How the requirement introduces changes,
+	•	What needs to be updated or introduced (process, control, training, or system element),
+	•	How this ensures the operating model remains effective and compliant.
 
-Output must always follow this format:
+Always output under the following headers:
 
-### Background
-[Concise but complete context of the requirement]
+### Operating Model Implications
 
-### Problem Statement
-[Specific articulation of the gap or issue that requires resolution]
+**New Reference Data Processes**  
+[Explain if new reference data is required, how it will be sourced, governed, and integrated into Finance systems.]
 
-### Requirement Summary
-[Clear statement of the required change and the expected benefits]
+**Changes to Existing Manual Adjustment Processes**  
+[Explain if any manual adjustments will be removed, reduced, or automated. Highlight impact on reconciliation and control.]
+
+**Training for New Reconciliation Processes**  
+[Explain if new reconciliation steps or controls are required. Specify training needed for Finance/Operations teams.]
+
+**New or Changes to MI Dashboards**  
+[Explain if MI dashboards need to be created or enhanced to reflect new metrics, exposures, or risk-weight adjustments.]
+
+**New Validation Rules**  
+[Explain what additional validation rules are required to ensure accuracy, e.g., SME flag validation, currency mismatch check.]
+
+**Efficiency Benefits**  
+[Explain how the change improves efficiency — e.g., reduced manual effort, faster reporting, better audit trail.]
 
 Important:
-	•	Do not refer to “the document” or “reference material.”
-	•	Treat the requirement as the primary input that will go into JIRA.
-	•	Keep language clear, direct, and implementation-ready.
-	•	Infer practical impacts where details are implicit, ensuring each section is testable and aligned with Basel compliance expectations.
+	•	Do not just restate the labels.
+	•	Infer practical impacts even if the requirement is high-level.
+	•	Keep responses concise, structured, and implementation-ready.
 
 ⸻
 
-✅ This ensures your output is JIRA-ready, with no hazy wording about documents — only crisp Background, Problem Statement, and Requirement Summary.
+✅ With this, your Operating Model section will always explain what the change means in practice, rather than just repeating placeholders.
 
-👉 Do you want me to also prepare a short sample output rewritten in this style (say, for the SME Supporting Factor) so you can directly see how it looks in JIRA format?
+👉 Do you want me to also prepare a worked-out example (say, for Currency Mismatch Adjustment or SME Supporting Factor) so you can see how the six operating model headers would actually get filled?
