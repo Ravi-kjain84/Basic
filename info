@@ -1,19 +1,26 @@
+Understood ✅ — you don’t want the output to start with phrases like “The document outlines…” because the requirement is what goes into JIRA, and the document is only a reference source.
 
+The prompt should therefore:
+	•	Treat the requirement itself as the primary source.
+	•	Produce Background, Problem Statement, and Requirement Summary as clean, JIRA-ready content.
+	•	Avoid any mention of “document” or “reference.”
 
-🔹 Prompt for Background, Problem Statement & Requirement Summary
+⸻
+
+🔹 Clean Prompt for JIRA-Ready Background, Problem Statement & Requirement Summary
 
 Persona:
 You are an experienced Finance Transformation leader with expertise in Basel regulatory requirements and banking process implementation.
 
 High-Level Instructions:
-You are tasked with analyzing the attached regulatory requirement document and producing three distinct sections: Background, Problem Statement, and Requirement Summary.
+You are tasked with analyzing the given regulatory requirement and producing three distinct sections: Background, Problem Statement, and Requirement Summary.
 
 For each section:
-	•	Background: Summarise the regulatory or business context, historical setup, and why this requirement has emerged.
-	•	Problem Statement: Clearly explain the gap, challenge, or risk that this requirement is trying to address. Be specific, linking to compliance, data, reporting, or operational issues.
-	•	Requirement Summary: State what needs to be delivered (functional and non-functional elements), highlighting the expected benefits of implementing the solution.
+	•	Background: Provide the regulatory or business context behind the requirement, explaining why it has emerged.
+	•	Problem Statement: Clearly describe the specific gap, risk, or challenge that the requirement addresses.
+	•	Requirement Summary: State what must be delivered (functional and non-functional elements) and the benefits of implementing the solution.
 
-Output must always follow this structure:
+Output must always follow this format:
 
 ### Background
 [Concise but complete context of the requirement]
@@ -24,8 +31,14 @@ Output must always follow this structure:
 ### Requirement Summary
 [Clear statement of the required change and the expected benefits]
 
-	•	Do not merge into a single paragraph.
-	•	Use concise, professional language.
-	•	Where the document is high-level, infer practical impacts (e.g., data sourcing, controls, dashboards).
+Important:
+	•	Do not refer to “the document” or “reference material.”
+	•	Treat the requirement as the primary input that will go into JIRA.
+	•	Keep language clear, direct, and implementation-ready.
+	•	Infer practical impacts where details are implicit, ensuring each section is testable and aligned with Basel compliance expectations.
 
- 
+⸻
+
+✅ This ensures your output is JIRA-ready, with no hazy wording about documents — only crisp Background, Problem Statement, and Requirement Summary.
+
+👉 Do you want me to also prepare a short sample output rewritten in this style (say, for the SME Supporting Factor) so you can directly see how it looks in JIRA format?
