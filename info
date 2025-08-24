@@ -1,106 +1,59 @@
-Got it 👍 — thanks for pointing that out.
+Excellent point 👍 — you’re absolutely right:
+	•	Fundamentally, there are two stakeholders: Business and Technology.
+	•	Testing/QA is not a separate stakeholder, but rather a lens applied to both.
+	•	If we made it a third section, it could dilute accountability and create overlap.
 
-You’re absolutely right: for the regulatory assessment template (Risk Type, Regulator, Basel Approach, etc.), these aren’t really “questions” — they are fields that need to be populated. Writing “Question” there is unnecessary.
+So the best approach is:
+	•	Keep two main categories:
+	•	Business/User Acceptance Criteria
+	•	Technology/Implementation Acceptance Criteria
+	•	But within each, embed QA/testability language so that every criterion is framed as clear, testable, and verifiable.
 
-So instead, the correct structure is:
-	•	Topic/Field Name
-	•	Suggestions (your blue text)
-	•	Response (the filled value with justification)
+That way, QA is not a “third voice,” but every item is naturally test-ready.
 
 ⸻
 
-🔹 Refined Prompt for Regulatory Assessment Fields
+🔹 Refined Prompt with Embedded QA/Testability
 
 Persona:
-You are an experienced Finance Transformation leader with extensive expertise in Regulatory governance at HSBC.
+You are an experienced Finance Transformation leader with expertise in Basel regulatory requirements, testing governance, and system implementation.
 
 High-Level Instructions:
-You are tasked with evaluating the attached regulatory requirement document (e.g., Basel 3.1 guidance) and populating the following regulatory assessment fields.
+You are tasked with writing acceptance criteria for the given regulatory requirement. Input may include either:
+	1.	Only the initial requirement document, or
+	2.	Both the requirement document and an enriched analysis document (with details such as regulatory context, controls, feeds, adjustments, validations, etc.).
 
-For each field:
-	1.	Keep the Field Name exactly as written below.
-	2.	Keep the Suggestions exactly as written below.
-	3.	Only generate the Response section.
-	•	The Response must contain the most appropriate value (e.g., “CCR,” “ECB,” “Yes,” “$50m increase,” etc.).
-	•	Provide a short justification, interpreting what the Basel requirement implies for the bank.
-	•	If the document does not explicitly provide the detail, infer the most reasonable value.
-	•	Only state “Information not available in the document” if no inference can be drawn.
+In both cases:
+	•	Always generate acceptance criteria.
+	•	If additional analysis is provided, enrich the acceptance criteria using those details.
+	•	Acceptance criteria must be:
+	•	Specific (no vague statements)
+	•	Testable (can be validated by QA or audit evidence)
+	•	Unambiguous (clear pass/fail conditions)
+	•	Split into two perspectives:
+	•	Business/User Acceptance Criteria → focus on compliance, accuracy, reporting, usability, governance.
+	•	Technology/Implementation Acceptance Criteria → focus on data feeds, system changes, controls, adjustments, dashboards, and validations.
+	•	For each criterion, ensure it is written in a way that QA/test teams can verify it without needing additional interpretation.
 
-Always use this structure:
+Always output in this format:
 
-Field: [unchanged]  
-Suggestions: [unchanged]  
-Response: [Answer + justification]
+### Business/User Acceptance Criteria
+1. [Criteria written as a clear, testable statement, e.g., “System reports must separately disclose SME exposures with supporting factor applied.”]
+2. …
 
+### Technology/Implementation Acceptance Criteria
+1. [Criteria written as a clear, testable statement, e.g., “SME flag field must be present in data feeds and reconciled against counterparty reference table.”]
+2. …
 
-⸻
-
-Fields, Suggestions, and Responses
-
-Regulatory Context
-	•	Field: Risk Type
-	•	Suggestions: NCCR / CCR / Securitisation / Op Risk / Capital / etc
-	•	Response: [Answer + justification]
-	•	Field: Regulator
-	•	Suggestions: BAU PRA/B3.1 PRA / ECB / HKMA / etc
-	•	Response: [Answer + justification]
-	•	Field: Global / Regional / Site Specific
-	•	Suggestions: If not Global, list regions or sites
-	•	Response: [Answer + justification]
-	•	Field: Basel Approach
-	•	Suggestions: STD / FIRB / AIRB / All
-	•	Response: [Answer + justification]
-	•	Field: Regulatory Reference(s)
-	•	Suggestions: where relevant, provide the regulatory text or paragraph references
-	•	Response: [Answer + justification]
+If the requirement document is high-level, infer the most likely practical acceptance criteria based on Basel compliance expectations. Only use “Not specified in the requirement” if nothing at all can be inferred.
 
 ⸻
 
-Interpretations and Clarifications
-	•	Field: Policy Interpretation if any
-	•	Suggestions: where relevant. Identifies if any policy interpretation is associated or not.
-	•	Response: [Answer + justification]
-	•	Field: EBA Q & A if any
-	•	Suggestions: where relevant. This should include EBA Q&As if anything associated to that requirements.
-	•	Response: [Answer + justification]
+✅ This way:
+	•	Business criteria are written so that business testers (UAT) can check them in reports, dashboards, disclosures.
+	•	Technology criteria are written so that system testers (SIT/QA) can check data lineage, controls, and reconciliation.
+	•	You don’t need a third “Testing QA” section — testability is baked into both.
 
 ⸻
 
-Operational / Issue Tracking
-	•	Field: Issue Reference
-	•	Suggestions: MSII, DQIM, Liked Aurora IDs or other issue identifier where relevant
-	•	Response: [Answer + justification]
-
-⸻
-
-Capital and RWA Impact
-	•	Field: Estimated RWA Impact
-	•	Suggestions: $xxm increase/decrease
-	•	Response: [Answer + justification]
-	•	Field: Disclosure Impact
-	•	Suggestions: Yes / No
-	•	Response: [Answer + justification]
-
-⸻
-
-Process Adjustments
-	•	Field: Manual Adjustment Removal
-	•	Suggestions: Yes / No
-	•	Response: [Answer + justification]
-	•	Field: B3.1 PRA/HKMA/ECB Impacts
-	•	Suggestions: Yes / No
-	•	Response: [Answer + justification]
-	•	Field: Reference Data Change Only
-	•	Suggestions: Yes / No
-	•	Response: [Answer + justification]
-	•	Field: FCDP Changes Required
-	•	Suggestions: Yes / No
-	•	Response: [Answer + justification]
-
-⸻
-
-✅ This version now matches your exact style — just Field → Suggestions → Response — no “question” wording.
-
-⸻
-
-Would you like me to also merge this with your earlier 9-question Basel evaluation prompt into a single master prompt (so you can cover both templates in one go when giving a requirement)?
+👉 Would you like me to now draft a worked-out acceptance criteria example for one real Basel 3.1 requirement (say, Currency Mismatch Adjustment), using this refined format so you see how QA/testability is embedded in both roles?
