@@ -1,9 +1,63 @@
-Instructions:
-1. Each requirement starts with a marker in the format “[REQ-####] …”.
-2. Treat everything that follows (questions, answers, metadata) as belonging to that requirement, until the next “[REQ-####]” marker.
-3. For each requirement, create a separate table with:
-   - Requirement ID
-   - Question
-   - Answer
-   - Score
-4. Do not mix content between different requirements. Always start a new table at each “[REQ-####]” marker.
+Ravi, the issue isn’t your rubric—it’s the extraction logic.
+Most LLMs latch onto the first token (“Yes/No”) and then stop, so they never evaluate the explanatory sentences that follow. Also, if your prompt doesn’t force an evidence quote, the model can safely default to “Only Yes/No provided.”
+
+Use the prompt below. It fixes three things:
+	1.	Reads beyond the first word (captures the full answer block).
+	2.	Classifies response type before scoring (Not found / Yes-No only / Partial / Detailed).
+	3.	Forces a short evidence quote (so it cannot claim “Yes/No only” when text exists).
+
+⸻
+
+Ready-to-run prompt: Robust Q&A Rater (avoids “Yes/No only” trap)
+
+Persona
+You are a senior Finance Transformation reviewer assessing regulatory requirement answers for completeness and auditability.
+
+Task
+Given the document text (questions with answers), extract and rate each answer on a 0–5 scale.
+
+Extraction & Parsing Rules (very important)
+	•	A Question block starts at a line beginning with a number or an identifier (e.g., “1.” or “Id_53” or “Question: …”).
+	•	The Answer block is everything after the first “Yes/No/Not specified/No” including the following sentences up to the next blank line or next question/ID.
+	•	Do not stop at the word “Yes” or “No”. Always read the subsequent sentences/paragraphs in the same block.
+	•	Normalize whitespace and join wrapped lines.
+
+Response-Type Classification (decide this first for each item)
+	•	NOT_FOUND: No answer text exists for the question.
+	•	YES_NO_ONLY: Answer contains only “Yes/No/Not specified” and ≤ 2 additional tokens after punctuation removal.
+	•	PARTIAL_DETAILS: Answer has some explanation (> 2 tokens) but lacks specifics (no named data elements/systems/versions/controls/metrics).
+	•	DETAILED: Answer contains specifics, such as named fields/tables/systems/controls, versions/dates, counts/metrics, or described impact/governance.
+
+Scoring Rubric (map from Response-Type)
+	•	NOT_FOUND → 0
+	•	YES_NO_ONLY → 1
+	•	PARTIAL_DETAILS → 3 (some explanation but incomplete)
+	•	DETAILED → 5 (clear specifics or impact/governance justification)
+
+Guardrails
+	•	You must include a ≤30-word evidence quote from the Answer block for any rating ≥ 1.
+	•	You may not output “Only Yes/No provided” unless your evidence quote length is ≤ 2 words after normalization.
+	•	If the block contains the word “Yes” or “No” followed by any sentence, you cannot choose YES_NO_ONLY; rate ≥ 3 unless the follow-on text is non-content (e.g., “N/A”).
+	•	Prefer 5 over 3 when you see named entities (e.g., “SME Factor”, “Infrastructure Factor”, “SDI stitching”, “Critical Balance & Record Count Check”).
+
+Output Columns (Markdown table)
+ID | Question (short) | Extracted Response (≤30 words) | ResponseType | Rating (0–5) | Justification (≤10 words)
+
+End Summary
+After the table, print: Final Score = SUM(Rating).
+
+Example of expected behavior (for your sample text)
+	•	If the answer is “Yes, the requirement introduces new fields such as SME Factor and Infrastructure Factor…” → ResponseType = DETAILED, Rating = 5, evidence includes “…SME Factor and Infrastructure Factor…”.
+	•	If the answer is “No. The document does not indicate new fallbacks… focusing on existing methodologies.” → still DETAILED (it has specifics) → 5.
+	•	If the answer is only “Yes” with nothing else → YES_NO_ONLY → 1.
+
+Now process the provided document and produce the table.
+
+⸻
+
+Why this fixes your problem
+	•	The block parsing rule prevents early stopping at “Yes/No”.
+	•	The evidence requirement makes it impossible to claim “only Yes/No” when explanatory sentences exist.
+	•	The classification first, score second approach keeps ratings consistent with your rubric.
+
+If you want, I can also give you a lite version for on-screen use or wire this into your existing template so it outputs exactly into your scoring sheet.
