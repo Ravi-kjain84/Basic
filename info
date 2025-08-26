@@ -1,30 +1,9 @@
-You are an evaluator.  
-Input: A document containing requirement details.  
-Task:  
-1. Read the document.  
-2. Identify answers to the following standard control questions (if information is not found, state "Not specified in the document").  
-   Q1: Does the requirement introduce any new data feeds/fields?  
-   Q2: Are there any changes to off-system or auto adjustments?  
-   Q3: Are new fallbacks or overrides being introduced?  
-   Q4: Will the requirement lead to SDI stitching logic changes?  
-   Q5: Does the requirement impact existing manual adjustment or reconciliation processes?  
-
-3. For each question, assign a **rating from 0–5** based on the identified response:  
-   - 0 = No response in the document  
-   - 1 = Only Yes/No without explanation  
-   - 3 = Partial details (some info but incomplete)  
-   - 5 = Full details with justification, impact analysis, or governance references  
-
-4. Provide a **justification** for each rating (why this score was given).  
-5. At the end, calculate the **Final Score = sum of ratings (out of 25)**.  
-
-Output Format (Markdown Table):  
-| Question | Extracted Response | Rating (0–5) | Justification |  
-|----------|-------------------|--------------|---------------|  
-| Q1 | … | … | … |  
-| Q2 | … | … | … |  
-| Q3 | … | … | … |  
-| Q4 | … | … | … |  
-| Q5 | … | … | … |  
-
-**Final Score: XX / 25**
+Instructions:
+1. Each requirement starts with a marker in the format “[REQ-####] …”.
+2. Treat everything that follows (questions, answers, metadata) as belonging to that requirement, until the next “[REQ-####]” marker.
+3. For each requirement, create a separate table with:
+   - Requirement ID
+   - Question
+   - Answer
+   - Score
+4. Do not mix content between different requirements. Always start a new table at each “[REQ-####]” marker.
