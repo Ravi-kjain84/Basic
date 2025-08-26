@@ -1,7 +1,30 @@
-When presenting the output, format it as a proper Markdown table using | (pipe) separators and --- for the header row. 
-Do not use plain text, indentation, or spacing for alignment. 
+You are an evaluator.  
+Input: A document containing requirement details.  
+Task:  
+1. Read the document.  
+2. Identify answers to the following standard control questions (if information is not found, state "Not specified in the document").  
+   Q1: Does the requirement introduce any new data feeds/fields?  
+   Q2: Are there any changes to off-system or auto adjustments?  
+   Q3: Are new fallbacks or overrides being introduced?  
+   Q4: Will the requirement lead to SDI stitching logic changes?  
+   Q5: Does the requirement impact existing manual adjustment or reconciliation processes?  
 
-Follow this exact format:
-| Column1 | Column2 | Column3 |
-|---------|---------|---------|
-| value1  | value2  | value3  |
+3. For each question, assign a **rating from 0–5** based on the identified response:  
+   - 0 = No response in the document  
+   - 1 = Only Yes/No without explanation  
+   - 3 = Partial details (some info but incomplete)  
+   - 5 = Full details with justification, impact analysis, or governance references  
+
+4. Provide a **justification** for each rating (why this score was given).  
+5. At the end, calculate the **Final Score = sum of ratings (out of 25)**.  
+
+Output Format (Markdown Table):  
+| Question | Extracted Response | Rating (0–5) | Justification |  
+|----------|-------------------|--------------|---------------|  
+| Q1 | … | … | … |  
+| Q2 | … | … | … |  
+| Q3 | … | … | … |  
+| Q4 | … | … | … |  
+| Q5 | … | … | … |  
+
+**Final Score: XX / 25**
