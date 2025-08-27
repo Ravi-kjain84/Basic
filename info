@@ -1,5 +1,16 @@
-CREATE OR REPLACE TABLE `target_project.target_dataset.RAFT_TEST_DEVIATION_RESULTS_LOG`
-AS
-SELECT *
-FROM `hsbc-16628436-fotc3-dev.RAFT_CONFIG.RAFT_TEST_DEVIATION_RESULTS_LOG`
-WHERE 1 = 0;
+CREATE TABLE `your_project.your_dataset.RAFT_TEST_DEVIATION_RESULTS_LOG_COPY` (
+  Creation_date DATETIME,
+  Component_name STRING,
+  Deviations_table_name STRING,
+  Environment STRING,
+  Run_group STRING,
+  Sub_run_group STRING,
+  Site STRING,
+  Test_dataset STRING,
+  Base_dataset STRING,
+  Deviation_table_type STRING,
+  Status STRING,
+  Total_Deviation_count INT64,
+  User STRING,
+  Job_ID STRING
+);
