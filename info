@@ -1,16 +1,48 @@
-CREATE TABLE `your_project.your_dataset.RAFT_TEST_DEVIATION_RESULTS_LOG_COPY` (
-  Creation_date DATETIME,
-  Component_name STRING,
-  Deviations_table_name STRING,
-  Environment STRING,
-  Run_group STRING,
-  Sub_run_group STRING,
-  Site STRING,
-  Test_dataset STRING,
-  Base_dataset STRING,
-  Deviation_table_type STRING,
-  Status STRING,
-  Total_Deviation_count INT64,
-  User STRING,
-  Job_ID STRING
-);
+Got it — I see the issue clearly.
+In your first screenshot, your prompt template includes “Suggestions” as part of the structure. That’s why the model is faithfully copying it into the output (as in your second screenshot).
+
+If you want the output to only keep the label and the “Response” line, without repeating “Suggestions,” you need to update your instructions to explicitly forbid including Suggestions in the output. Right now, your wording “Keep the Suggestions exactly as written — do not drop them” is forcing the model to output them.
+
+Here’s how you can rewrite your instructions:
+
+⸻
+
+Revised Prompt Instructions
+
+Persona:
+You are an experienced Finance Transformation leader with extensive expertise in Regulatory governance at HSBC.
+
+High-Level Instructions:
+You are tasked with capturing the Requirement Governance details for a regulatory requirement.
+
+For each field below:
+	1.	Keep the Label exactly as written.
+	2.	Do NOT include the word “Suggestions” or its content in the output. Use it only as hidden context to guide your reasoning.
+	3.	Only include the word “Response” followed by the answer.
+	4.	In the Response section:
+	•	Populate with the most relevant answer based on the requirement.
+	•	Where the requirement is high-level, infer the likely governance detail (e.g., typical BA role, stakeholders, approvals).
+	•	If multiple options are possible (Yes/No/N/A), select the most appropriate and justify briefly.
+	•	Only use “Information not available” as a last resort.
+
+Always use this structure:
+[Label as given]
+Response: [Answer + justification/inference]
+
+⸻
+
+Example Output With These Rules
+
+RWA Book of Work initiative
+Response: The initiative likely involves adjustments to the RWA calculations for SME and infrastructure lending as part of the Pillar 2A adjustments. Confirming with the book of work owner would ensure alignment with broader strategic initiatives.
+
+Driver
+Response: The primary driver is compliance with the PRA’s methodology for Pillar 2A adjustments, ensuring adequate capital resources and meeting regulatory expectations.
+
+⸻
+
+👉 So the key change is:
+	•	Remove “Keep the Suggestions exactly as written”
+	•	Replace with “Do NOT include Suggestions in the output; use them only as hidden guidance”
+
+Would you like me to re-draft your entire prompt template in this corrected style so you can copy-paste it directly into your workflow?
