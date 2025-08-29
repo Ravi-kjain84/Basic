@@ -1,48 +1,22 @@
-Got it — I see the issue clearly.
-In your first screenshot, your prompt template includes “Suggestions” as part of the structure. That’s why the model is faithfully copying it into the output (as in your second screenshot).
-
-If you want the output to only keep the label and the “Response” line, without repeating “Suggestions,” you need to update your instructions to explicitly forbid including Suggestions in the output. Right now, your wording “Keep the Suggestions exactly as written — do not drop them” is forcing the model to output them.
-
-Here’s how you can rewrite your instructions:
+Here’s the final tightened and confident version:
 
 ⸻
 
-Revised Prompt Instructions
+Subject: Re: Gen AI & Automation demo to ESG team: Testing CoE Priorities and Targets
 
-Persona:
-You are an experienced Finance Transformation leader with extensive expertise in Regulatory governance at HSBC.
+Hi Damon, hope you are doing well.
 
-High-Level Instructions:
-You are tasked with capturing the Requirement Governance details for a regulatory requirement.
+Yes, Anu has shared the details and I’m working on it. We’ve made good progress on the AI solution design through a POC with the controllership team, where the scope has expanded from requirement analysis to Jira templates, design documents, and test cases.
 
-For each field below:
-	1.	Keep the Label exactly as written.
-	2.	Do NOT include the word “Suggestions” or its content in the output. Use it only as hidden context to guide your reasoning.
-	3.	Only include the word “Response” followed by the answer.
-	4.	In the Response section:
-	•	Populate with the most relevant answer based on the requirement.
-	•	Where the requirement is high-level, infer the likely governance detail (e.g., typical BA role, stakeholders, approvals).
-	•	If multiple options are possible (Yes/No/N/A), select the most appropriate and justify briefly.
-	•	Only use “Information not available” as a last resort.
+On engagement and AI solution perspective, we are in discussions with IWPB, CIB, and Treasury IT to finalize the POC approach from a Finance Transformation standpoint, involving various value streams as well. I’ll set up a call next week to walk you through the details and also give a demo of the ongoing work.
 
-Always use this structure:
-[Label as given]
-Response: [Answer + justification/inference]
+For automation, we are working with IT and value stream teams to design a single solution that can serve all testing colleagues across business and technology. The first draft of this solution is expected from IT by the end of the year.
+
+Regarding the point around Testing CoE resourcing, there is currently a discussion in progress with senior management to finalize the target operating model. I plan to share an update on this by September–October as the discussions progress.
+
+Thanks,
+Ravi
 
 ⸻
 
-Example Output With These Rules
-
-RWA Book of Work initiative
-Response: The initiative likely involves adjustments to the RWA calculations for SME and infrastructure lending as part of the Pillar 2A adjustments. Confirming with the book of work owner would ensure alignment with broader strategic initiatives.
-
-Driver
-Response: The primary driver is compliance with the PRA’s methodology for Pillar 2A adjustments, ensuring adequate capital resources and meeting regulatory expectations.
-
-⸻
-
-👉 So the key change is:
-	•	Remove “Keep the Suggestions exactly as written”
-	•	Replace with “Do NOT include Suggestions in the output; use them only as hidden guidance”
-
-Would you like me to re-draft your entire prompt template in this corrected style so you can copy-paste it directly into your workflow?
+Do you also want me to prepare a shorter version (3–4 tight paragraphs) that you can use if you feel the recipient prefers very quick reads?
