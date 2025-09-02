@@ -1,26 +1,138 @@
-Here’s a polished draft of your invite mail. I’ve kept it professional but simple, with a clear flow and focus on the next steps for the AI Use Case POC:
+# --- Streamlit view for RAFT metrics table ---
+# deps: streamlit, pandas, google-cloud-bigquery
 
-⸻
+import io
+import pandas as pd
+import streamlit as st
+from google.cloud import bigquery
 
-Subject: Invite: AI Use Case POC – Next Steps Discussion
+def render_metrics_view(
+    bq_client: bigquery.Client,
+    table_fqn: str,
+    where_clause: str | None = None,
+    limit: int | None = 2000,
+    title: str = "Run Metrics"
+):
+    """
+    Render a filterable, scrollable view of the RAFT metrics table.
 
-Hi all,
+    Args:
+        bq_client: an authenticated bigquery.Client
+        table_fqn: fully-qualified table name: `project.dataset.table`
+        where_clause: optional extra filter, e.g. "dataset = 'FIN_ENRICHMENT_RESULTS'"
+        limit: safety limit for initial load
+        title: section header text
+    """
+    st.subheader(title)
 
-As we have now collated the nominations from various value streams for participation in the AI Use Case POC, we would like to bring everyone together to align on the next steps.
+    # --- fetch data (cast date/time so they behave nicely in UI) ---
+    cols = [
+        "dataset",
+        "summary_table_name",
+        "batch",
+        "CAST(date AS STRING) AS date",
+        "CAST(time AS STRING) AS time",
+        "Table_name",
+        "Total_Records_in_BL",
+        "Total_Records_in_Test",
+        "Records_Compared_BL",
+        "Records_Compared_Test",
+        "Num_of_Columns_tested",
+        "Time_taken",
+        "BL_PK_coverage",
+        "Test_PK_coverage",
+        "Data_points",
+    ]
 
-This session will cover:
-	•	Discussion of the nominated use case
-	•	Agreement on acceptance criteria
-	•	Key aspects to be included in the POC
-	•	Next steps and responsibilities
+    sql = f"""
+    SELECT {", ".join(cols)}
+    FROM `{table_fqn}`
+    {"WHERE " + where_clause if where_clause else ""}
+    ORDER BY date DESC, time DESC
+    {f"LIMIT {int(limit)}" if limit else ""}
+    """
+    df = bq_client.query(sql).to_dataframe(create_bqstorage_client=False)
 
-We are in the process of arranging the necessary accesses for CIB. In the meantime, let’s connect on Thursday to align on the way forward.
+    # normalize types for UI
+    numeric_cols = [
+        "Total_Records_in_BL","Total_Records_in_Test","Records_Compared_BL",
+        "Records_Compared_Test","Num_of_Columns_tested","Data_points",
+        "BL_PK_coverage","Test_PK_coverage"
+    ]
+    for c in numeric_cols:
+        if c in df.columns:
+            df[c] = pd.to_numeric(df[c], errors="coerce")
 
-Looking forward to the discussion.
+    # --- filters (scrollable selectors) ---
+    left, mid, right = st.columns([1,1,1])
 
-Best regards,
-[Your Name]
+    with left:
+        batch_choice = st.selectbox(
+            "Batch ID", 
+            options=["(All)"] + sorted(df["batch"].dropna().unique().tolist(), reverse=True),
+            index=0
+        )
+    with mid:
+        date_choice = st.selectbox(
+            "Date",
+            options=["(All)"] + sorted(df["date"].dropna().unique().tolist(), reverse=True),
+            index=0
+        )
+    with right:
+        table_choice = st.selectbox(
+            "Table name",
+            options=["(All)"] + sorted(df["Table_name"].dropna().unique().tolist()),
+            index=0
+        )
 
-⸻
+    # apply filters
+    mask = pd.Series(True, index=df.index)
+    if batch_choice != "(All)":
+        mask &= df["batch"].eq(batch_choice)
+    if date_choice != "(All)":
+        mask &= df["date"].eq(date_choice)
+    if table_choice != "(All)":
+        mask &= df["Table_name"].eq(table_choice)
 
-Would you like me to also draft a calendar invite description version of this (shorter, bullet-pointed, more “meeting-note” style), so you can directly paste it in the meeting invite?
+    fdf = df.loc[mask].copy()
+
+    # --- show metrics grid ---
+    st.caption(f"{len(fdf):,} rows (of {len(df):,} loaded)")
+    st.dataframe(
+        fdf,
+        use_container_width=True,
+        hide_index=True,
+        height=420,  # scrollable
+        column_config={
+            "dataset": st.column_config.TextColumn("Dataset"),
+            "summary_table_name": st.column_config.TextColumn("Summary table"),
+            "batch": st.column_config.TextColumn("Batch ID", width="medium"),
+            "date": st.column_config.TextColumn("Date"),
+            "time": st.column_config.TextColumn("Time"),
+            "Table_name": st.column_config.TextColumn("Table name", width="large"),
+            "Time_taken": st.column_config.TextColumn("Time taken"),
+            "BL_PK_coverage": st.column_config.NumberColumn("BL PK coverage", format="%.2f"),
+            "Test_PK_coverage": st.column_config.NumberColumn("Test PK coverage", format="%.2f"),
+        },
+    )
+
+    # quick summary row (optional)
+    with st.expander("Quick stats", expanded=False):
+        agg = {
+            "Total_Records_in_BL":"sum",
+            "Total_Records_in_Test":"sum",
+            "Records_Compared_BL":"sum",
+            "Records_Compared_Test":"sum",
+            "Num_of_Columns_tested":"max",
+            "Data_points":"sum",
+        }
+        st.write(fdf.agg(agg).to_frame("value"))
+
+    # download filtered view
+    csv = fdf.to_csv(index=False).encode("utf-8")
+    st.download_button("Download filtered CSV", csv, file_name="raft_metrics_filtered.csv", mime="text/csv")
+
+
+# ---- How to call it (example) ----
+# client = get_bq_client(project_id="cohesive-apogee-411113")
+# render_metrics_view(client, "cohesive-apogee-411113.My_Results.METRICS_RAFT_TD_Cmp_03")
