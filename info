@@ -1,46 +1,19 @@
-Here’s the final streamlined version of your PoC Overview slide, with the artifacts included and the Next Steps phrased neutrally with arrows:
+Understood. So for the Scope in the first slide, we should:
+	•	Avoid re-listing the artifacts (since they’re already in Objectives).
+	•	Keep it high-level but concrete.
+	•	Emphasize participation from the nominated Value Streams/projects.
+
+Here’s a clean revision of the Scope section:
 
 ⸻
-
-PoC – Overview
-
-Business Case
-	•	Manual-Intensive Delivery: High manual effort in scoping, analysis, and documentation.
-	•	Scalability Issues: Variability in requirements, validation, and test prep limits speed and adaptability.
-
-⸻
-
-Opportunity
-	•	GenAI Automation: Automate delivery steps with AI tools.
-	•	Pilot: Trial 3 tools in IWPB, CiB, and Treasury.
-	•	Benefits: Scale, reduce manual work, improve speed and quality.
-
-⸻
-
-PoC Planning
-
-Objectives
-	•	Generate requirements & acceptance criteria.
-	•	Conduct gap and impact analysis.
-	•	Produce high-level design & test scenarios.
-	•	Create user stories and draft signoff packs.
 
 Scope
-	•	Core change/project artifacts.
-	•	Engage Value Streams, Finance & Tech teams.
-	•	JIRA tracking (internal only).
-
-Timeline
-	•	2 weeks duration.
-	•	VSs define use cases from their domain.
-	•	VSs share feedback via templates.
+	•	Focus on delivery artifacts defined in Objectives.
+	•	Nominated Value Streams and projects to participate in PoC.
+	•	Collaborative effort across Finance and Tech teams.
 
 ⸻
 
-Next Steps
+This keeps it short, avoids duplication, and makes clear who’s involved.
 
-PoC results → submitted to FAMM & AerCo → potential move to pilot phase
-
-⸻
-
-Would you like me to also suggest a visual layout (e.g., two-column boxes or flow-style sections) so this doesn’t just read like text when you drop it in PowerPoint?
+Do you want me to rebuild the full streamlined slide draft with this updated Scope included, so it’s all tied together neatly?
