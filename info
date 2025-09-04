@@ -1,53 +1,46 @@
-import pandas as pd
-import streamlit as st
-from google.cloud import bigquery
+Here’s the final streamlined version of your PoC Overview slide, with the artifacts included and the Next Steps phrased neutrally with arrows:
 
-PROJECT_ID = "hsbc-9093058-rwapc3-dev"     # fixed
-TABLE_NAME = "COMPONENT_A_METRICS"         # fixed
+⸻
 
-def table_fqn_for_dataset(dataset: str) -> str:
-    """Build fully qualified table name: project.dataset.table"""
-    clean = dataset.strip().replace("`", "").replace(";", "")
-    return f"{PROJECT_ID}.{clean}.{TABLE_NAME}"
+PoC – Overview
 
-def render_metrics_for_dataset(bq_client: bigquery.Client, dataset: str):
-    """Query the metrics table and render filters + raw view"""
-    fqn = table_fqn_for_dataset(dataset)
+Business Case
+	•	Manual-Intensive Delivery: High manual effort in scoping, analysis, and documentation.
+	•	Scalability Issues: Variability in requirements, validation, and test prep limits speed and adaptability.
 
-    sql = f"SELECT * FROM `{fqn}` ORDER BY date DESC, time DESC"
-    df = bq_client.query(sql).to_dataframe(create_bqstorage_client=False)
+⸻
 
-    # --- filters ---
-    col1, col2, col3 = st.columns(3)
+Opportunity
+	•	GenAI Automation: Automate delivery steps with AI tools.
+	•	Pilot: Trial 3 tools in IWPB, CiB, and Treasury.
+	•	Benefits: Scale, reduce manual work, improve speed and quality.
 
-    with col1:
-        batch_choice = st.selectbox(
-            "Batch ID", ["(All)"] + sorted(df["batch"].dropna().unique().tolist(), reverse=True)
-        )
-    with col2:
-        date_choice = st.selectbox(
-            "Date", ["(All)"] + sorted(df["date"].dropna().unique().tolist(), reverse=True)
-        )
-    with col3:
-        table_choice = st.selectbox(
-            "Table name", ["(All)"] + sorted(df["Table_name"].dropna().unique().tolist())
-        )
+⸻
 
-    # apply filters
-    mask = pd.Series(True, index=df.index)
-    if batch_choice != "(All)":
-        mask &= df["batch"] == batch_choice
-    if date_choice != "(All)":
-        mask &= df["date"] == date_choice
-    if table_choice != "(All)":
-        mask &= df["Table_name"] == table_choice
+PoC Planning
 
-    fdf = df.loc[mask]
+Objectives
+	•	Generate requirements & acceptance criteria.
+	•	Conduct gap and impact analysis.
+	•	Produce high-level design & test scenarios.
+	•	Create user stories and draft signoff packs.
 
-    # --- show dataframe ---
-    st.caption(f"Showing {len(fdf):,} rows (out of {len(df):,})")
-    st.dataframe(fdf, use_container_width=True, hide_index=True, height=500)
+Scope
+	•	Core change/project artifacts.
+	•	Engage Value Streams, Finance & Tech teams.
+	•	JIRA tracking (internal only).
 
-    # optional download
-    csv = fdf.to_csv(index=False).encode("utf-8")
-    st.download_button("Download CSV", csv, file_name="metrics_filtered.csv", mime="text/csv")
+Timeline
+	•	2 weeks duration.
+	•	VSs define use cases from their domain.
+	•	VSs share feedback via templates.
+
+⸻
+
+Next Steps
+
+PoC results → submitted to FAMM & AerCo → potential move to pilot phase
+
+⸻
+
+Would you like me to also suggest a visual layout (e.g., two-column boxes or flow-style sections) so this doesn’t just read like text when you drop it in PowerPoint?
