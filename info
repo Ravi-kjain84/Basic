@@ -1,4 +1,4 @@
-Got it — here’s a cleaner version of the email with that clarified:
+Here’s the updated draft of your email, now including the information on which models are being used by CIB and IWPB:
 
 ⸻
 
@@ -12,13 +12,17 @@ Action Items from the call:
 	1.	We will update you once IWPB and CIB accesses are finalized (around 20 in total).
 	2.	We may revisit the nominations list to align with the available accesses.
 	3.	We will share sample prompts prepared on a requirement as a starting point for the PoC.
-	4.	During the two-week PoC, we will run ~6 support sessions on alternate days to guide the PoC run; calendar invites will be shared soon, along with a Teams channel for coordination.
+	4.	During the two-week PoC, we will run ~6 support sessions on alternate days to guide the PoC run; invites will be shared soon, along with a Teams channel for coordination.
+
+Models in Use:
+	•	CIB: Azure – GPT-40 mini, Azure – GPT-40
+	•	IWPB: Azure – GPT-40, Azure – GPT-40 mini, Azure – o1-mini, Azure – o3-mini, Azure – o1, Azure – text-embedding-3-small
 
 Thank you again for your participation and for nominating yourselves to be part of this journey.
 
 Best regards,
-[Your Name]
+Ravi Kumar Jain
 
 ⸻
 
-Would you like me to keep it at “support sessions” (neutral and clear), or use a slightly more engaging label like “working sessions”?
+Would you like me to keep “Models in Use” as a bullet block (like above), or weave it as a single-line note under the action items (e.g., “For reference, CIB and IWPB models in use are…”)?
