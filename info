@@ -1,28 +1,29 @@
-Here’s the updated draft of your email, now including the information on which models are being used by CIB and IWPB:
+Let me walk through it as if I were the recipient.
+
+Your mail is already clear, polite, and structured. A few small tweaks could make it flow smoother and sound more natural in a corporate setting:
+	1.	Sentence tightening — “On the point regarding public and internal data…” is slightly formal and heavy. You can say “Regarding data usage…” for simplicity.
+	2.	Consistency — You wrote “public or internal policy document references,” which is fine, but “policy documents (public or internal)” sounds cleaner.
+	3.	Ending — “Thank you again, and we look forward…” works well, but if you want a crisper close: “We appreciate your support and look forward to our discussion next week.”
+
+Here’s the refined version with those small changes:
 
 ⸻
 
-Subject: Next Steps: AI PoC Walkthrough – Materials & Evaluation Matrix
+Subject: RE: AI Governance Request RITM36835353 has been Approved
 
-Hi all,
+Hi Anubhav,
 
-Thank you for joining today’s walkthrough session. Please find attached the presentation and evaluation matrix discussed on the call. Do reach out if you have any queries, suggestions, or concerns.
+Thank you for the update. As suggested, I have filled the form and submitted it.
 
-Action Items from the call:
-	1.	We will update you once IWPB and CIB accesses are finalized (around 20 in total).
-	2.	We may revisit the nominations list to align with the available accesses.
-	3.	We will share sample prompts prepared on a requirement as a starting point for the PoC.
-	4.	During the two-week PoC, we will run ~6 support sessions on alternate days to guide the PoC run; invites will be shared soon, along with a Teams channel for coordination.
+Regarding data usage, we are restricting the PoC to internal data only. The value stream leads have been instructed not to use any finance data or sensitive information. The value streams will be using policy documents (public or internal) to initiate the process and generate the subsequent delivery artifacts.
 
-Models in Use:
-	•	CIB: Azure – GPT-40 mini, Azure – GPT-40
-	•	IWPB: Azure – GPT-40, Azure – GPT-40 mini, Azure – o1-mini, Azure – o3-mini, Azure – o1, Azure – text-embedding-3-small
+This week, we have aligned the value streams with the required expectations and are now looking forward to providing them the necessary accesses so they can proceed with the PoC at their end.
 
-Thank you again for your participation and for nominating yourselves to be part of this journey.
+We appreciate your support and look forward to our discussion next week.
 
-Best regards,
-Ravi Kumar Jain
+Thanks and regards,
+Ravi
 
 ⸻
 
-Would you like me to keep “Models in Use” as a bullet block (like above), or weave it as a single-line note under the action items (e.g., “For reference, CIB and IWPB models in use are…”)?
+This version keeps your intent intact, just smoother to read. Want me to also make a shorter 3-paragraph version in case you’d like it to be more executive-style (less detail, faster to scan)?
