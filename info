@@ -1,1 +1,68 @@
-tg
+Here’s a structured version of your six-month plan in two forms: a one-slide summary for senior leaders and a detailed end-to-end plan you can use as backup.
+
+⸻
+
+One-Slide Project Plan (Executive View)
+
+Generative AI for Change Management Orchestration – 6-Month Plan
+	•	Month 1: Mobilization
+• Value streams nominated participants
+• Access to HSBC Productivity Suite, CIB, IWPB arranged
+• Kick-off call to align and consolidate requirements
+	•	Month 2: Prompt Development
+• Provide sample prompt templates
+• Nominees draft prompts for requirement templates, HLD, epics, test cases
+	•	Month 3: Artifact Creation & Review
+• Generate requirements & design artifacts from prompts
+• Refine prompts iteratively
+• Peer reviews of generated outputs
+	•	Month 4: Evaluation
+• Apply evaluation metrics to outputs
+• Compare across HSBC Suite, CIB, IWPB solutions
+• Shortlist preferred solution
+	•	Month 5: Phase 2 – Contextualization
+• Build knowledge repository (prior requirements, data dictionary, lineage)
+• Re-run POC with added context
+• Collaborate with AI Group / IWPB IT Pod
+	•	Month 6: Phase 3 – Extension
+• Low-level design docs with lineage
+• Pilot automation of regulatory reporting preparation
+• Plan scale-up roadmap
+
+⸻
+
+Detailed End-to-End Plan
+
+Phase 1 – Foundation (Months 1–3)
+	•	Mobilization (M1)
+	•	Collect nominees from each value stream.
+	•	Provide HSBC Productivity Suite, CIB, and IWPB accesses.
+	•	Kick-off call to centralize requirement submission.
+	•	Share sample prompt templates.
+	•	Prompting & Artifacts (M2–M3)
+	•	Nominees craft prompts for: requirement templates, HLDs, epics, test cases.
+	•	Generate artifacts, refine prompts iteratively.
+	•	Peer review sessions for quality and completeness.
+
+Phase 2 – Evaluation & Contextualization (Months 4–5)
+	•	Evaluation (M4)
+	•	Apply evaluation metrics (accuracy, completeness, usability, efficiency).
+	•	Identify strengths/weaknesses of HSBC Suite, CIB, IWPB outputs.
+	•	Shortlist preferred solution for Phase 2 build-out.
+	•	Contextualization (M5)
+	•	Build internal knowledge repository with:
+• historical requirements
+• data dictionary
+• data lineage context
+	•	Collaborate with AI Group / IWPB pod for enhanced solution.
+	•	Conduct POC round-2 with contextual augmentation.
+
+Phase 3 – Extension & Automation (Month 6)
+	•	Develop low-level design documents incorporating lineage.
+	•	Explore automation of regulatory reporting preparation.
+	•	Engage architects & IT team for scale-up design.
+	•	Final evaluation: feasibility for full deployment and long-term roadmap.
+
+⸻
+
+Would you like me to prepare the slide itself (PowerPoint/PDF, ready to present) with the executive version formatted cleanly, or do you just need the text structured so you can paste it into your template?
