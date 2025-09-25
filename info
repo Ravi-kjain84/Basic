@@ -1,9 +1,11 @@
-Got it — here’s the simple bullet-point list of features to be tested for Data Guard v3 based on what you described:
-	•	Jira token selection (JRoken panel) – correct token is picked.
-	•	Epic listing by label – all epics with the specified label are displayed.
-	•	New epic visibility – when a new epic is created with the same label, it shows up in the list.
-	•	Project dropdown (RWPC1 common table) – all projects from the table appear in the dropdown.
-	•	Batch ID population by project – when a project is selected, the batch IDs linked to it are populated.
-	•	Compare two databases option – when checkbox is selected, all batch IDs from the previously selected run group appear in the dropdown.
+Here’s the new feature list for “Variants Analysis – Dimension & Filter checks” in the same simple bullet format:
+	•	Dimension selection list – all columns from the underlying table are available for selection.
+	•	Filter multi-value support – verify multiple values can be selected within a filter.
+	•	Categorical column validation – only categorical columns appear as filterable dimensions.
+	•	Numerical exclusion – numeric columns do not appear in the filter dimension list.
+	•	Value population – when a dimension is selected, all its distinct values appear in the filter dropdown.
+	•	Null handling – null values for the selected dimension also appear as selectable options.
+	•	Multiple dimensions – ability to select more than one filter dimension at a time.
+	•	Multiple filter conditions – ability to apply more than one filter condition across dimensions.
 
-Do you also want me to pull out the same kind of feature list for True Match, or do you want to lock this list for Data Guard first?
+Do you want me to merge these with the Data Guard v3 list into one consolidated master list of features to test, or keep each feature group separate?
