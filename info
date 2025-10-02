@@ -1,19 +1,5 @@
-Here’s the feature list for Variant Sample Table & True Match checks, simplified into clear bullet points:
+I understand Tejender is already providing you with details for the weekly updates. To streamline this, it would be helpful if you could share your input template, which we can then populate before having a connect scheduled.
 
-Variant Sample Table
-	•	Gap details display – sample table should show all the gaps with full details.
-	•	Row drill-down – clicking on a sample account row should display details from the account or deal ID.
-	•	Column selection option – user should be able to pick columns from the RWRP output table to show in the sample accounts with variances.
-	•	Minimum rows – at least 10 rows of sample accounts should be displayed.
-	•	Save commentary – ability to enter commentary for a row and save it.
-	•	Save commentary behavior – verify what happens after saving (e.g., persists in DB, shows confirmation, reloads).
-	•	True Match button presence – confirm a True Match button exists on the screen.
-	•	True Match button action – clicking the button opens a new window with both dataset IDs and the project pre-selected.
+I will be on leave today and Friday, so request you to reschedule the call to mid-next week. Please keep Teji, Kush, and Amit in the loop for these updates on a regular basis.
 
-True Match
-	•	Project, dataset, and table entry – user can enter/select Project IDs, Dataset IDs, and randomly chosen table names from a list.
-	•	Composite key validation – verify that selected comparison keys are genuine composite keys.
-	•	Row count comparison – for selected tables, check row count comparison works.
-	•	Unique row count comparison – verify unique row count by composite key matches the expected unique rows.
-
-Do you want me to now merge everything so far (Data Guard v3 + Variants Analysis + Sample Table + True Match) into one consolidated checklist?
+On deliverables, we have clarity on Q4 2025 as of now. Q1 2026 deliverables will be finalized based on what we are able to achieve. Just one correction on the strategic point mentioned earlier: it should not be described as “human-free testing.” Instead, it should highlight enhanced controls, governance, and automation. We can align further on this in our next call.
