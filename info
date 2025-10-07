@@ -1,35 +1,14 @@
-Can you please help me to write a mail that There is a fireside chat. We have organized we are going to organize for 10th October 2.30 to 3.30 That we have to change from 4 to 5 Okay So we need to request one of our guest Richard That can we please can you please? We we can mention the such reason that due to some constraint the availability of room 80 seater room is not there for the requested time period and we need to change the We need to request to change the time from 4 5 4 p.m. To 5 p.m. Can you please? Please confirm can you please? Make the arrangement at your end to shuffle the meetings in case if it is and Confirm us that we can use this lot accordingly we will confirm on the room and recent the invite to the two people Can you please draft a very respectable mail that I can send?
+let
+    Source = Excel.CurrentWorkbook(){[Name="Table1"]}[Content],
 
-
-Of course. Here are a couple of options for the email, from a more formal to a slightly more concise version. Both are very respectful.
-Option 1: Detailed and Formal
-This version is polite and explains the situation clearly.
-Subject: Request to Reschedule: Fireside Chat on October 10th
-Dear Richard,
-I hope this email finds you well.
-We are all very much looking forward to hosting you for the fireside chat scheduled for October 10th. Your participation is highly anticipated by our team.
-I am writing to you today to respectfully request a slight adjustment to the timing of our session. Due to an unforeseen logistical constraint, the 80-seater conference room we require is unfortunately unavailable during our originally scheduled time of 2:30 PM - 3:30 PM.
-The room is, however, available from 4:00 PM to 5:00 PM on the same day, October 10th.
-We would be incredibly grateful if you could check your availability for this new time slot. We understand that you have a very busy schedule and sincerely apologize for any inconvenience this change may cause. We would appreciate it if you could see if it's possible to make arrangements at your end to accommodate this shift.
-Please let us know if the 4:00 PM - 5:00 PM slot is feasible for you. Upon your confirmation, we will proceed with securing the venue and will send out a revised calendar invitation to everyone promptly.
-Thank you for your understanding and flexibility.
-Best regards,
-[Your Name]
-[Your Title/Organization]
-Option 2: Concise and Direct
-This version gets to the point a little faster but remains just as respectful.
-Subject: Important Update: Fireside Chat on October 10th
-Dear Richard,
-Hope you are having a good week.
-I'm writing regarding our upcoming fireside chat on October 10th. We’ve encountered a scheduling issue with our venue, and the 80-seater room is not available at our planned time of 2:30 PM - 3:30 PM.
-To resolve this, we would like to propose moving the session to 4:00 PM - 5:00 PM on the same day.
-We realize this is a last-minute request and sincerely apologize for the inconvenience. Could you please let us know if you would be able to make this new time work?
-Once you confirm your availability, we will finalize the room booking and resend the official invitation.
-Thank you for your valuable time and consideration.
-Sincerely,
-[Your Name]
-[Your Title/Organization]
-Which one to choose?
- * Option 1 is excellent if you want to be very thorough and formal.
- * Option 2 is great if you have a slightly more established rapport with Richard and prefer more direct communication.
-Both emails clearly state the problem, the proposed solution, and the next steps while being very apologetic and respectful of his time.
+    // Group rows by Department
+    Grouped = Table.Group(
+        Source,
+        {"Department"},
+        {
+            {"Names", each Text.Combine([Name], ", " & "#(lf)"), type text},
+            {"Email IDs", each Text.Combine([Email ID], ", " & "#(lf)"), type text}
+        }
+    )
+in
+    Grouped
