@@ -1,11 +1,55 @@
-# Sanitize the composed prompt before sending
-def clean_prompt(s: str) -> str:
-    return (
-        str(s)
-        .replace("\r\n", "\n")
-        .replace("\r", "\n")
-        .strip("\x00")          # drop stray NULLs
-        .strip()
+response = requests.post(internal_endpoint, headers=headers, json=data, verify=False)
+
+# Always parse JSON safely
+try:
+    result = response.json()
+except Exception:
+    st.error(f"Non-JSON response (HTTP {response.status_code}): {response.text[:500]}")
+    st.stop()
+
+# 1) Handle HTTP errors and content-filter blocks first
+def _render_filter(r: dict) -> str:
+    cf = (r.get("innererror", {}) or {}).get("content_filter_result", {}) or {}
+    parts = []
+    for name, info in cf.items():
+        if isinstance(info, dict) and info.get("filtered"):
+            parts.append(f"{name} (severity: {info.get('severity', 'unknown')})")
+    return ", ".join(parts) if parts else "unknown reason"
+
+if response.status_code >= 400:
+    code = result.get("code") or (result.get("error") or {}).get("code")
+    if code == "content_filter" or (result.get("innererror", {}) or {}).get("code") == "ResponsibleAIPolicyViolation":
+        st.warning(f"Blocked by content filter: {_render_filter(result)}")
+    else:
+        st.error(f"HTTP {response.status_code} error: {result}")
+    st.stop()
+
+# 2) Extract content for successful responses (try common schemas)
+response_text = None
+
+# OpenAI-style Chat Completions
+if isinstance(result, dict) and "choices" in result and result["choices"]:
+    choice0 = result["choices"][0]
+    response_text = (
+        (choice0.get("message") or {}).get("content")  # chat format
+        or choice0.get("text")                         # legacy text format
     )
 
-composed_prompt = clean_prompt(f"{prompt_template}\n\nRequirement:\n{requirement_text}")
+# Google/Gemini-style (sometimes proxied internally)
+if response_text is None and "candidates" in result and result["candidates"]:
+    cand = result["candidates"][0]
+    # parts -> text
+    parts = ((cand.get("content") or {}).get("parts") or [])
+    if parts and isinstance(parts[0], dict):
+        response_text = parts[0].get("text")
+
+# Simple proxy shape
+if response_text is None:
+    response_text = result.get("output_text") or result.get("content") or result.get("message")
+
+if not response_text:
+    st.error(f"Unexpected success payload; no text found: {result}")
+    st.stop()
+
+# Now you can use response_text
+st.write("Model response:", response_text)
