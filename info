@@ -1,99 +1,11 @@
-# app.py
-import json, uuid, requests, streamlit as st
+# Sanitize the composed prompt before sending
+def clean_prompt(s: str) -> str:
+    return (
+        str(s)
+        .replace("\r\n", "\n")
+        .replace("\r", "\n")
+        .strip("\x00")          # drop stray NULLs
+        .strip()
+    )
 
-st.set_page_config(page_title="AI Gateway Tester", page_icon="🤖")
-st.title("AI Gateway · Chat Completion")
-
-# --- Inputs ---
-url = st.text_input(
-    "Endpoint URL",
-    value=("https://gaip-api-uat.hsbc-12152296-gaipuat-dev.dev.gcp.cloud.hk.hsbc/"
-           "etiv-ssvc-aigateway-ea-chatcompletion-uat-internal-proxy/v1/api/v1/chat/completions")
-)
-amt = st.text_input("AMT Token", type="password")
-model = st.text_input("Model", value="Gemini-2.5-flash")
-max_tokens = st.number_input("Max tokens", 1, 8192, 50)  # default 50
-skip_verify = st.checkbox("Disable SSL verification (UAT/self-signed)", value=True)
-prompt = st.text_area("Your prompt", height=120, placeholder="e.g., capital of England?")
-
-# Optional: silence warning when verify=False
-if skip_verify:
-    import urllib3
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-def headers(amt_token: str) -> dict:
-    return {
-        "AMToken": amt_token,
-        "Content-Type": "application/json",
-        "Token_Type": "SESSION_TOKEN",
-        "x-correlation-id": str(uuid.uuid4()),
-        "x-usersession-id": "abcdef9",
-    }
-
-def payload(model_name: str, text: str, max_toks: int) -> dict:
-    return {
-        "model": model_name,
-        "messages": [{"role": "user", "content": text}],
-        "max_tokens": int(max_toks),
-    }
-
-def extract_answer(d: dict) -> str | None:
-    try:
-        return d["choices"][0]["message"]["content"]
-    except Exception:
-        for k in ("answer", "content", "output"):
-            if isinstance(d.get(k), str) and d[k].strip():
-                return d[k]
-    return None
-
-if st.button("Send →", type="primary", use_container_width=True):
-    if not url.strip():
-        st.error("Endpoint URL is required."); st.stop()
-    if not amt.strip():
-        st.error("AMT token is required."); st.stop()
-    if not prompt.strip():
-        st.error("Prompt is required."); st.stop()
-
-    try:
-        with st.spinner("Calling gateway…"):
-            resp = requests.post(
-                url,
-                headers=headers(amt),
-                json=payload(model, prompt, max_tokens),
-                timeout=60,
-                verify=not skip_verify,  # default OFF
-            )
-    except requests.exceptions.SSLError as e:
-        st.error("SSL error. Either fix certs or keep verification disabled for UAT.")
-        st.code(str(e)); st.stop()
-    except requests.exceptions.Timeout:
-        st.error("Request timed out."); st.stop()
-    except requests.exceptions.RequestException as e:
-        st.error("Network error while calling the gateway.")
-        st.code(str(e)); st.stop()
-
-    if resp.status_code != 200:
-        st.error(f"Gateway returned HTTP {resp.status_code}.")
-        try:
-            st.code(json.dumps(resp.json(), indent=2), language="json")
-        except Exception:
-            st.code(resp.text[:4000])
-        st.stop()
-
-    try:
-        data = resp.json()
-    except json.JSONDecodeError:
-        st.error("Non-JSON response from gateway.")
-        st.code(resp.text[:4000]); st.stop()
-
-    answer = extract_answer(data)
-    if not answer:
-        st.warning("No message content returned by the model.")
-        st.expander("Raw JSON").code(json.dumps(data, indent=2), language="json")
-    else:
-        st.subheader("Response")
-        st.write(answer)
-        with st.expander("Raw JSON"):
-            st.code(json.dumps(data, indent=2), language="json")
-
-st.caption("By default, SSL verification is OFF for UAT. Enable it for production connections.")
+composed_prompt = clean_prompt(f"{prompt_template}\n\nRequirement:\n{requirement_text}")
