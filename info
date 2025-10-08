@@ -1,143 +1,99 @@
 # app.py
-import json
-import uuid
-import requests
-import streamlit as st
+import json, uuid, requests, streamlit as st
 
-# ---------- UI ----------
-st.set_page_config(page_title="HSBC AI Gateway Tester", page_icon="🤖", layout="centered")
-st.title("HSBC AI Gateway · Chat Completion Tester")
+st.set_page_config(page_title="AI Gateway Tester", page_icon="🤖")
+st.title("AI Gateway · Chat Completion")
 
-# Keep token in session so you don't have to paste it every time
-if "am_token" not in st.session_state:
-    st.session_state.am_token = ""
-
-st.subheader("Connection")
+# --- Inputs ---
 url = st.text_input(
     "Endpoint URL",
     value=("https://gaip-api-uat.hsbc-12152296-gaipuat-dev.dev.gcp.cloud.hk.hsbc/"
-           "etiv-ssvc-aigateway-ea-chatcompletion-uat-internal-proxy/v1/api/v1/chat/completions"),
-    help="Paste/adjust your UAT or PROD endpoint."
+           "etiv-ssvc-aigateway-ea-chatcompletion-uat-internal-proxy/v1/api/v1/chat/completions")
 )
+amt = st.text_input("AMT Token", type="password")
+model = st.text_input("Model", value="Gemini-2.5-flash")
+max_tokens = st.number_input("Max tokens", 1, 8192, 50)  # default 50
+skip_verify = st.checkbox("Disable SSL verification (UAT/self-signed)", value=True)
+prompt = st.text_area("Your prompt", height=120, placeholder="e.g., capital of England?")
 
-st.session_state.am_token = st.text_input(
-    "AMT Token",
-    value=st.session_state.am_token,
-    type="password",
-    help="Paste the AMT session token."
-)
-
-col1, col2 = st.columns([1, 1])
-with col1:
-    model = st.text_input("Model name", value="Gemini-2.5-flash")
-with col2:
-    max_tokens = st.number_input("Max tokens", min_value=1, max_value=8192, value=256, step=1)
-
-st.checkbox_label = "Disable SSL verification (unsafe; suppresses warnings)"
-skip_verify = st.checkbox(st.checkbox_label, value=False, help="Use only for UAT with self-signed certs.")
-
+# Optional: silence warning when verify=False
 if skip_verify:
-    # Silence urllib3 warnings when verify=False
     import urllib3
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-st.subheader("Query")
-user_query = st.text_area("Your prompt", placeholder="e.g., capital of England?", height=120)
-
-send = st.button("Send →", type="primary", use_container_width=True)
-
-# ---------- Helpers ----------
-def build_headers(amt_token: str) -> dict:
+def headers(amt_token: str) -> dict:
     return {
         "AMToken": amt_token,
         "Content-Type": "application/json",
         "Token_Type": "SESSION_TOKEN",
         "x-correlation-id": str(uuid.uuid4()),
-        "x-usersession-id": "abcdef9",   # replace if your gateway requires a real session id
+        "x-usersession-id": "abcdef9",
     }
 
-def build_payload(model_name: str, prompt: str, max_toks: int) -> dict:
+def payload(model_name: str, text: str, max_toks: int) -> dict:
     return {
         "model": model_name,
-        "messages": [{"role": "user", "content": prompt}],
+        "messages": [{"role": "user", "content": text}],
         "max_tokens": int(max_toks),
-        # include "user" if your gateway expects it
-        # "user": "UC0002189"
     }
 
-def extract_answer(json_obj: dict) -> str:
-    """
-    Be defensive: gateways differ. Try common shapes first.
-    """
+def extract_answer(d: dict) -> str | None:
     try:
-        return json_obj["choices"][0]["message"]["content"]
+        return d["choices"][0]["message"]["content"]
     except Exception:
-        # Try a few fallbacks
-        for k in ("answer", "content", "message", "output"):
-            if k in json_obj and isinstance(json_obj[k], str):
-                return json_obj[k]
-        # Give up: pretty-print the JSON
-        return json.dumps(json_obj, indent=2)
+        for k in ("answer", "content", "output"):
+            if isinstance(d.get(k), str) and d[k].strip():
+                return d[k]
+    return None
 
-# ---------- Action ----------
-if send:
+if st.button("Send →", type="primary", use_container_width=True):
     if not url.strip():
-        st.error("Endpoint URL is required.")
-    elif not st.session_state.am_token.strip():
-        st.error("AMT token is required.")
-    elif not user_query.strip():
-        st.error("Prompt is required.")
-    else:
-        headers = build_headers(st.session_state.am_token)
-        payload = build_payload(model, user_query, max_tokens)
+        st.error("Endpoint URL is required."); st.stop()
+    if not amt.strip():
+        st.error("AMT token is required."); st.stop()
+    if not prompt.strip():
+        st.error("Prompt is required."); st.stop()
 
-        st.info("Sending request…")
+    try:
+        with st.spinner("Calling gateway…"):
+            resp = requests.post(
+                url,
+                headers=headers(amt),
+                json=payload(model, prompt, max_tokens),
+                timeout=60,
+                verify=not skip_verify,  # default OFF
+            )
+    except requests.exceptions.SSLError as e:
+        st.error("SSL error. Either fix certs or keep verification disabled for UAT.")
+        st.code(str(e)); st.stop()
+    except requests.exceptions.Timeout:
+        st.error("Request timed out."); st.stop()
+    except requests.exceptions.RequestException as e:
+        st.error("Network error while calling the gateway.")
+        st.code(str(e)); st.stop()
+
+    if resp.status_code != 200:
+        st.error(f"Gateway returned HTTP {resp.status_code}.")
         try:
-            with st.spinner("Awaiting response from gateway…"):
-                resp = requests.post(
-                    url,
-                    headers=headers,
-                    json=payload,
-                    timeout=60,           # bump if your gateway is slow
-                    verify=not skip_verify
-                )
-        except requests.exceptions.SSLError as e:
-            st.error("SSL error. Either enable 'Disable SSL verification' for UAT or fix the certs.")
-            st.code(str(e))
-        except requests.exceptions.Timeout:
-            st.error("Request timed out. Try again or increase the timeout.")
-        except requests.exceptions.RequestException as e:
-            st.error("Network error while calling the gateway.")
-            st.code(str(e))
-        else:
-            # Handle HTTP statuses
-            if resp.status_code != 200:
-                st.error(f"Gateway returned HTTP {resp.status_code}.")
-                # Try to show structured error if present
-                try:
-                    st.code(json.dumps(resp.json(), indent=2), language="json")
-                except Exception:
-                    st.code(resp.text[:4000])
-            else:
-                # Try to parse JSON
-                try:
-                    data = resp.json()
-                except json.JSONDecodeError:
-                    st.error("Gateway responded with non-JSON body.")
-                    st.code(resp.text[:4000])
-                else:
-                    answer = extract_answer(data)
-                    if not answer or answer.strip() == "":
-                        st.warning("No content returned by the model.")
-                        st.expander("Raw JSON").code(json.dumps(data, indent=2), language="json")
-                    else:
-                        st.subheader("Response")
-                        st.write(answer)
-                        with st.expander("Raw JSON"):
-                            st.code(json.dumps(data, indent=2), language="json")
+            st.code(json.dumps(resp.json(), indent=2), language="json")
+        except Exception:
+            st.code(resp.text[:4000])
+        st.stop()
 
-# ---------- Footer ----------
-st.caption(
-    "Tip: For production, keep SSL verification ON. If your UAT cert is self-signed, "
-    "either import the CA or temporarily use the checkbox above."
-)
+    try:
+        data = resp.json()
+    except json.JSONDecodeError:
+        st.error("Non-JSON response from gateway.")
+        st.code(resp.text[:4000]); st.stop()
+
+    answer = extract_answer(data)
+    if not answer:
+        st.warning("No message content returned by the model.")
+        st.expander("Raw JSON").code(json.dumps(data, indent=2), language="json")
+    else:
+        st.subheader("Response")
+        st.write(answer)
+        with st.expander("Raw JSON"):
+            st.code(json.dumps(data, indent=2), language="json")
+
+st.caption("By default, SSL verification is OFF for UAT. Enable it for production connections.")
