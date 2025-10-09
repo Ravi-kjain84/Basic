@@ -1,8 +1,96 @@
-Artifact
-Prompt
-Requirement Summary
-“Provide a concise summary of the key points in the requirement. Output only plain text without any HTML or markup.”
-User Stories
-“Generate user stories in plain text (no HTML). Use the format ‘As a , I want  so that .’”
-Test Cases
-“Produce test cases in Markdown table format using plain text only — no HTML tags. Include columns ‘Test Case ID’, ‘Test Case Step’, and ‘Expected Result’.”
+import pandas as pd
+import re
+from pathlib import Path
+
+def read_prompts(uploaded_file) -> pd.DataFrame:
+    """
+    Read prompts from a CSV or XLSX file and return a DataFrame with columns
+    'Artifact' and 'Prompt'. Robust to Excel/Windows encodings and strips
+    HTML that ReportLab's Paragraph() can't handle.
+    """
+
+    # ---- helpers -----------------------------------------------------------
+    def _reset_stream(f):
+        try:
+            f.seek(0)
+        except Exception:
+            pass
+
+    # Map curly quotes, dashes, and NBSP to ASCII
+    _TRANSLATE = str.maketrans({
+        "\u2018": "'",  # ‘
+        "\u2019": "'",  # ’
+        "\u201C": '"',  # “
+        "\u201D": '"',  # ”
+        "\u2013": "-",  # –
+        "\u2014": "-",  # —
+        "\xa0":  " ",   # NBSP
+    })
+
+    _BR_RE   = re.compile(r"(?i)<br\s*/?>")
+    _PARA_RE = re.compile(r"(?i)</?para[^>]*>")
+    _ANYTAG  = re.compile(r"<[^>]+>")  # last-resort strip of remaining tags
+
+    def _clean_text(x: str) -> str:
+        if pd.isna(x):
+            return ""
+        t = str(x).translate(_TRANSLATE)
+        # HTML → PDF-safe
+        t = _BR_RE.sub("\n", t)
+        t = _PARA_RE.sub("", t)
+        # If anything HTML-like remains, strip it (keeps output plain/Markdown)
+        t = _ANYTAG.sub("", t)
+        return t.strip()
+
+    # ---- determine extension ----------------------------------------------
+    filename = getattr(uploaded_file, "name", "") or getattr(uploaded_file, "filename", "")
+    extension = Path(filename).suffix.lower()
+
+    if extension not in {".csv", ".xlsx", ".xls"}:
+        raise ValueError(f"Unsupported prompt file type: {extension or 'unknown'}")
+
+    _reset_stream(uploaded_file)
+
+    # ---- read file ---------------------------------------------------------
+    if extension == ".csv":
+        # Try UTF-8, then UTF-8 with BOM, then Windows-1252
+        encodings = ("utf-8", "utf-8-sig", "cp1252")
+        last_err = None
+        for enc in encodings:
+            try:
+                _reset_stream(uploaded_file)
+                df = pd.read_csv(
+                    uploaded_file,
+                    encoding=enc,
+                    dtype=str,
+                    keep_default_na=False
+                )
+                break
+            except UnicodeDecodeError as e:
+                last_err = e
+        else:
+            # Ran out of encodings
+            raise last_err
+    else:
+        # Excel route (lets pandas/engine handle encoding internally)
+        _reset_stream(uploaded_file)
+        df = pd.read_excel(uploaded_file, dtype=str)
+
+    # ---- normalise columns -------------------------------------------------
+    # Accept slight variations in header formatting/case
+    rename_map = {c: c.strip().lower() for c in df.columns}
+    df.columns = [rename_map[c] for c in df.columns]
+    col_map = {}
+    for want in ("artifact", "prompt"):
+        matches = [c for c in df.columns if c == want]
+        if not matches:
+            raise ValueError("Prompt file must contain 'Artifact' and 'Prompt' columns.")
+        col_map[matches[0]] = want
+    df = df.rename(columns=col_map)
+
+    # ---- clean content -----------------------------------------------------
+    df["artifact"] = df["artifact"].map(_clean_text)
+    df["prompt"]   = df["prompt"].map(_clean_text)
+
+    # ---- return in canonical case/order -----------------------------------
+    return df.loc[:, ["artifact", "prompt"]].rename(columns={"artifact": "Artifact", "prompt": "Prompt"})
