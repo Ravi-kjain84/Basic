@@ -1,96 +1,26 @@
-import pandas as pd
-import re
-from pathlib import Path
+Here’s a crisp, respectful version of that mail you can send to Kiran:
 
-def read_prompts(uploaded_file) -> pd.DataFrame:
-    """
-    Read prompts from a CSV or XLSX file and return a DataFrame with columns
-    'Artifact' and 'Prompt'. Robust to Excel/Windows encodings and strips
-    HTML that ReportLab's Paragraph() can't handle.
-    """
+⸻
 
-    # ---- helpers -----------------------------------------------------------
-    def _reset_stream(f):
-        try:
-            f.seek(0)
-        except Exception:
-            pass
+Subject: Discussion Points for Meeting with Vikram Sharma
 
-    # Map curly quotes, dashes, and NBSP to ASCII
-    _TRANSLATE = str.maketrans({
-        "\u2018": "'",  # ‘
-        "\u2019": "'",  # ’
-        "\u201C": '"',  # “
-        "\u201D": '"',  # ”
-        "\u2013": "-",  # –
-        "\u2014": "-",  # —
-        "\xa0":  " ",   # NBSP
-    })
+Hi Kiran,
 
-    _BR_RE   = re.compile(r"(?i)<br\s*/?>")
-    _PARA_RE = re.compile(r"(?i)</?para[^>]*>")
-    _ANYTAG  = re.compile(r"<[^>]+>")  # last-resort strip of remaining tags
+Ahead of our discussion with Vikram Sharma today, I’ve noted a few points for your review. Please suggest if these look fine or if we should align on them before the call.
+	1.	Considering I’ll be taking up the Testing Lead role for this project (in addition to my COE responsibilities), we can plan a knowledge transfer from the current testing team to me to understand the scope and nature of testing activities.
+	2.	I should begin getting system accesses early to familiarize myself with the tools and environments used in the project.
+	3.	We may agree on a travel plan (China or UK) to connect with the team, understand the workflow, and establish coordination on-site.
+	4.	We should review whether the current testing team alignment can move under the COE for improved governance, consistency, and control over deliverables.
+	5.	Need to confirm timeline for major testing events — my understanding is that they begin around February.
+	6.	I should start joining the ongoing project calls to stay current on activities and dependencies.
+	7.	Please note, I’ll be on leave during the week of 20th October, and can start engaging more closely from the last week of October.
+	8.	We should clarify billing arrangements for this new role — whether it requires an FRP, and how the chargeback to the project will be managed. This would also help us track resource redeployment and efficiency gains from the COE perspective.
 
-    def _clean_text(x: str) -> str:
-        if pd.isna(x):
-            return ""
-        t = str(x).translate(_TRANSLATE)
-        # HTML → PDF-safe
-        t = _BR_RE.sub("\n", t)
-        t = _PARA_RE.sub("", t)
-        # If anything HTML-like remains, strip it (keeps output plain/Markdown)
-        t = _ANYTAG.sub("", t)
-        return t.strip()
+Please share your thoughts or any refinements before the meeting.
 
-    # ---- determine extension ----------------------------------------------
-    filename = getattr(uploaded_file, "name", "") or getattr(uploaded_file, "filename", "")
-    extension = Path(filename).suffix.lower()
+Best regards,
+Ravi
 
-    if extension not in {".csv", ".xlsx", ".xls"}:
-        raise ValueError(f"Unsupported prompt file type: {extension or 'unknown'}")
+⸻
 
-    _reset_stream(uploaded_file)
-
-    # ---- read file ---------------------------------------------------------
-    if extension == ".csv":
-        # Try UTF-8, then UTF-8 with BOM, then Windows-1252
-        encodings = ("utf-8", "utf-8-sig", "cp1252")
-        last_err = None
-        for enc in encodings:
-            try:
-                _reset_stream(uploaded_file)
-                df = pd.read_csv(
-                    uploaded_file,
-                    encoding=enc,
-                    dtype=str,
-                    keep_default_na=False
-                )
-                break
-            except UnicodeDecodeError as e:
-                last_err = e
-        else:
-            # Ran out of encodings
-            raise last_err
-    else:
-        # Excel route (lets pandas/engine handle encoding internally)
-        _reset_stream(uploaded_file)
-        df = pd.read_excel(uploaded_file, dtype=str)
-
-    # ---- normalise columns -------------------------------------------------
-    # Accept slight variations in header formatting/case
-    rename_map = {c: c.strip().lower() for c in df.columns}
-    df.columns = [rename_map[c] for c in df.columns]
-    col_map = {}
-    for want in ("artifact", "prompt"):
-        matches = [c for c in df.columns if c == want]
-        if not matches:
-            raise ValueError("Prompt file must contain 'Artifact' and 'Prompt' columns.")
-        col_map[matches[0]] = want
-    df = df.rename(columns=col_map)
-
-    # ---- clean content -----------------------------------------------------
-    df["artifact"] = df["artifact"].map(_clean_text)
-    df["prompt"]   = df["prompt"].map(_clean_text)
-
-    # ---- return in canonical case/order -----------------------------------
-    return df.loc[:, ["artifact", "prompt"]].rename(columns={"artifact": "Artifact", "prompt": "Prompt"})
+Would you like it to sound slightly more formal (for onward sharing with Vikram later) or keep this internal tone for Kiran only?
