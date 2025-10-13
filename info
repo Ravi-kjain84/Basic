@@ -1,1 +1,28 @@
-gg
+Here’s a single concise, professional slide draft you can use for your deck:
+
+⸻
+
+TAS – Test Automation Solution
+
+Purpose:
+A unified testing automation platform providing end-to-end capability across regression, bulk, and customized test execution — without the need for Python or local installations.
+
+Core Modules:
+	•	DataGuard V1–V3: Regression dashboards for automated dataset validation
+	•	TrueMatch: Granular and bulk data comparison engine
+	•	Test Studio: Custom test execution based on user-defined SQL logic
+	•	Compass: JIRA-linked governance and testing dashboard
+
+Key Advantages:
+	•	Zero local setup: Accessible via browser link
+	•	Centralized & flexible: All tools integrated under one suite
+	•	Explainable outputs: No manual SQLs; results displayed clearly
+	•	Governance ready: JIRA traceability and audit reporting
+	•	High adoption, low maintenance: Minimum setup, maximum usability
+
+Tagline:
+“One platform. All testing. Centralized, explainable, and ready to scale.”
+
+⸻
+
+Would you like me to make it look slide-ready (formatted with layout hints, section colors, and spacing cues for PowerPoint)?
