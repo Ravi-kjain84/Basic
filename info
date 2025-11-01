@@ -1,1 +1,78 @@
-gg
+import pyodbc
+import pandas as pd
+
+
+def get_connection(
+    server: str,
+    database: str,
+    username: str = "",
+    password: str = "",
+    driver: str = "{ODBC Driver 17 for SQL Server}",
+    timeout: int = 5
+) -> pyodbc.Connection:
+    """
+    Returns an open pyodbc connection using Windows or SQL authentication.
+    """
+
+    # Use Trusted_Connection if username/password are blank
+    if username and password:
+        conn_str = (
+            f"DRIVER={driver};"
+            f"SERVER={server};"
+            f"DATABASE={database};"
+            f"UID={username};"
+            f"PWD={password};"
+            f"TrustServerCertificate=yes;"
+            f"Connection Timeout={timeout};"
+        )
+    else:
+        conn_str = (
+            f"DRIVER={driver};"
+            f"SERVER={server};"
+            f"DATABASE={database};"
+            "Trusted_Connection=yes;"
+            "TrustServerCertificate=yes;"
+            f"Connection Timeout={timeout};"
+        )
+
+    return pyodbc.connect(conn_str)
+
+
+def run_query_to_df(conn: pyodbc.Connection, sql: str) -> pd.DataFrame:
+    """
+    Executes the SQL query and returns the result as a pandas DataFrame.
+    """
+    try:
+        df = pd.read_sql(sql, conn)
+        print(f"Query executed successfully — {len(df)} rows returned.")
+        return df
+    except Exception as e:
+        print("Error running query:", e)
+        return pd.DataFrame()  # return empty DataFrame if failure
+
+
+if __name__ == "__main__":
+    # Replace with real values or use environment variables
+    SERVER = "GBW25099261.hbeu.adroot.hsbc,10010"
+    DATABASE = "CPDB"
+    USERNAME = ""  # leave blank if using Windows authentication
+    PASSWORD = ""
+
+    SQL_QUERY = "SELECT TOP 10 * FROM CP_PROJ_MOV_VER;"  # limit for testing
+
+    try:
+        conn = get_connection(SERVER, DATABASE, USERNAME, PASSWORD)
+        print("Connection successful.")
+
+        df_result = run_query_to_df(conn, SQL_QUERY)
+        print(df_result.head())
+
+    except pyodbc.Error as e:
+        print("Connection failed:", e)
+
+    finally:
+        try:
+            conn.close()
+            print("Connection closed.")
+        except Exception:
+            pass
