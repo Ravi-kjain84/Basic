@@ -1,93 +1,77 @@
-import pyodbc
+import re
 import pandas as pd
-from datetime import datetime
 
+# ========= CONFIGURE THESE =========
+xlsx_path        = "path/to/workbook.xlsx"
+sheet_name       = "Capital Movements"
+row_actual_forecast = 2
+row_date             = 3
+first_data_row       = 8
+# ===================================
 
-def get_connection(
-    server: str,
-    database: str,
-    username: str = "",
-    password: str = "",
-    driver: str = "{ODBC Driver 17 for SQL Server}",
-    timeout: int = 5
-) -> pyodbc.Connection:
-    """
-    Returns an open pyodbc connection using Windows or SQL authentication.
-    """
-
-    if username and password:
-        conn_str = (
-            f"DRIVER={driver};"
-            f"SERVER={server};"
-            f"DATABASE={database};"
-            f"UID={username};"
-            f"PWD={password};"
-            f"TrustServerCertificate=yes;"
-            f"Connection Timeout={timeout};"
-        )
-    else:
-        conn_str = (
-            f"DRIVER={driver};"
-            f"SERVER={server};"
-            f"DATABASE={database};"
-            "Trusted_Connection=yes;"
-            "TrustServerCertificate=yes;"
-            f"Connection Timeout={timeout};"
-        )
-
-    return pyodbc.connect(conn_str)
-
-
-def run_query_to_df(conn: pyodbc.Connection, sql: str) -> pd.DataFrame:
-    """
-    Executes the SQL query and returns the result as a pandas DataFrame.
-    """
-    try:
-        df = pd.read_sql(sql, conn)
-        print(f"Query executed successfully — {len(df)} rows returned.")
-        return df
-    except Exception as e:
-        print("Error running query:", e)
-        return pd.DataFrame()
-
-
-def save_to_csv(df: pd.DataFrame, base_filename: str = "query_output") -> str:
-    """
-    Saves the DataFrame to a timestamped CSV file and returns the file path.
-    """
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"{base_filename}_{timestamp}.csv"
-    df.to_csv(filename, index=False, encoding="utf-8-sig")
-    print(f"✅ Data saved to CSV file: {filename}")
-    return filename
-
-
-if __name__ == "__main__":
-    # Replace with actual credentials or environment variables
-    SERVER = "GBW25099261.hbeu.adroot.hsbc,10010"
-    DATABASE = "CPDB"
-    USERNAME = ""  # leave blank for Windows auth
-    PASSWORD = ""
-
-    SQL_QUERY = "SELECT TOP 10 * FROM CP_PROJ_MOV_VER;"  # sample query
-
-    try:
-        conn = get_connection(SERVER, DATABASE, USERNAME, PASSWORD)
-        print("Connection successful.")
-
-        df_result = run_query_to_df(conn, SQL_QUERY)
-
-        if not df_result.empty:
-            save_to_csv(df_result)
-        else:
-            print("⚠️ No data returned from query.")
-
-    except pyodbc.Error as e:
-        print("Connection failed:", e)
-
-    finally:
+def _parse_accounting_number(x):
+    """'(1,234.5)' -> -1234.5 ; '1,234' -> 1234 ; '', '-', '–', '—' -> 0 ; '3.5%' -> 0.035 ; other text -> NA."""
+    if pd.isna(x):
+        return 0.0  # <- EDIT #1: empty cell counts as zero
+    s = str(x).strip()
+    if s in {"", "-", "–", "—"}:
+        return 0.0  # <- EDIT #1: visibly blank placeholders => zero
+    if s.endswith("%"):
         try:
-            conn.close()
-            print("Connection closed.")
-        except Exception:
-            pass
+            return float(s[:-1].replace(",", "")) / 100.0
+        except ValueError:
+            return pd.NA
+    if re.fullmatch(r"\(\s*[\d,]*\.?\d*\s*\)", s):
+        s = "-" + s.strip("()")
+    s = s.replace(",", "")
+    try:
+        return float(s)
+    except ValueError:
+        return pd.NA  # non-numeric text (notes) -> NA so we can drop it
+
+# ---------- (rest of the script is same up to tidy creation) ----------
+
+raw = pd.read_excel(xlsx_path, sheet_name=sheet_name, header=None, engine="openpyxl")
+
+idx_row_af = row_actual_forecast - 1
+idx_row_dt = row_date - 1
+candidate = raw.iloc[[idx_row_af, idx_row_dt], 4:]
+non_empty_cols = candidate.apply(lambda col: col.notna().any(), axis=0)
+if not non_empty_cols.any():
+    raise ValueError("Couldn't find any non-empty header cells to the right of column D.")
+first_value_col_abs = 4 + non_empty_cols.idxmax()
+
+hdr_af = raw.iloc[idx_row_af, first_value_col_abs:].astype(object).ffill().map(lambda v: "" if pd.isna(v) else str(v).strip())
+hdr_dt = raw.iloc[idx_row_dt, first_value_col_abs:].astype(object).ffill().map(lambda v: "" if pd.isna(v) else str(v).strip())
+multi_cols = pd.MultiIndex.from_arrays([hdr_af.tolist(), hdr_dt.tolist()], names=["ActualForecast","Date"])
+
+id_block = raw.iloc[first_data_row-1:, 0:4].copy()
+id_block.columns = ["Key","CorepReference","DetailedCapitalTable","CapitalTableReference"]
+
+val_block = raw.iloc[first_data_row-1:, first_value_col_abs:].copy()
+val_block.columns = multi_cols
+
+all_df = pd.concat([id_block, val_block], axis=1)
+# drop spacer rows that are completely empty across IDs and values
+all_df = all_df.dropna(how="all")
+
+tidy = (
+    all_df
+    .set_index(["Key","CorepReference","DetailedCapitalTable","CapitalTableReference"])
+    .stack(list(range(len(multi_cols.names))))
+    .reset_index()
+)
+tidy.columns = ["Key","CorepReference","DetailedCapitalTable","CapitalTableReference","ActualForecast","Date","Value"]
+
+# parse numbers; blanks become 0, genuine nonnumeric text becomes NA
+tidy["Value"] = tidy["Value"].apply(_parse_accounting_number)
+
+# EDIT #2: drop only rows where Value is NA *after parsing* (i.e., notes or text),
+# but keep zeros created from blanks.
+tidy = tidy[tidy["Value"].notna()].reset_index(drop=True)
+
+for c in ["Key","CorepReference","DetailedCapitalTable","CapitalTableReference","ActualForecast","Date"]:
+    tidy[c] = tidy[c].astype(str).str.strip()
+
+# tidy.to_csv("CapitalMovements_tidy.csv", index=False)
+print(tidy.head(20))
