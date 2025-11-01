@@ -1,5 +1,6 @@
 import pyodbc
 import pandas as pd
+from datetime import datetime
 
 
 def get_connection(
@@ -14,7 +15,6 @@ def get_connection(
     Returns an open pyodbc connection using Windows or SQL authentication.
     """
 
-    # Use Trusted_Connection if username/password are blank
     if username and password:
         conn_str = (
             f"DRIVER={driver};"
@@ -48,24 +48,39 @@ def run_query_to_df(conn: pyodbc.Connection, sql: str) -> pd.DataFrame:
         return df
     except Exception as e:
         print("Error running query:", e)
-        return pd.DataFrame()  # return empty DataFrame if failure
+        return pd.DataFrame()
+
+
+def save_to_csv(df: pd.DataFrame, base_filename: str = "query_output") -> str:
+    """
+    Saves the DataFrame to a timestamped CSV file and returns the file path.
+    """
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"{base_filename}_{timestamp}.csv"
+    df.to_csv(filename, index=False, encoding="utf-8-sig")
+    print(f"✅ Data saved to CSV file: {filename}")
+    return filename
 
 
 if __name__ == "__main__":
-    # Replace with real values or use environment variables
+    # Replace with actual credentials or environment variables
     SERVER = "GBW25099261.hbeu.adroot.hsbc,10010"
     DATABASE = "CPDB"
-    USERNAME = ""  # leave blank if using Windows authentication
+    USERNAME = ""  # leave blank for Windows auth
     PASSWORD = ""
 
-    SQL_QUERY = "SELECT TOP 10 * FROM CP_PROJ_MOV_VER;"  # limit for testing
+    SQL_QUERY = "SELECT TOP 10 * FROM CP_PROJ_MOV_VER;"  # sample query
 
     try:
         conn = get_connection(SERVER, DATABASE, USERNAME, PASSWORD)
         print("Connection successful.")
 
         df_result = run_query_to_df(conn, SQL_QUERY)
-        print(df_result.head())
+
+        if not df_result.empty:
+            save_to_csv(df_result)
+        else:
+            print("⚠️ No data returned from query.")
 
     except pyodbc.Error as e:
         print("Connection failed:", e)
