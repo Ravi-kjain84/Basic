@@ -1,77 +1,84 @@
-import re
+Good—now state the requirement precisely:
+	•	Keep the first four columns as identifiers.
+	•	Unpivot every other column into a single Value column.
+	•	The “column header” that gets melted should first land in one temporary column, then be split into two fields: ActualForecast (e.g., “Actuals”) and Date.
+
+Here’s a robust implementation that works whether your wide columns are plain strings like "(Actuals, 2020-01-01 00:00:00)" or a true MultiIndex with two levels (('Actuals','2020-01-01')). It infers the first four id columns by position so you don’t fight header typos.
+
 import pandas as pd
 
-# ========= CONFIGURE THESE =========
-xlsx_path        = "path/to/workbook.xlsx"
-sheet_name       = "Capital Movements"
-row_actual_forecast = 2
-row_date             = 3
-first_data_row       = 8
-# ===================================
+def to_tidy(all_df):
+    # 1) Define id columns by position (first four)
+    id_cols = all_df.columns[:4].tolist()
+    wide_cols = [c for c in all_df.columns if c not in id_cols]
 
-def _parse_accounting_number(x):
-    """'(1,234.5)' -> -1234.5 ; '1,234' -> 1234 ; '', '-', '–', '—' -> 0 ; '3.5%' -> 0.035 ; other text -> NA."""
-    if pd.isna(x):
-        return 0.0  # <- EDIT #1: empty cell counts as zero
-    s = str(x).strip()
-    if s in {"", "-", "–", "—"}:
-        return 0.0  # <- EDIT #1: visibly blank placeholders => zero
-    if s.endswith("%"):
-        try:
-            return float(s[:-1].replace(",", "")) / 100.0
-        except ValueError:
-            return pd.NA
-    if re.fullmatch(r"\(\s*[\d,]*\.?\d*\s*\)", s):
-        s = "-" + s.strip("()")
-    s = s.replace(",", "")
-    try:
-        return float(s)
-    except ValueError:
-        return pd.NA  # non-numeric text (notes) -> NA so we can drop it
+    df = all_df.copy()
 
-# ---------- (rest of the script is same up to tidy creation) ----------
+    # 2) Case A: columns are a true MultiIndex with 2 levels
+    if isinstance(df.columns, pd.MultiIndex) and df.columns.nlevels >= 2:
+        # Keep only id + wide columns; set index on ids and stack the rest
+        tidy = (
+            df.set_index(id_cols)
+              .stack(list(range(df.columns.nlevels)))   # collapses all column levels
+              .reset_index()
+        )
+        # Last column after .stack is the values
+        tidy = tidy.rename(columns={tidy.columns[-1]: "Value"})
+        # The stacked levels become extra columns right before "Value"
+        # Name them consistently
+        col_names = [n if n is not None else f"level_{i}" 
+                     for i, n in enumerate(all_df.columns.names or [])]
+        # If there were more than 2 levels, keep only the last two as requested
+        if len(col_names) >= 2:
+            # Rename the last two logical levels
+            tidy = tidy.rename(columns={
+                tidy.columns[-3]: "ActualForecast",
+                tidy.columns[-2]: "Date"
+            })
+        else:
+            # Fallback names
+            tidy = tidy.rename(columns={
+                tidy.columns[-3]: "ActualForecast",
+                tidy.columns[-2]: "Date"
+            })
 
-raw = pd.read_excel(xlsx_path, sheet_name=sheet_name, header=None, engine="openpyxl")
+    else:
+        # 2) Case B: column headers are simple strings; melt then parse
+        melted = df.melt(
+            id_vars=id_cols,
+            value_vars=wide_cols,
+            var_name="raw",
+            value_name="Value"
+        )
 
-idx_row_af = row_actual_forecast - 1
-idx_row_dt = row_date - 1
-candidate = raw.iloc[[idx_row_af, idx_row_dt], 4:]
-non_empty_cols = candidate.apply(lambda col: col.notna().any(), axis=0)
-if not non_empty_cols.any():
-    raise ValueError("Couldn't find any non-empty header cells to the right of column D.")
-first_value_col_abs = 4 + non_empty_cols.idxmax()
+        # Try to parse patterns like "(Actuals, 2020-01-01 00:00:00)" or "Actuals, 2020-01-01"
+        #  - ActualForecast: everything up to first comma or closing paren
+        #  - Date: everything after the comma, stripped of trailing ')'
+        actual = melted["raw"].astype(str).str.extract(r'^\(?\s*([^,)\[]+)\s*[,)\]]')[0]
+        date_s = melted["raw"].astype(str).str.extract(r'[,]\s*([^)]+)\)?$')[0]
 
-hdr_af = raw.iloc[idx_row_af, first_value_col_abs:].astype(object).ffill().map(lambda v: "" if pd.isna(v) else str(v).strip())
-hdr_dt = raw.iloc[idx_row_dt, first_value_col_abs:].astype(object).ffill().map(lambda v: "" if pd.isna(v) else str(v).strip())
-multi_cols = pd.MultiIndex.from_arrays([hdr_af.tolist(), hdr_dt.tolist()], names=["ActualForecast","Date"])
+        tidy = melted.drop(columns=["raw"]).copy()
+        tidy["ActualForecast"] = actual.str.strip()
+        tidy["Date"] = pd.to_datetime(date_s.str.strip(), errors="coerce")
 
-id_block = raw.iloc[first_data_row-1:, 0:4].copy()
-id_block.columns = ["Key","CorepReference","DetailedCapitalTable","CapitalTableReference"]
+    # 3) Optional clean-ups
+    # tidy["Value"] = tidy["Value"].apply(parse_accounting_number)  # if you have it
+    for c in id_cols:
+        tidy[c] = tidy[c].astype(str).str.strip()
 
-val_block = raw.iloc[first_data_row-1:, first_value_col_abs:].copy()
-val_block.columns = multi_cols
+    # 4) Order columns
+    tidy = tidy[id_cols + ["ActualForecast", "Date", "Value"]]
 
-all_df = pd.concat([id_block, val_block], axis=1)
-# drop spacer rows that are completely empty across IDs and values
-all_df = all_df.dropna(how="all")
+    # 5) Drop rows where Date couldn't be parsed (if you only want well-formed entries)
+    tidy = tidy.dropna(subset=["Date"]).reset_index(drop=True)
 
-tidy = (
-    all_df
-    .set_index(["Key","CorepReference","DetailedCapitalTable","CapitalTableReference"])
-    .stack(list(range(len(multi_cols.names))))
-    .reset_index()
-)
-tidy.columns = ["Key","CorepReference","DetailedCapitalTable","CapitalTableReference","ActualForecast","Date","Value"]
+    return tidy
 
-# parse numbers; blanks become 0, genuine nonnumeric text becomes NA
-tidy["Value"] = tidy["Value"].apply(_parse_accounting_number)
+# Example:
+# tidy_df = to_tidy(all_df)
+# print(tidy_df.head(10))
 
-# EDIT #2: drop only rows where Value is NA *after parsing* (i.e., notes or text),
-# but keep zeros created from blanks.
-tidy = tidy[tidy["Value"].notna()].reset_index(drop=True)
+Why this solves your error:
+	•	The previous failure came from asserting there were two column levels and calling stack([0,1]). Here we inspect the dataframe we actually have: if it has a MultiIndex we stack; otherwise we melt and parse. No wishful thinking, no stale multi_cols.
 
-for c in ["Key","CorepReference","DetailedCapitalTable","CapitalTableReference","ActualForecast","Date"]:
-    tidy[c] = tidy[c].astype(str).str.strip()
-
-# tidy.to_csv("CapitalMovements_tidy.csv", index=False)
-print(tidy.head(20))
+If this still fails, the culprit will be the exact header pattern. Show me one or two raw header strings verbatim; if they don’t contain a comma, we’ll adjust the regex accordingly.
