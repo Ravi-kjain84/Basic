@@ -1,3 +1,9 @@
-=LEFT(A1, FIND("-", A1) - 1)
+Here’s a refined and more cohesive version of your paragraph — keeping your meaning intact but improving rhythm, precision, and logical flow:
 
-=RIGHT(A1, LEN(A1) - FIND("-", A1))
+⸻
+
+We recently completed a proof of concept (POC) on prompt-based orchestration using the Productivity Suite, with participation from nominated representatives across multiple value streams. Going forward, it will be essential to identify and develop prompt champions within each value stream. These champions will play a key role in promoting prompt-engineering practices and assisting others in building effective prompts. Over time, each value stream should also work toward standardizing its own library of approved prompts. This will not only ensure consistency and reusability but will also accelerate productivity gains, particularly for use cases such as the Document Viewer.
+
+⸻
+
+Would you like me to make it slightly shorter for a presentation slide (more punchy) or retain this narrative version for a report/email?
